@@ -52,19 +52,6 @@ class Job(db.Model):
     user = db.relationship("User", backref="job")
     company = db.relationship("Company", backref="job")
 
-
-class Company(db.Model):
-
-    __tablename__ = "company_table"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255), nullable=False, unique=True)
-    location = db.Column(db.String(255), nullable=False)
-    industry = db.Column(db.String(255))
-
-    recruiter = db.relationship("Recruiter", backref="company")
-    employee = db.relationship("Company_Team", backref="company")
-
 class Email(db.Model):
 
     __tablename__ = "email_table"
@@ -97,3 +84,61 @@ class General_Task(db.Model):
     due_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(255), nullable=False)
     completed = db.Column(db.Boolean, default=False)
+
+class Next_Step(db.Model):
+
+    __tablename__ = "next_step_table"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    job_id = db.Column(db.Integer, db.ForeignKey("job_table"), nullable=False)
+    task_for = db.Column(db.Integer, db.ForeignKey("task_employee_index_table"), nullable=False)
+    due_date = db.Column(db.DateTime, nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+    type = db.Column(db.String(255), nullable=False)
+
+    
+
+class Company(db.Model):
+
+    __tablename__ = "company_table"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(255), nullable=False, unique=True)
+    location = db.Column(db.String(255), nullable=False)
+    industry = db.Column(db.String(255))
+    favorite = db.Column(db.Boolean, default=False)
+
+    recruiter = db.relationship("Recruiter", backref="company")
+    employee = db.relationship("Employee", backref="company")
+
+class Task_Employee_Index(db.Model):
+    
+    __tablename__ = "task_employee_index_table"
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    employee_id = db.Column(db.Integer, db.ForeignKey("employee_table"), nullable=False)
+    recruiter_id = db.Column(db.Integer, db.ForeignKey("recruiter_table"), nullable=False)
+
+class Recruiter(db.Model):
+
+    __tablename__ = "recruiter_table"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    company_id = db.Column(db.Integer, db.ForeignKey("company_table"), nullable=False)
+    first_name = db.Column(db.String(255), nullable=False)
+    last_name = db.Column(db.String(255), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    linkedin = db.Column(db.String(255))
+    
+class Employee(db.Model):
+
+    __tablename__ = "employee_table"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    company_id = db.Column(db.Integer, db.ForeignKey("company_table"), nullable=False)
+    first_name = db.Column(db.String(255), nullable=False)
+    last_name = db.Column(db.String(255), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    linkedin = db.Column(db.String(255))
