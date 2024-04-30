@@ -9,16 +9,24 @@ app = Flask(__name__)
 
 
 @app.route("/")
+def login():
+    return render_template("login.html")
+
+@app.route("/homepage")
 def homepage():
     return render_template("homepage.html")
 
+@app.route("/register")
+def create_account():
+    return render_template("/register.html")
 
+@app.route("/create_job")
+def create_job():
+    return render_template("/create_job.html")
 
-
-
-
-
-
+@app.route("/create_company")
+def create_company():
+    return render_template("/create_company.html")
 
 
 if __name__ == "__main__":

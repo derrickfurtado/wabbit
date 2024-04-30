@@ -1,13 +1,13 @@
 MVP:
 
-1. Create Account
-2. Log in securly to Account with bcrypt
-3. Record Job Opportunities and details associated with it.
-4. Link Job object to Company objects
-5. Link Job object to staff and recruiter objects
-6. Create tasks for email, call, or general for each job
-7. Have time dependency associated with all tasks
-8. Trigger notifications based on time frame: (following is a general timeline)
+- Log in securly to Account with bcrypt
+- Create Account
+- Record Job Opportunities and details associated with it.
+- Link Job object to Company objects
+- Link Job object to staff and recruiter objects
+- Create tasks for email, call, or general for each job
+- Have time dependency associated with all tasks
+- Trigger notifications based on time frame: (following is a general timeline)
     - Create job as favorite, but have not applied yet ==> 24 hours - automate email to user (E2U) to demand call-2-action (CTA) apply for this job
     - Job applied
         - immediately ==> find recruiter and create recruiter object
