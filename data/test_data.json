@@ -1,0 +1,132 @@
+[
+  {
+    "users": 
+      {
+        "id": 1,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "user@gmail.com",
+        "password": "pass",
+        "location": "New York",
+        "school": "University of XYZ",
+        "bio": "Lorem ipsum dolor sit amet.",
+        "headshot": "path/to/headshot1.jpg"
+      }
+  },
+  {
+    "job": 
+      {
+        "id": 1,
+        "company_id": 1,
+        "user_id": 1,
+        "recruiter_id": 1,
+        "next_step_id": 1,
+        "role": "Software Engineer",
+        "description": "Lorem ipsum dolor sit amet.",
+        "requirements": "Consectetur adipiscing elit.",
+        "salary": 80000,
+        "compensation": "Salary",
+        "link": "https://example.com/job1",
+        "date_applied": "2023-10-15T12:00:00Z",
+        "job_offer": "False",
+        "rejection": "False",
+        "declined_offer": "False",
+        "accepted_offer": "False",
+        "ghosted": "False",
+        "favorite": "False",
+        "last_logged_task": "Prepare for interview",
+        "last_logged_task_time": "2024-04-30T08:00:00Z"
+      }
+  },
+  {
+    "email": 
+      {
+        "id": 1,
+        "job_id": 1,
+        "task_for_id": 1,
+        "due_date": "2024-05-01",
+        "description": "Follow up with recruiter",
+        "completed": "False"
+      }
+  },
+  {
+    "call": 
+      {
+        "id": 1,
+        "job_id": 1,
+        "task_for_id": 1,
+        "due_date": "2024-05-05",
+        "description": "Prepare for the call",
+        "completed": "False"
+      }
+  },
+  {
+    "general_task": 
+      {
+        "id": 1,
+        "job_id": 1,
+        "task_for_id": 1,
+        "due_date": "2024-05-10",
+        "description": "Update resume",
+        "completed": "False"
+      }
+    
+  },
+  {
+    "next_step": 
+      {
+        "id": 1,
+        "job_id": 1,
+        "task_for_id": 1,
+        "due_date": "2024-05-15T08:00:00Z",
+        "description": "Schedule interview",
+        "type": "Interview"
+      }
+    
+  },
+  {
+    "company": 
+      {
+        "id": 1,
+        "name": "ABC Corp",
+        "location": "New York",
+        "industry": "Technology",
+        "favorite": "False"
+      }
+  },
+  {
+    "task_employee_index": [
+      {
+        "id": 1,
+        "employee_id": 1,
+        "recruiter_id": 1
+      }
+    ]
+  },
+  {
+    "recruiters": [
+      {
+        "id": 1,
+        "company_id": 1,
+        "first_name": "Emily",
+        "last_name": "Johnson",
+        "title": "Senior Recruiter",
+        "email": "emily.johnson@abccorp.com",
+        "linkedin": "https://linkedin.com/emilyjohnson"
+      }
+    ]
+  },
+  {
+    "employees": [
+      {
+        "id": 1,
+        "company_id": 1,
+        "first_name": "Michael",
+        "last_name": "Smith",
+        "title": "Software Engineer",
+        "email": "michael.smith@abccorp.com",
+        "linkedin": "https://linkedin.com/michaelsmith"
+      }
+    ]
+  }
+]

@@ -1,11 +1,14 @@
 """ server to contain endpoints for Wabbit app """
 
 from flask import Flask, render_template
+from key import secret_key
 
 
 
 app = Flask(__name__)
 
+
+app.secret_key = secret_key
 
 
 @app.route("/")
@@ -31,4 +34,4 @@ def create_company():
 
 if __name__ == "__main__":
 
-    app.run(host="localhost", port=4040, debug=True )
+    app.run(host="localhost", port=4040, debug=True)
