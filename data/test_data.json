@@ -17,10 +17,7 @@
     "job": 
       {
         "id": 1,
-        "company_id": 1,
         "user_id": 1,
-        "recruiter_id": 1,
-        "next_step_id": 1,
         "role": "Software Engineer",
         "description": "Lorem ipsum dolor sit amet.",
         "requirements": "Consectetur adipiscing elit.",
@@ -54,7 +51,6 @@
       {
         "id": 1,
         "job_id": 1,
-        "task_for_id": 1,
         "due_date": "2024-05-05",
         "description": "Prepare for the call",
         "completed": "False"
@@ -77,7 +73,6 @@
       {
         "id": 1,
         "job_id": 1,
-        "task_for_id": 1,
         "due_date": "2024-05-15T08:00:00Z",
         "description": "Schedule interview",
         "step_type": "Interview"
@@ -95,16 +90,15 @@
       }
   },
   {
-    "task_employee_index": [
+    "task_employee_index":
       {
         "id": 1,
         "employee_id": 1,
         "recruiter_id": 1
       }
-    ]
   },
   {
-    "recruiters": [
+    "recruiter":
       {
         "id": 1,
         "company_id": 1,
@@ -114,10 +108,9 @@
         "email": "emily.johnson@abccorp.com",
         "linkedin": "https://linkedin.com/emilyjohnson"
       }
-    ]
   },
   {
-    "employees": [
+    "employee":
       {
         "id": 1,
         "company_id": 1,
@@ -127,6 +120,5 @@
         "email": "michael.smith@abccorp.com",
         "linkedin": "https://linkedin.com/michaelsmith"
       }
-    ]
   }
 ]

@@ -29,12 +29,11 @@ def create_company(name, location, industry, favorite):
     
     return new_company
 
-def create_job(company_id, user_id, recruiter_id, next_step_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time):
+def create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time):
     new_job = model.Job(
         company_id = company_id, 
         user_id = user_id, 
         recruiter_id = recruiter_id, 
-        next_step_id = next_step_id,
         role = role,
         description = description,
         requirements = requirements,

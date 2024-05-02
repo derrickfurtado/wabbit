@@ -30,10 +30,10 @@ class Job(db.Model):
     __tablename__ = "job_table"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    company_id = db.Column(db.Integer, db.ForeignKey("company_table.id"), nullable=False)
+    company_id = db.Column(db.Integer, db.ForeignKey("company_table.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("users_table.id"), nullable=False)
     recruiter_id = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
-    next_step_id = db.Column(db.Integer, db.ForeignKey("next_step_table.id"))
+
 
     role = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255), nullable=False)
@@ -48,7 +48,7 @@ class Job(db.Model):
     accepted_offer = db.Column(db.Boolean, default=False)
     ghosted = db.Column(db.Boolean, default=False)
     favorite = db.Column(db.Boolean, default=False)
-    last_looged_task = db.Column(db.String(255), nullable=False)
+    last_logged_task = db.Column(db.String(255), nullable=False)
     last_logged_task_time = db.Column(db.DateTime, nullable=False)
 
     user = db.relationship("Users", backref="job")
@@ -67,7 +67,7 @@ class Email(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"), nullable=False)
+    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"))
     due_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(255), nullable=False)
     completed = db.Column(db.Boolean, default=False)
@@ -83,7 +83,7 @@ class Call(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"), nullable=False)
+    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"))
     due_date = db.Column(db.Date, nullable = False)
     description = db.Column(db.String(255))
     completed = db.Column(db.Boolean, default=False)
@@ -97,7 +97,7 @@ class General_Task(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"), nullable=False)
+    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"))
     due_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(255), nullable=False)
     completed = db.Column(db.Boolean, default=False)
@@ -111,10 +111,10 @@ class Next_Step(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"), nullable=False)
-    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"), nullable=False)
+    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"))
     due_date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.String(255), nullable=False)
-    type = db.Column(db.String(255), nullable=False)
+    step_type = db.Column(db.String(255), nullable=False)
 
     tasks_for = db.relationship("Task_Employee_Index", backref="next_step")
 
