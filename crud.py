@@ -3,13 +3,14 @@ from pdb import set_trace
 
 
 def create_user(first_name, last_name, email, password, location, school, bio, headshot):
-    h = hashlib.new("SHA256")
-    h.update(b"password")
-    hashed_password = h.hexdigest()
+
+    ### Hash password here with haslib ###
 
     new_user = model.Users(
         first_name = first_name, 
-        password = hashed_password, 
+        last_name = last_name,
+        email = email,
+        password = password, 
         location = location, 
         school = school, 
         bio = bio, 
@@ -83,13 +84,13 @@ def create_general_task(job_id, task_for_id, due_date, description, completed):
     )
     return new_general_task
 
-def create_next_step(job_id, task_for_id, due_date, description, type):
+def create_next_step(job_id, task_for_id, due_date, description, step_type):
     new_next_step = model.Next_Step(
         job_id = job_id,
         task_for_id = task_for_id,
         due_date = due_date,
         description = description,
-        type = type
+        step_type = step_type
     )
     return new_next_step
 
