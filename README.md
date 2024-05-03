@@ -1,7 +1,8 @@
 MVP:
 
-- Log in securly to Account with bcrypt
-- Create Account
+- ✅ Log in to account
+- Log in securely with bcrypt
+- ✅ Create Account
 - Record Job Opportunities and details associated with it.
 - Link Job object to Company objects
 - Link Job object to staff and recruiter objects
@@ -29,12 +30,16 @@ Rubric:
 1. Front End
     - 3 CSS-styled pages.
 2. Server
-    - 3 endpoints
-    - 3 view functions
+    - 3 ✅ endpoints
+    - 3 ✅ view functions
 3. DB
-    - Active DB
+    - ✅ Active DB
     - Full CRUD functionality
+        - read
+        - delete
+        - update
+        - ✅ create
 4. Login
-    - need login process functioning
+    - ✅ need login process functioning
 5. Features
     - 3 user features complete and function

@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, PasswordField
+from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, PasswordField, EmailField, DateField, IntegerField
 from wtforms.validators import DataRequired, Length
+
 
 
 class User_Login_Form(FlaskForm):
@@ -11,6 +12,15 @@ class User_Login_Form(FlaskForm):
 class User_Registration_Form(FlaskForm):
     first_name = StringField("First Name: ", validators=[DataRequired(), Length(min=2, max=255)])
     last_name = StringField("Last Name: ")
-    email = StringField("Email: ", validators=[DataRequired(), Length(min=5, max=255)])
+    email = EmailField("Email: ", validators=[DataRequired(), Length(min=5, max=255)])
     password = PasswordField("Password: ", validators=[DataRequired(), Length(min=4, max=255)])
     submit = SubmitField()
+
+class Job_Form(FlaskForm):
+    role = StringField("Role Title: ", validators=[DataRequired(), Length(max=255)])
+    description = StringField("Copy Description Here: ", validators=(DataRequired(), Length(max=2000)))
+    requirements = StringField("Copy Requirements Here: ", validators=[DataRequired(), Length(max=2000)])
+    salary = IntegerField("Salary (if present): ")
+    compensation = StringField("Other Compensation (if present): ", validators=[Length(max=255)])
+    link = StringField("Copy link to job posting: ", validators=[DataRequired(), Length(max=255)])
+    company = SelectField("Choose from current companies: ")

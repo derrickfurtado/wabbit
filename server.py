@@ -23,9 +23,10 @@ def login():
 def homepage():
     return render_template("homepage.html")
 
-@app.route("/create_job")                       ## landing page for job creation
-def create_job():
-    return render_template("/create_job.html")
+@app.route("/job_page")                       ## landing page for job creation
+def show_job_form():
+    job_form = forms.Job_Form()
+    return render_template("/job_page.html", job_form = job_form)
 
 @app.route("/create_company")                   ## landing page for company creation
 def create_company():
@@ -90,6 +91,14 @@ def sign_out():
     del session["user_id"]
     flash(f"You have logged out!")
     return redirect("/")
+
+@app.route("/create_job")
+def create_job():
+    
+    redirect("/job_page")
+
+
+
 
 if __name__ == "__main__":
     model.connect_to_db(app)
