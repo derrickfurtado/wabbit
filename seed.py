@@ -1,4 +1,4 @@
-""" Seed file to create/delete and add test data to our Wabbit DB """
+""" Seed file to create/delete DB and add test data to our Wabbit DB for testing/building only"""
 
 import os, model, server, json, crud
 from pdb import set_trace
@@ -11,11 +11,11 @@ os.system("createdb wabbit")            ## recreate table
 model.connect_to_db(server.app)         ## connect to Wabbit DB
 model.db.create_all()                   ## create all tables
 
-with open ('data/test_data.json') as file:
-    test_data = json.loads(file.read())
+with open ('data/test_data.json') as file:  ## open and read .json file
+    test_data = json.loads(file.read())     ## test_data will be a list of dictionaries for each dataclass object
 
 ### Create User Test Data ###
-user_data = test_data[0]["users"]
+user_data = test_data[0]["users"]           ## each dataclass object has a specific index
 first_name = user_data["first_name"]
 last_name = user_data["last_name"]
 email = user_data["email"]
@@ -49,7 +49,7 @@ favorite = bool(job_data["favorite"])
 last_logged_task = job_data["last_logged_task"]
 last_logged_task_time = job_data["last_logged_task_time"]
 
-test_job = crud.create_job(None, user_id, None, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)
+test_job = crud.create_job(None, user_id, None, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)            ### added None to certain fields that required dependencies. Only needed upon creation of test data
 
 model.db.session.add(test_job)
 model.db.session.commit()
@@ -144,7 +144,7 @@ test_employee = crud.create_employee(company_id, first_name, last_name, title, e
 model.db.session.add(test_employee)
 model.db.session.commit()
 
-### Don't need to create task_employee_index data. Can create during testing ###
+### Don't need to create task_employee_index data. Can create during testing/building ###
 
 
 print("🚨 Database has been seeded 🚨")

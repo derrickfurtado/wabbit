@@ -1,3 +1,5 @@
+""" CRUD file for all CRUD functions"""
+
 import model, hashlib
 from pdb import set_trace
 

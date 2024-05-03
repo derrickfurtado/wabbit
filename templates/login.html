@@ -3,6 +3,34 @@
 
 {% block body %}
 
-<h1>Login</h1>
+<h1>Login below:</h1>
+
+<section id="login_form">
+    <form action="{{ url_for('login_user') }}" method="post">
+        {{ login_form.csrf_token() }}
+        {{ login_form.email.label }}
+        {{ login_form.email }}
+        {{ login_form.password.label }}
+        {{ login_form.password }}
+        {{ login_form.submit }}
+
+    </form>
+</section>
+
+<h1>Register Account Here:</h1>
+<section id="registration_form">
+    <form action="{{ url_for('register_user') }}" method="post">
+        {{ register_form.csrf_token }}
+        {{ register_form.email.label }}
+        {{ register_form.email }} 
+        {{ register_form.password.label }}
+        {{ register_form.password }}<br><br>
+        {{ register_form.first_name.label }}
+        {{ register_form.first_name }}
+        {{ register_form.last_name.label }}
+        {{ register_form.last_name }}
+        {{ register_form.submit }}
+    </form>
+</section>
 
 {% endblock %}

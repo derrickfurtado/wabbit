@@ -8,13 +8,26 @@
 </head>
 <body>
     <nav>
-        <a href="/"><button>Login</button></a>
+        
+        {% if request.path != "/" %}
         <a href="/homepage"><button>Homepage</button></a>
-        <a href="/register"><button>Create Account</button></a>
+        <a href="/sign_out"><button>Sign Out</button></a>
         <a href="/create_company"><button>Create Company</button></a>
         <a href="/create_job"><button>Create Job</button></a>
+        {% endif %}
+        
         {% block navbar %}
         {% endblock %}
+
+        <div id="flash_message">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <b>{{ message }}</b>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
     </nav>
 
     {% block body %}

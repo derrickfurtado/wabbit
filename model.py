@@ -38,11 +38,11 @@ class Job(db.Model):
     role = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(255), nullable=False)
     requirements = db.Column(db.String(255), nullable=False)
-    salary = db.Column(db.Integer)
-    compensation = db.Column(db.String(255))
+    salary = db.Column(db.Integer)                              ## nullable in case salary and/or compensation is not present
+    compensation = db.Column(db.String(255))                    
     link = db.Column(db.String(255), nullable=False)
     date_applied = db.Column(db.DateTime, nullable=False)
-    job_offer = db.Column(db.Boolean, default=False)
+    job_offer = db.Column(db.Boolean, default=False)            ## boolean for tracking analytics
     rejection = db.Column(db.Boolean, default=False)
     declined_offer = db.Column(db.Boolean, default=False)
     accepted_offer = db.Column(db.Boolean, default=False)
@@ -51,7 +51,7 @@ class Job(db.Model):
     last_logged_task = db.Column(db.String(255), nullable=False)
     last_logged_task_time = db.Column(db.DateTime, nullable=False)
 
-    user = db.relationship("Users", backref="job")
+    user = db.relationship("Users", backref="job")                  ## most relationships will be contained on job object
     company = db.relationship("Company", backref="job")
     recruiter = db.relationship("Recruiter", backref="job")
     email_task = db.relationship("Email", backref="job")
@@ -68,8 +68,8 @@ class Email(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
     task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"))
-    due_date = db.Column(db.Date, nullable=False)
-    description = db.Column(db.String(255), nullable=False)
+    due_date = db.Column(db.Date, nullable=False)               ## all booleans, when seeded, turn out True ... not sure why
+    description = db.Column(db.String(255), nullable=False) 
     completed = db.Column(db.Boolean, default=False)
 
     tasks_for = db.relationship("Task_Employee_Index", backref="email")
