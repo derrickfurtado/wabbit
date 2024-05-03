@@ -23,9 +23,14 @@ def login():
 def homepage():
     return render_template("homepage.html")
 
-@app.route("/job_page")                       ## landing page for job creation
+@app.route("/job_page")                       ## landing page for job creation form
 def show_job_form():
+    company_list = crud.show_all_companies()
     job_form = forms.Job_Form()
+    choices = [(company.id, company.name) for company in company_list]      ## creating dynamic list for company options
+    choices.append(("create_company", "*** Create Company ***"))            ## adding fall back in case company is not created yet
+    job_form.company.choices = choices                              ## adding dynamic list and fallback together to choices
+
     return render_template("/job_page.html", job_form = job_form)
 
 @app.route("/create_company")                   ## landing page for company creation
@@ -92,9 +97,13 @@ def sign_out():
     flash(f"You have logged out!")
     return redirect("/")
 
-@app.route("/create_job")
+@app.route("/create_job", methods=["POST"])
 def create_job():
-    
+    job_form = forms.Job_Form()
+
+    if job_form.company.data == 'create_company':
+        session["role"]                             ##########################################
+        set_trace()
     redirect("/job_page")
 
 

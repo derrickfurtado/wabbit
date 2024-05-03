@@ -18,9 +18,10 @@ class User_Registration_Form(FlaskForm):
 
 class Job_Form(FlaskForm):
     role = StringField("Role Title: ", validators=[DataRequired(), Length(max=255)])
-    description = StringField("Copy Description Here: ", validators=(DataRequired(), Length(max=2000)))
-    requirements = StringField("Copy Requirements Here: ", validators=[DataRequired(), Length(max=2000)])
+    description = StringField("Job Description: ", validators=(DataRequired(), Length(max=2000)))
+    requirements = StringField("Job Requirements: ", validators=[DataRequired(), Length(max=2000)])
     salary = IntegerField("Salary (if present): ")
     compensation = StringField("Other Compensation (if present): ", validators=[Length(max=255)])
-    link = StringField("Copy link to job posting: ", validators=[DataRequired(), Length(max=255)])
-    company = SelectField("Choose from current companies: ")
+    link = StringField("Link to posting: ", validators=[DataRequired(), Length(max=255)])
+    company = SelectField("Company: ", coerce=str)              ## coerce allows the form to "look" for a string when invoked
+    submit = SubmitField()

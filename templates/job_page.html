@@ -5,8 +5,24 @@
 <h1>Create Job Here:</h1>
 
 <section id="create_job_form">
-    <form action="/create_job">
-        
+    <form action="{{ url_for('create_job')}}" method="post">
+        {{ job_form.csrf_token() }}
+        {{ job_form.role.label }}
+        {{ job_form.role }}
+        {{ job_form.description.label }}
+        {{ job_form.description }}
+        {{ job_form.requirements.label }}
+        {{ job_form.requirements }}
+        {{ job_form.salary.label }}
+        {{ job_form.salary }}
+        {{ job_form.compensation.label }}
+        {{ job_form.compensation }}
+        {{ job_form.link.label }}
+        {{ job_form.link }}
+        {{ job_form.company.label }}
+        {{ job_form.company }}
+        {{ job_form.submit }}
+
     </form>
 </section>
 
