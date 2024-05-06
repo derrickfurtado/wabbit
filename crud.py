@@ -2,6 +2,7 @@
 
 import model, hashlib
 from pdb import set_trace
+from datetime import datetime
 
 
 def create_user(first_name, last_name, email, password, location, school, bio, headshot):
@@ -67,6 +68,8 @@ def show_all_jobs():
     job_list = model.Job.query.all()
     return job_list
 
+def job_detail(id):
+    return model.Job.query.get(id)
 #####################
 
 def create_email(job_id, task_for_id, due_date, description, completed):
@@ -149,6 +152,12 @@ def create_employee(company_id, first_name, last_name, title, email, linkedin):
         linkedin = linkedin
     )
     return new_employee
+
+#####################
+
+def days_since(date_time):
+    time_difference = datetime.now() - date_time
+    return time_difference.days
 
 
 

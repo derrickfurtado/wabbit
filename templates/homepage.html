@@ -15,30 +15,24 @@
                 <th>Role Name</th>
                 <th>Company</th>
                 <th>Salary</th>
-                <th>Last Logged Task</th>
-                <th>Last Logged Time</th>
                 <th>Link to Job</th>
                 <th>Next Steps</th>
+                <th>Next Step Date</th>
             </tr>
         </thead>
         <tbody>
             {% for job in job_list %}
             <tr>
-                <td>{{ job.role }}</td>
+                <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                 <td>{{ job.company.name }}</td>
                 <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
-                {% if job.last_logged_task != None and job.last_logged_task_time != None %}
-                    <td>{{ job.last_logged_task }}</td>
-                    <td>{{ job.last_logged_task_time.strftime('%b %d @ %H:%M%p') }}</td>
-                {% else %}
-                    <td>None</td>
-                    <td>None</td>
-                {% endif %}
                 <td><a href="{{ job.link }}">Job Link</a></td>
-                {% if job.next_step != None %}
-                    <td>{{ job.next_step }}</td>
-                {% else %}
+                {% if job.next_step == [] %}
                     <td>None</td>
+                    <td>None</td>
+                {% else %}
+                    <td>{{ job.next_step[0].description }}</td>
+                    <td>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</td>
                 {% endif %}
             </tr>
             {% endfor %}

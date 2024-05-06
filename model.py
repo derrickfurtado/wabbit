@@ -34,7 +34,6 @@ class Job(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users_table.id"), nullable=False)
     recruiter_id = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
 
-
     role = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(2000), nullable=False)
     requirements = db.Column(db.String(2000), nullable=False)
@@ -54,6 +53,7 @@ class Job(db.Model):
     user = db.relationship("Users", backref="job")                  ## most relationships will be contained on job object
     company = db.relationship("Company", backref="job")
     recruiter = db.relationship("Recruiter", backref="job")
+    next_step = db.relationship("Next_Step", backref="job")
     email_task = db.relationship("Email", backref="job")
     call_task = db.relationship("Call", backref="job")
     general_task = db.relationship("General_Task", backref="job")

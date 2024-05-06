@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<section id="job_card">
+    <div id="job_role">
+        <h1>{{ job.role }}</h1>
+        <h3>{{ job.company.name }}</h3>
+    </div>
+    <div id="job_details_div">
+        <div id="job_description">
+            Job Description:
+            <b>{{ job.description }}</b>
+        </div>
+        <div id="job_requirements">
+            Requirements:
+            <b>{{ job.requirements }}</b>
+        </div>
+        <div id="job_salary">
+            Salary:
+            <b>{{ "$ {:,.0f} per year".format(job.salary) }}</b>
+        </div>
+        <div id="job_compensation">
+            Additional Compensation:
+            <b>{{ job.compensation }}</b>
+        </div>
+        <div id="job_link">
+            Link to Job Posting:
+            <b><a href="{{ job.link }}">HERE</a></b>
+        </div>
+        <div id="job_data_applied">
+            Date Applied:
+            <b>{{ job.date_applied.strftime('%b %d @ %H:%M%p') }}</b>
+        </div>
+    </div>
+    <div id="bool_div">
+        <div id="job_offer_bool">
+            Job Offer?
+            <button>SELECT</button>
+            <b>{{ job.job_offer }}</b>
+        </div>
+        <div id="job_rejection_bool">
+            Rejection?
+            <button>SELECT</button>
+            <b>{{ job.rejection }}</b>
+        </div>
+        <div id="job_declined_bool">
+            Declined?
+            <button>SELECT</button>
+            <b>{{ job.declined_offer }}</b>
+        </div>
+        <div id="job_accepted_bool">
+            Accepted?
+            <button>SELECT</button>
+            <b>{{ job.accepted_offer }}</b>
+        </div>
+        <div id="job_ghosted_bool">
+            Ghosted?
+            <button>SELECT</button>
+            <b>{{ job.ghosted }}</b>
+        </div>
+        <div id="job_favorite_bool">
+            Favorite?
+            <button>SELECT</button>
+            <b>{{ job.favorite }}</b>
+        </div>
+    </div>
+    <div id="next_steps_div">
+        <div id="job_next_step">
+            Next Steps:
+            <b>{{ job.next_step[0].description }}</b>
+        </div>
+        <div id="job_next_step_time">
+            Scheduled for:
+            <b>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</b>
+        </div>
+        <div id="job_last_task">
+            It's been <b>{{ days_since_task }} days since last activity.</b>
+            <div>
+                Last Activity:
+                <b>{{ job.last_logged_task }}</b>
+            </div>
+        </div>
+        <div id="task_div">
+            <div id="job_call_task"></div>
+            <div id="job_email_task"></div>
+            <div id="job_general_task"></div>
+        </div>
+    </div>
+    <div id="roster_div">
+        <div id="job_recruiter">
+            Lead Recruiter:
+            
+        </div>
+        <div id="job_employee_list">
+            Stackholders:
+            {% for employee in job.company.employee %}
+                <ul>{{ employee.first_name }} {{ employee.last_name }}</ul>
+            {% endfor %}
+        </div>
+    </div>
+
+</section>
+
+
+
+
+
+
+
+{% endblock %}

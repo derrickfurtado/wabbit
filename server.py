@@ -1,7 +1,7 @@
 """ server to contain endpoints for Wabbit app """
 
 import forms, model, crud
-from flask import Flask, render_template, flash, redirect, session
+from flask import Flask, render_template, flash, redirect, session, request
 from key import secret_key
 from pdb import set_trace
 
@@ -83,6 +83,7 @@ def sign_out():
 def homepage():
     job_list = crud.show_all_jobs()
     company_list = crud.show_all_companies()
+
     return render_template("homepage.html", job_list = job_list, company_list = company_list)
 
             ####### 🚨 Add in table columns for buttons that update task completed
@@ -143,6 +144,12 @@ def create_job():
         flash(f"Job Created! Let's keep going!")
         return redirect("/job_page")
 
+@app.route("/job_detail")
+def show_job_detail():
+    job_id = request.args.get('job_id')
+    job = crud.job_detail(job_id)
+    days_since_task = crud.days_since(job.last_logged_task_time)
+    return render_template("job_detail_page.html", job = job, days_since_task = days_since_task)
 
 ##########################################################
 
@@ -199,6 +206,10 @@ def create_company():
     flash("Job and Company created! Keep it up!")
     return redirect("job_page")
 
+
+@app.route("/company_detail")
+def show_company_detail():
+    return render_template("company_detail_page.html")
 ##########################################################
 
 
