@@ -26,7 +26,7 @@
         </div>
         <div id="job_link">
             Link to Job Posting:
-            <b><a href="{{ job.link }}">HERE</a></b>
+            <b><a href="{{ job.link }}" target="_blank">HERE</a></b>
         </div>
         <div id="job_data_applied">
             Date Applied:
@@ -90,12 +90,17 @@
     <div id="roster_div">
         <div id="job_recruiter">
             Lead Recruiter:
-            
+            {% if job.recruiter == None %}
+                <a href="{{ url_for('recruiter_form', job_id = job.id) }}"><button>Add Recruiter</button></a>
+            {% else %}
+                {{ job.recruiter.first_name }} {{ job.recruiter.last_name }}
+            {% endif %}
         </div>
         <div id="job_employee_list">
             Stackholders:
+            <a href="{{ url_for('employee_form', company_id = job.company.id) }}"><button>Add More Stakeholders</button></a>
             {% for employee in job.company.employee %}
-                <ul>{{ employee.first_name }} {{ employee.last_name }}</ul>
+                <ul><a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{ employee.last_name }}</a></ul>
             {% endfor %}
         </div>
     </div>

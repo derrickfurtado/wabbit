@@ -26,7 +26,7 @@
                 <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                 <td>{{ job.company.name }}</td>
                 <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
-                <td><a href="{{ job.link }}">Job Link</a></td>
+                <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
                 {% if job.next_step == [] %}
                     <td>None</td>
                     <td>None</td>
