@@ -31,7 +31,6 @@ def create_company(name, location, industry, favorite):
         industry = industry, 
         favorite = favorite
         )
-    
     return new_company
 
 def show_all_companies():
@@ -63,6 +62,10 @@ def create_job(company_id, user_id, recruiter_id, role, description, requirement
         )
     
     return new_job
+
+def show_all_jobs():
+    job_list = model.Job.query.all()
+    return job_list
 
 #####################
 

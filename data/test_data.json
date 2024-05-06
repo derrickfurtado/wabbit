@@ -3,27 +3,28 @@
     "users": 
       {
         "id": 1,
-        "first_name": "John",
-        "last_name": "Doe",
+        "first_name": "Derrick",
+        "last_name": "Furtado",
         "email": "user@gmail.com",
-        "password": "pass",
-        "location": "New York",
-        "school": "University of XYZ",
-        "bio": "Lorem ipsum dolor sit amet.",
-        "headshot": "path/to/headshot1.jpg"
+        "password": "devmountain",
+        "location": "Lehi, UT",
+        "school": "San Jose State University",
+        "bio": "Sales Closer turned Sales Builder",
+        "headshot": "https://media.licdn.com/dms/image/D5635AQGxO_SJlBmU3w/profile-framedphoto-shrink_400_400/0/1706909301680?e=1715619600&v=beta&t=GItACqgIZnQRcxIm5UoH9kVd5_ByCb7Do22a-5b-nDg"
       }
   },
   {
     "job": 
       {
         "id": 1,
+        "company_id": 1,
         "user_id": 1,
-        "role": "Software Engineer",
-        "description": "Lorem ipsum dolor sit amet.",
-        "requirements": "Consectetur adipiscing elit.",
-        "salary": 80000,
-        "compensation": "Salary",
-        "link": "https://example.com/job1",
+        "role": "Junior Software Developer",
+        "description": "Work really hard with in a team environment with SCRUM",
+        "requirements": "Know Python well",
+        "salary": 127400,
+        "compensation": "$50k in RSUs",
+        "link": "https://www.linkedin.com/jobs/view/3914368777/?alternateChannel=search&refId=ELa4SIYXv1Gh60%2Fxh1GaKw%3D%3D&trackingId=Ikiv%2BbfxvtfQPHW6nYg8OQ%3D%3D",
         "date_applied": "2023-10-15T12:00:00Z",
         "job_offer": "False",
         "rejection": "False",

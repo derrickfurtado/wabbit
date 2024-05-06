@@ -3,8 +3,8 @@ MVP:
 - ✅ Log in to account
 - Log in securely with bcrypt
 - ✅ Create Account
-- Record Job Opportunities and details associated with it.
-- Link Job object to Company objects
+- ✅ Record Job Opportunities and details associated with it.
+- ✅ Link Job object to Company objects
 - Link Job object to staff and recruiter objects
 - Create tasks for email, call, or general for each job
 - Have time dependency associated with all tasks

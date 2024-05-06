@@ -14,30 +14,10 @@ app.secret_key = secret_key                 ## secret key stored in key.py file 
 
 
 @app.route("/")                             ## main landing page
-def login():
+def login_page():
     login_form = forms.User_Login_Form()
     register_form = forms.User_Registration_Form()
     return render_template("login.html", login_form = login_form, register_form = register_form)
-
-@app.route("/homepage")                     ## landing page, post login
-def homepage():
-    return render_template("homepage.html")
-
-@app.route("/job_page")                       ## landing page for job creation form
-def show_job_form():
-    company_list = crud.show_all_companies()
-    job_form = forms.Job_Form()
-    choices = [(company.id, company.name) for company in company_list]      ## creating dynamic list for company options
-    choices.append(("create_company", "*** Create Company ***"))            ## adding fall back in case company is not created yet
-    job_form.company.choices = choices                              ## adding dynamic list and fallback together to choices
-
-    return render_template("/job_page.html", job_form = job_form)
-
-@app.route("/create_company")                   ## landing page for company creation
-def create_company():
-    return render_template("/create_company.html")
-
-############################################
 
 @app.route("/login_user", methods=["POST"])                               ## check for errors if methods = ["POST"] is needed
 def login_user():
@@ -97,14 +77,129 @@ def sign_out():
     flash(f"You have logged out!")
     return redirect("/")
 
+##########################################################
+
+@app.route("/homepage")                     ## landing page, post login
+def homepage():
+    job_list = crud.show_all_jobs()
+    company_list = crud.show_all_companies()
+    return render_template("homepage.html", job_list = job_list, company_list = company_list)
+
+            ####### 🚨 Add in table columns for buttons that update task completed
+
+##########################################################
+
+
+@app.route("/job_page")                        ### landing page for job creation form ###
+def show_job_form():
+    company_list = crud.show_all_companies()
+    job_form = forms.Job_Form()
+    choices = [(company.id, company.name) for company in company_list]      ## creating dynamic list for company options
+    choices.append(("create_company", "*** Create Company ***"))            ## adding fall back in case company is not created yet
+    job_form.company.choices = choices                              ## adding dynamic list and fallback together to choices
+
+    return render_template("/job_page.html", job_form = job_form)
+
 @app.route("/create_job", methods=["POST"])
 def create_job():
     job_form = forms.Job_Form()
 
+                                                        ####### can I put validate on submit here?
     if job_form.company.data == 'create_company':
-        session["role"]                             ##########################################
-        set_trace()
-    redirect("/job_page")
+        session["role"] = job_form.role.data
+        session["description"] = job_form.description.data
+        session["requirements"] = job_form.requirements.data
+        session["salary"] = job_form.salary.data
+        session["compensation"] = job_form.compensation.data
+        session["link"] = job_form.link.data
+
+        return redirect("company_page")
+    
+    else:
+        company_id = job_form.company.data
+        user_id = session["user_id"]
+        recruiter_id = None
+        role = job_form.role.data
+        description = job_form.description.data
+        requirements = job_form.requirements.data
+        salary = job_form.salary.data
+        compensation = job_form.compensation.data
+        link = job_form.link.data
+        date_applied = None
+        job_offer = False
+        rejection = False
+        declined_offer = False
+        accepted_offer = False
+        ghosted = False
+        favorite = False
+        last_logged_task = None
+        last_logged_task_time = None
+            ########################################## 🚨 implement auto tasks here
+
+        new_job = crud.create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)
+
+        model.db.session.add(new_job)
+        model.db.session.commit()
+        flash(f"Job Created! Let's keep going!")
+        return redirect("/job_page")
+
+
+##########################################################
+
+
+@app.route("/company_page")                                                 ## landing page for company creation
+def show_company_form():
+    company_form = forms.Company_Form()
+    return render_template("company_page.html", company_form = company_form)
+
+@app.route("/create_company", methods=["post"])                             ## landing page for company creation AFTER job creation, IF company does not exist            
+def create_company():
+    company_form = forms.Company_Form()
+
+    name = company_form.name.data
+    location = company_form.location.data
+    industry = company_form.industry.data
+    favorite = False
+    
+    new_company = crud.create_company(name, location, industry, favorite)
+    model.db.session.add(new_company)
+    model.db.session.commit()               ### commit here to get the new_company.id index
+    
+    company_id = new_company.id             ### using new company id for this job created. Jobs require a company to be relational
+    user_id = session["user_id"]                    
+    recruiter_id = None
+    role = session["role"]
+    description = session["description"]                ##### pulling session data from job creation into this page
+    requirements = session["requirements"]
+    salary = session["salary"]
+    compensation = session["compensation"]
+    link = session["link"]
+    date_applied = None
+    job_offer = False
+    rejection = False
+    declined_offer = False
+    accepted_offer = False
+    ghosted = False
+    favorite = False
+    last_logged_task = None
+    last_logged_task_time = None
+        ########################################## 🚨 implement auto tasks here
+
+    new_job = crud.create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)
+
+    del session["role"]                             ##### removing all of these unique sessions after they are no longer needed
+    del session["description"]
+    del session["requirements"]
+    del session["salary"]
+    del session["compensation"]
+    del session["link"]
+
+    model.db.session.add(new_job)
+    model.db.session.commit()
+    flash("Job and Company created! Keep it up!")
+    return redirect("job_page")
+
+##########################################################
 
 
 
