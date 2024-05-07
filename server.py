@@ -13,6 +13,7 @@ app = Flask(__name__)
 
 app.secret_key = secret_key                 ## secret key stored in key.py file for security
 
+############################ Credentials ##############################
 
 @app.route("/")                             ## main landing page
 def login_page():
@@ -78,7 +79,7 @@ def sign_out():
     flash(f"You have logged out!")
     return redirect("/")
 
-##########################################################
+############################ Homepage Routes ##############################
 
 @app.route("/homepage")                     ## landing page, post login
 def homepage():
@@ -89,7 +90,7 @@ def homepage():
 
             ####### 🚨 Add in table columns for buttons that update task completed
 
-##########################################################
+########################### Job Object ###############################
 
 
 @app.route("/job_page")                        ### landing page for job creation form ###
@@ -152,8 +153,18 @@ def show_job_detail():
     days_since_task = crud.days_since(job.last_logged_task_time)
     return render_template("job_detail_page.html", job = job, days_since_task = days_since_task)
 
-##########################################################
+@app.route("/update_applied_status")
+def update_applied_status():
+    job_id = request.args.get("job_id")
+    updated_job = crud.update_applied_status(job_id)
+    model.db.session.add(updated_job)
+    model.db.session.commit()
 
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+
+
+########################### Company Object ###############################
 
 @app.route("/company_page")                                                 ## landing page for company creation
 def show_company_form():
@@ -210,8 +221,8 @@ def create_company():
 @app.route("/company_detail")
 def show_company_detail():
     return render_template("company_detail_page.html")
-##########################################################
 
+######################### People Objects #################################
 
 @app.route("/create_recruiter")
 def recruiter_form():
@@ -266,6 +277,7 @@ def create_employee():
 
     flash(f"Stakeholder added to {new_employee.company.name}")
     return redirect(url_for("show_job_detail", job_id = job_id))
+
 
 
 if __name__ == "__main__":

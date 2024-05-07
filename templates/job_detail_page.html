@@ -38,6 +38,7 @@
                 <b>{{ job.date_applied.strftime('%b %d @ %H:%M%p') }}</b>
             {% else %}
                 <b>Have not applied yet.</b>
+                <a href="{{ url_for('update_applied_status', job_id = job.id) }}"><button>APPLY</button></a>
             {% endif %}
         </div>
     </div>
