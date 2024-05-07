@@ -1,9 +1,10 @@
 """ server to contain endpoints for Wabbit app """
 
 import forms, model, crud
-from flask import Flask, render_template, flash, redirect, session, request
+from flask import Flask, render_template, flash, redirect, session, request, url_for
 from key import secret_key
 from pdb import set_trace
+from datetime import datetime
 
 
 
@@ -133,8 +134,8 @@ def create_job():
         accepted_offer = False
         ghosted = False
         favorite = False
-        last_logged_task = None
-        last_logged_task_time = None
+        last_logged_task = "Created Job"
+        last_logged_task_time = datetime.now()
             ########################################## 🚨 implement auto tasks here
 
         new_job = crud.create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)
@@ -188,8 +189,8 @@ def create_company():
     accepted_offer = False
     ghosted = False
     favorite = False
-    last_logged_task = None
-    last_logged_task_time = None
+    last_logged_task = "Created Job"
+    last_logged_task_time = datetime.now()
         ########################################## 🚨 implement auto tasks here
 
     new_job = crud.create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)
@@ -233,27 +234,38 @@ def create_recruiter():
     new_recruiter = crud.create_recruiter(company_id, first_name, last_name, title, email, linkedin)        ### create recruiter
     model.db.session.add(new_recruiter)
     model.db.session.commit()
-
-    #### need to update job with recruiter ID
+    
+    job.recruiter_id = new_recruiter.id
+    model.db.session.add(job)
+    model.db.session.commit()
 
     flash("Recruiter added to Job")
     return render_template("job_detail_page.html", job = job)
 
-
 @app.route("/create_employee")
 def employee_form():
     company_id = request.args.get("company_id")
+    job_id = request.args.get("job_id")
     employee_form = forms.Employee_Form()
-    return render_template("create_employee.html", employee_form = employee_form, company_id = company_id)
+    return render_template("create_employee.html", employee_form = employee_form, company_id = company_id, job_id = job_id)
 
-@app.route("/employee")
+@app.route("/employee", methods=["post"])
 def create_employee():
-    pass
+    company_id = request.args.get("company_id")
+    job_id = request.args.get("job_id")
+    employee_form = forms.Employee_Form()
+    first_name = employee_form.first_name.data
+    last_name = employee_form.last_name.data
+    title = employee_form.title.data
+    email = employee_form.email.data
+    linkedin = employee_form.linkedin.data
 
+    new_employee = crud.create_employee(company_id, first_name, last_name, title, email, linkedin)
+    model.db.session.add(new_employee)
+    model.db.session.commit()
 
-
-
-
+    flash(f"Stakeholder added to {new_employee.company.name}")
+    return redirect(url_for("show_job_detail", job_id = job_id))
 
 
 if __name__ == "__main__":

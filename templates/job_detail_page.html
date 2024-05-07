@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 
+{% block title %}
+<title>Job Detail Page</title>
+{% endblock %}
+
 {% block body %}
 
 <section id="job_card">
-    <div id="job_role">
+    <div id="job_role_div">
         <h1>{{ job.role }}</h1>
         <h3>{{ job.company.name }}</h3>
     </div>
@@ -29,8 +33,12 @@
             <b><a href="{{ job.link }}" target="_blank">HERE</a></b>
         </div>
         <div id="job_data_applied">
-            Date Applied:
-            <b>{{ job.date_applied.strftime('%b %d @ %H:%M%p') }}</b>
+            {% if job.date_applied != None %}
+                Date Applied:
+                <b>{{ job.date_applied.strftime('%b %d @ %H:%M%p') }}</b>
+            {% else %}
+                <b>Have not applied yet.</b>
+            {% endif %}
         </div>
     </div>
     <div id="bool_div">
@@ -68,11 +76,19 @@
     <div id="next_steps_div">
         <div id="job_next_step">
             Next Steps:
-            <b>{{ job.next_step[0].description }}</b>
+            {% if job.next_step != [] %}
+                <b>{{ job.next_step[0].description }}</b>
+            {% else %}
+                <b>No next steps.</b>
+            {% endif %}
         </div>
         <div id="job_next_step_time">
             Scheduled for:
-            <b>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</b>
+            {% if job.next_step != [] %}
+                <b>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</b>
+            {% else %}
+                <b>Nothing scheduled.</b>
+            {% endif %}
         </div>
         <div id="job_last_task">
             It's been <b>{{ days_since_task }} days since last activity.</b>
@@ -93,14 +109,14 @@
             {% if job.recruiter == None %}
                 <a href="{{ url_for('recruiter_form', job_id = job.id) }}"><button>Add Recruiter</button></a>
             {% else %}
-                {{ job.recruiter.first_name }} {{ job.recruiter.last_name }}
+                <a href="{{ job.recruiter.linkedin }}" target="_blank">{{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</a> ({{ job.recruiter.title }}) - {{ job.recruiter.email }}
             {% endif %}
         </div>
         <div id="job_employee_list">
             Stackholders:
-            <a href="{{ url_for('employee_form', company_id = job.company.id) }}"><button>Add More Stakeholders</button></a>
+            <a href="{{ url_for('employee_form', company_id = job.company.id, job_id = job.id) }}"><button>Add More Stakeholders</button></a>
             {% for employee in job.company.employee %}
-                <ul><a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{ employee.last_name }}</a></ul>
+                <ul><a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{ employee.last_name }}</a> ({{ employee.title }}) - {{ employee.email }}</ul>
             {% endfor %}
         </div>
     </div>

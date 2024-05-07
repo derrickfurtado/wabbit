@@ -1,20 +1,26 @@
 {% extends "base.html" %}
 
+{% block title %}
+<title>Add Stakeholders</title>
+{% endblock %}
+
 {% block body %}
 <h1>Add Stakeholders to this Company:</h1>
 <section id="employee_form">
-    {{ employee_form.csrf_token() }}
-    {{ employee_form.first_name.label }}
-    {{ employee_form.first_name }}
-    {{ employee_form.last_name.label }}
-    {{ employee_form.last_name }}
-    {{ employee_form.title.label }}
-    {{ employee_form.title }}
-    {{ employee_form.email.label }}
-    {{ employee_form.email }}
-    {{ employee_form.linkedin.label }}
-    {{ employee_form.linkedin }}
-    {{ employee_form.submit }}
+    <form action="{{ url_for('create_employee', company_id = company_id, job_id = job_id) }}" method="post">
+        {{ employee_form.csrf_token() }}
+        {{ employee_form.first_name.label }}
+        {{ employee_form.first_name }}
+        {{ employee_form.last_name.label }}
+        {{ employee_form.last_name }}
+        {{ employee_form.title.label }}
+        {{ employee_form.title }}
+        {{ employee_form.email.label }}
+        {{ employee_form.email }}
+        {{ employee_form.linkedin.label }}
+        {{ employee_form.linkedin }}
+        {{ employee_form.submit }}
+    </form>
 </section>
 
 

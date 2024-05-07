@@ -70,6 +70,9 @@ def show_all_jobs():
 
 def job_detail(id):
     return model.Job.query.get(id)
+
+def update_job(job_id):
+    pass
 #####################
 
 def create_email(job_id, task_for_id, due_date, description, completed):

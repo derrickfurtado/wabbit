@@ -159,7 +159,7 @@ class Recruiter(db.Model):
     company_id = db.Column(db.Integer, db.ForeignKey("company_table.id"), nullable=False)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
-    title = db.Column(db.String(255), nullable=False)
+    title = db.Column(db.String(255), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False)
     linkedin = db.Column(db.String(255))
 
@@ -175,7 +175,7 @@ class Employee(db.Model):
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False, unique=True)
     linkedin = db.Column(db.String(255))
 
 
