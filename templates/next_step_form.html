@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Schedule Next Steps</title>
+{% endblock %}
+
+{% block body %}
+
+<section id="next_step_form">
+    <form action="{{ url_for('create_next_step', job_id = job_id) }}", method="post">
+        {{ sne_form.csrf_token() }}
+        {{ sne_form.task_for_id.label }}
+        {{ sne_form.task_for_id }}
+        {{ sne_form.due_date.label }}
+        {{ sne_form.due_date }}
+        {{ sne_form.description.label }}
+        {{ sne_form.description }}
+        {{ sne_form.step_type.label }}
+        {{ sne_form.step_type }}
+        {{ sne_form.submit }}
+
+    </form>
+</section>
+
+
+
+{% endblock %}

@@ -29,8 +29,7 @@
             <b>{{ job.compensation }}</b>
         </div>
         <div id="job_link">
-            Link to Job Posting:
-            <b><a href="{{ job.link }}" target="_blank">HERE</a></b>
+            <b><a href="{{ job.link }}" target="_blank"><button>Link to Job Posting</button></a></b>
         </div>
         <div id="job_data_applied">
             {% if job.date_applied != None %}
@@ -82,6 +81,7 @@
             {% else %}
                 <b>No next steps.</b>
             {% endif %}
+            <a href="{{ url_for('schedule_next_step', job_id = job.id) }}"><button>Schedule Next Step</button></a>
         </div>
         <div id="job_next_step_time">
             Scheduled for:
@@ -110,14 +110,14 @@
             {% if job.recruiter == None %}
                 <a href="{{ url_for('recruiter_form', job_id = job.id) }}"><button>Add Recruiter</button></a>
             {% else %}
-                <a href="{{ job.recruiter.linkedin }}" target="_blank">{{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</a> ({{ job.recruiter.title }}) - {{ job.recruiter.email }}
+                <a href="{{ job.recruiter.linkedin }}" target="_blank">{{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</a> ({{ job.recruiter.title }}) - <a href="mailto:{{ job.recruiter.email }}">{{ job.recruiter.email }}</a>
             {% endif %}
         </div>
         <div id="job_employee_list">
             Stackholders:
-            <a href="{{ url_for('employee_form', company_id = job.company.id, job_id = job.id) }}"><button>Add More Stakeholders</button></a>
+            <a href="{{ url_for('employee_form', company_id = job.company.id, job_id = job.id) }}"></a>
             {% for employee in job.company.employee %}
-                <ul><a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{ employee.last_name }}</a> ({{ employee.title }}) - {{ employee.email }}</ul>
+                <ul><a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{ employee.last_name }}</a> ({{ employee.title }}) - <a href="mailto:{{ employee.email }}">{{ employee.email }}</a></ul>
             {% endfor %}
         </div>
     </div>
