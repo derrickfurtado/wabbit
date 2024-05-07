@@ -75,6 +75,14 @@ def update_applied_status(job_id):
     job = model.Job.query.get(job_id)
     job.date_applied = datetime.now()
     return job
+
+def update_bool(bool):
+    if bool == False:
+        bool = True
+    else:
+        bool = False
+    return bool
+
 #####################
 
 def create_email(job_id, task_for_id, due_date, description, completed):

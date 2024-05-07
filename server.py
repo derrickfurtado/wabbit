@@ -162,7 +162,71 @@ def update_applied_status():
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
+@app.route("/update_offer")
+def update_offer():
+    job_id = request.args.get("job_id")                 ### grab job_id from url parameter
+    job = crud.job_detail(job_id)                       ### grab the job object using using job_id
+    job.job_offer = crud.update_bool(job.job_offer)     ### switch values of boolean
+    
+    model.db.session.add(job)
+    model.db.session.commit()
+    
+    return redirect(url_for('show_job_detail', job_id = job_id))
 
+@app.route("/update_rejection")
+def update_rejection():
+    job_id = request.args.get("job_id")                 
+    job = crud.job_detail(job_id)    
+    job.rejection = crud.update_bool(job.rejection)
+
+    model.db.session.add(job)
+    model.db.session.commit()
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/update_declined")
+def update_declined():
+    job_id = request.args.get("job_id")                 
+    job = crud.job_detail(job_id)    
+    job.declined_offer = crud.update_bool(job.declined_offer)
+
+    model.db.session.add(job)
+    model.db.session.commit()
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/update_accepted")
+def update_accepted():
+    job_id = request.args.get("job_id")                 
+    job = crud.job_detail(job_id)    
+    job.accepted_offer = crud.update_bool(job.accepted_offer)
+
+    model.db.session.add(job)
+    model.db.session.commit()
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/update_ghosted")
+def update_ghosted():
+    job_id = request.args.get("job_id")                 
+    job = crud.job_detail(job_id)    
+    job.ghosted = crud.update_bool(job.ghosted)
+
+    model.db.session.add(job)
+    model.db.session.commit()
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/update_favorite")
+def update_favorite():
+    job_id = request.args.get("job_id")                 
+    job = crud.job_detail(job_id)    
+    job.favorite = crud.update_bool(job.favorite)
+
+    model.db.session.add(job)
+    model.db.session.commit()
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
 
 ########################### Company Object ###############################
 

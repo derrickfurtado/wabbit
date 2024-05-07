@@ -45,32 +45,32 @@
     <div id="bool_div">
         <div id="job_offer_bool">
             Job Offer?
-            <button>SELECT</button>
+            <a href="{{ url_for('update_offer', job_id = job.id)}}"><button>SELECT</button></a>
             <b>{{ job.job_offer }}</b>
         </div>
         <div id="job_rejection_bool">
             Rejection?
-            <button>SELECT</button>
+            <a href="{{ url_for('update_rejection', job_id = job.id) }}"><button>SELECT</button></a>
             <b>{{ job.rejection }}</b>
         </div>
         <div id="job_declined_bool">
             Declined?
-            <button>SELECT</button>
+            <a href="{{ url_for('update_declined', job_id = job.id) }}"><button>SELECT</button></a>
             <b>{{ job.declined_offer }}</b>
         </div>
         <div id="job_accepted_bool">
             Accepted?
-            <button>SELECT</button>
+            <a href="{{ url_for('update_accepted', job_id = job.id) }}"><button>SELECT</button></a>
             <b>{{ job.accepted_offer }}</b>
         </div>
         <div id="job_ghosted_bool">
             Ghosted?
-            <button>SELECT</button>
+            <a href="{{ url_for('update_ghosted', job_id = job.id) }}"><button>SELECT</button></a>
             <b>{{ job.ghosted }}</b>
         </div>
         <div id="job_favorite_bool">
             Favorite?
-            <button>SELECT</button>
+            <a href="{{ url_for('update_favorite', job_id = job.id) }}"><button>SELECT</button></a>
             <b>{{ job.favorite }}</b>
         </div>
     </div>
