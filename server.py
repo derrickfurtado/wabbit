@@ -206,11 +206,52 @@ def create_company():
     flash("Job and Company created! Keep it up!")
     return redirect("job_page")
 
-
 @app.route("/company_detail")
 def show_company_detail():
     return render_template("company_detail_page.html")
 ##########################################################
+
+
+@app.route("/create_recruiter")
+def recruiter_form():
+    job_id = request.args.get("job_id")
+    recruiter_form = forms.Recruiter_Form()
+    return render_template("create_recruiter.html", recruiter_form = recruiter_form, job_id = job_id)
+
+@app.route("/recruiter", methods=["post"])
+def create_recruiter():
+    recruiter_form = forms.Recruiter_Form()
+    job_id = request.args.get("job_id")
+    job = model.Job.query.get(job_id)
+    company_id = job.company_id
+    first_name = recruiter_form.first_name.data
+    last_name = recruiter_form.last_name.data
+    title = recruiter_form.title.data
+    email = recruiter_form.email.data
+    linkedin = recruiter_form.linkedin.data
+    
+    new_recruiter = crud.create_recruiter(company_id, first_name, last_name, title, email, linkedin)        ### create recruiter
+    model.db.session.add(new_recruiter)
+    model.db.session.commit()
+
+    #### need to update job with recruiter ID
+
+    flash("Recruiter added to Job")
+    return render_template("job_detail_page.html", job = job)
+
+
+@app.route("/create_employee")
+def employee_form():
+    company_id = request.args.get("company_id")
+    employee_form = forms.Employee_Form()
+    return render_template("create_employee.html", employee_form = employee_form, company_id = company_id)
+
+@app.route("/employee")
+def create_employee():
+    pass
+
+
+
 
 
 
