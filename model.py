@@ -67,12 +67,14 @@ class Email(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"))
+    task_for_employe = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
+    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
     due_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(255), nullable=False) 
     completed = db.Column(db.Boolean, default=False)
 
-    tasks_for = db.relationship("Task_Employee_Index", backref="email")
+    recruiter = db.relationship("Recruiter", backref="email_task")
+    employee = db.relationship("Employee", backref="email_task")
 
     def __repr__(self):
         return f"Email ID: {self.id}: attached to Job ID: {self.job_id}"
@@ -83,10 +85,14 @@ class Call(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"))
+    task_for_employe = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
+    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
     due_date = db.Column(db.Date, nullable = False)
     description = db.Column(db.String(255))
     completed = db.Column(db.Boolean, default=False)
+
+    recruiter = db.relationship("Recruiter", backref="call_task")
+    employee = db.relationship("Employee", backref="call_task")
 
     def __repr__(self):
         return f"Call ID: {self.id}: attached to Job ID: {self.job_id}"
@@ -97,10 +103,14 @@ class General_Task(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"))
+    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
+    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
     due_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(255), nullable=False)
     completed = db.Column(db.Boolean, default=False)
+
+    recruiter = db.relationship("Recruiter", backref="general_task")
+    employee = db.relationship("Employee", backref="general_task")
 
     def __repr__(self):
         return f"General Task ID: {self.id}: attached to Job ID: {self.job_id}"
@@ -111,12 +121,12 @@ class Next_Step(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"), nullable=False)
-    task_for_id = db.Column(db.Integer, db.ForeignKey("task_employee_index_table.id"))
+    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
+    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
     due_date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.String(255), nullable=False)
     step_type = db.Column(db.String(255), nullable=False)
 
-    tasks_for = db.relationship("Task_Employee_Index", backref="next_step")
 
     def __repr__(self):
         return f"Next Step ID: {self.id}: attached to Job ID: {self.job_id}."
@@ -137,20 +147,6 @@ class Company(db.Model):
     def __repr__(self):
         return f"Company ID: {self.id} = Name: {self.name} located in {self.location}"
 
-class Task_Employee_Index(db.Model):
-    
-    __tablename__ = "task_employee_index_table"
-    
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    employee_id = db.Column(db.Integer, db.ForeignKey("employee_table.id"), nullable=False)
-    recruiter_id = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"), nullable=False)
-
-    employee = db.relationship("Employee", backref="task_employee_index")
-    recruiter = db.relationship("Recruiter", backref="task_employee_index")
-
-    def __repr__(self):
-        return f"ID: {self.id} - EmployeeID: {self.employee_id} - RecruiterID: {self.recruiter_id}"
-
 class Recruiter(db.Model):
 
     __tablename__ = "recruiter_table"
@@ -163,8 +159,10 @@ class Recruiter(db.Model):
     email = db.Column(db.String(255), nullable=False)
     linkedin = db.Column(db.String(255))
 
+    next_step = db.relationship("Next_Step", backref="recruiter")
+
     def __repr__(self):
-        return f""
+        return f"Recruiter name: {self.first_name} {self.last_name}"
     
 class Employee(db.Model):
 
@@ -178,7 +176,10 @@ class Employee(db.Model):
     email = db.Column(db.String(255), nullable=False, unique=True)
     linkedin = db.Column(db.String(255))
 
+    next_step = db.relationship("Next_Step", backref="employee")
 
+    def __repr__(self):
+        return f"Employee name: {self.first_name} {self.last_name}"
 
 
 

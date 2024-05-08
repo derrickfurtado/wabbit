@@ -22,7 +22,7 @@ def create_user(first_name, last_name, email, password, location, school, bio, h
     
     return new_user
 
-#####################
+########## Company Object ###########
 
 
 def create_company(name, location, industry, favorite):
@@ -38,7 +38,7 @@ def show_all_companies():
     company_list = model.Company.query.all()
     return company_list
 
-#####################
+########### Job Object ##########
 
 def create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time):
     new_job = model.Job(
@@ -83,7 +83,7 @@ def update_bool(bool):
         bool = False
     return bool
 
-#####################
+############# Email Object ########
 
 def create_email(job_id, task_for_id, due_date, description, completed):
     new_email = model.Email(
@@ -95,7 +95,7 @@ def create_email(job_id, task_for_id, due_date, description, completed):
     )
     return new_email
 
-#####################
+############ Call Object #########
 
 def create_call(job_id, task_for_id, due_date, description, completed):
     new_call = model.Call(
@@ -107,7 +107,7 @@ def create_call(job_id, task_for_id, due_date, description, completed):
     )
     return new_call
 
-#####################
+############# General Task Object ########
 
 def create_general_task(job_id, task_for_id, due_date, description, completed):
     new_general_task = model.General_Task(
@@ -119,41 +119,20 @@ def create_general_task(job_id, task_for_id, due_date, description, completed):
     )
     return new_general_task
 
-#####################
+############## Next Step Object #######
 
-def create_next_step(job_id, task_for_id, due_date, description, step_type):
+def create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type):
     new_next_step = model.Next_Step(
         job_id = job_id,
-        task_for_id = task_for_id,
+        task_for_employee = task_for_employee,
+        task_for_recruiter = task_for_recruiter,
         due_date = due_date,
         description = description,
         step_type = step_type
     )
     return new_next_step
 
-#####################
-
-def create_task_employee_index(employee_id, recruiter_id):
-    new_index = model.Task_Employee_Index( 
-        employee_id = employee_id,
-        recruiter_id = recruiter_id
-        )
-    return new_index
-
-#####################
-
-def create_recruiter(company_id, first_name, last_name, title, email, linkedin):
-    new_recruiter = model.Recruiter(
-        company_id = company_id,
-        first_name = first_name,
-        last_name = last_name,
-        title = title,
-        email = email,
-        linkedin = linkedin
-    )
-    return new_recruiter
-
-#####################
+############## Employee Object #######
 
 def create_employee(company_id, first_name, last_name, title, email, linkedin):    
     new_employee = model.Employee(
@@ -166,7 +145,28 @@ def create_employee(company_id, first_name, last_name, title, email, linkedin):
     )
     return new_employee
 
-#####################
+def employee_list_by_company(company_id):
+    employee_list = model.Employee.query.filter_by(company_id = company_id)
+    return employee_list
+
+############# Recruiter Object ########
+
+def create_recruiter(company_id, first_name, last_name, title, email, linkedin):
+    new_recruiter = model.Recruiter(
+        company_id = company_id,
+        first_name = first_name,
+        last_name = last_name,
+        title = title,
+        email = email,
+        linkedin = linkedin
+    )
+    return new_recruiter
+
+def recruiter_list_by_company(company_id):
+    recruiter_list = model.Recruiter.query.filter_by(company_id = company_id)
+    return recruiter_list
+
+############## Miscellaneous Functions #######
 
 def days_since(date_time):
     time_difference = datetime.now() - date_time

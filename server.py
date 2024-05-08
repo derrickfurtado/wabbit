@@ -151,6 +151,7 @@ def show_job_detail():
     job_id = request.args.get('job_id')
     job = crud.job_detail(job_id)
     days_since_task = crud.days_since(job.last_logged_task_time)
+
     return render_template("job_detail_page.html", job = job, days_since_task = days_since_task)
 
 @app.route("/update_applied_status")
@@ -225,6 +226,57 @@ def update_favorite():
 
     model.db.session.add(job)
     model.db.session.commit()
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/next_steps")
+def schedule_next_step():
+    next_step_form = forms.Next_Step_Form()
+
+    job_id = request.args.get("job_id")
+    job = crud.job_detail(job_id)
+
+    recruiter_list = crud.recruiter_list_by_company(job.company_id)
+    employee_list = crud.employee_list_by_company(job.company_id)
+    
+    recruiter_choices = [(recruiter.id, f"{recruiter.first_name} {recruiter.last_name} ({recruiter.title})") for recruiter in recruiter_list]
+    employee_choices = [(employee.id, f"{employee.first_name} {employee.last_name} ({employee.title})" ) for employee in employee_list]
+
+    recruiter_choices.append(("add_recruiter", "*** Create Recruiter ***"))
+    recruiter_choices.append(("no_recruiter", "Not meeting with Recruiter"))
+    employee_choices.append(("add employee", "*** Create Employee ***"))
+    employee_choices.append(("no_employee", "Not meeting with Employee"))
+
+    next_step_form.task_for_recruiter_id.choices = recruiter_choices
+    next_step_form.task_for_employee_id.choices = employee_choices
+
+    return render_template("next_step_form.html", next_step_form = next_step_form, job_id = job_id)
+
+@app.route("/create_next_step", methods=["post"])
+def create_next_step():
+    next_step_form = forms.Next_Step_Form()
+    job_id = request.args.get("job_id")
+    
+    task_for_recruiter = next_step_form.task_for_recruiter_id.data
+    task_for_employee = next_step_form.task_for_employee_id.data
+    due_date = next_step_form.due_date.data
+    description = next_step_form.description.data
+    step_type = next_step_form.step_type.data
+    
+    if task_for_employee != "no_employee" and task_for_recruiter != "no_recruiter":
+        new_next_step = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
+        model.db.session.add(new_next_step)
+        model.db.session.commit()
+    elif task_for_employee != "no_employee" and task_for_recruiter == "no_recruiter":
+        task_for_recruiter = None
+        new_next_step = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
+        model.db.session.add(new_next_step)
+        model.db.session.commit()
+    elif task_for_employee == "no_employee" and task_for_recruiter != "no_recruiter":
+        task_for_employee = None
+        new_next_step = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
+        model.db.session.add(new_next_step)
+        model.db.session.commit()
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
