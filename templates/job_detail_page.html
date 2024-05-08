@@ -115,7 +115,7 @@
         </div>
         <div id="job_employee_list">
             Stackholders:
-            <a href="{{ url_for('employee_form', company_id = job.company.id, job_id = job.id) }}"></a>
+            <a href="{{ url_for('employee_form', company_id = job.company.id, job_id = job.id) }}"><button>Add Stakeholder</button></a>
             {% for employee in job.company.employee %}
                 <ul><a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{ employee.last_name }}</a> ({{ employee.title }}) - <a href="mailto:{{ employee.email }}">{{ employee.email }}</a></ul>
             {% endfor %}
