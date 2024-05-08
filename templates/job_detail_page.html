@@ -83,7 +83,7 @@
                     {% if last_step.task_for_recruiter %}
                         <a href="{{ last_step.recruiter.linkedin }}", target="_blank">{{ last_step.recruiter.first_name }} {{ last_step.recruiter.last_name }} ({{ last_step.recruiter.title }})</a>
                     {% else %}
-                    <a href="{{ last_step.employee.linkedin }}", target="_blank">{{ last_step.employee.first_name }} {{ last_step.employee.last_name }} ({{ last_step.recruiter.title }})</a>
+                    <a href="{{ last_step.employee.linkedin }}", target="_blank">{{ last_step.employee.first_name }} {{ last_step.employee.last_name }} ({{ last_step.employee.title }})</a>
                     {% endif %}
                     Scheduled for: <b>{{ last_step.due_date.strftime('%b %d @ %H:%M%p') }}</b>
             {% else %}
@@ -92,10 +92,10 @@
 
         </div>
         <div id="recruiter_next_step">
-            <a href="{{ url_for('sne_recruiter_form', job_id = job.id) }}"><button>Schedule Next Step with Recruiter</button></a>
+            <a href="{{ url_for('sne_recruiter_form', job_id = job.id) }}"><button>Schedule Call with Recruiter</button></a>
         </div>
         <div id="employee_next_step">
-            <a href="{{ url_for('sne_employee_form', job_id = job.id) }}"><button>Schedule Next Step with Interviewer</button></a>
+            <a href="{{ url_for('sne_employee_form', job_id = job.id) }}"><button>Schedule Call with Interviewer</button></a>
         </div>
         <div id="job_last_task">
             It's been <b>{{ days_since_task }} days since last activity.</b>
