@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Add Recruiter</title>
+{% endblock %}
+
+{% block body %}
+<h1>Add Recruiter to this Next Step:</h1>
+<section id="recruiter_form">
+    <form action="{{ url_for('add_recruiter_sne', job_id = job_id) }}" method="post">
+        {{ recruiter_form.csrf_token() }}
+        {{ recruiter_form.first_name.label }}
+        {{ recruiter_form.first_name }}
+        {{ recruiter_form.last_name.label }}
+        {{ recruiter_form.last_name }}
+        {{ recruiter_form.title.label }}
+        {{ recruiter_form.title }}
+        {{ recruiter_form.email.label }}
+        {{ recruiter_form.email }}
+        {{ recruiter_form.linkedin.label }}
+        {{ recruiter_form.linkedin }}
+        {{ recruiter_form.submit }}
+    </form>
+</section>
+
+{% endblock %}

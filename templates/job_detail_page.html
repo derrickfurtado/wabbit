@@ -74,22 +74,28 @@
         </div>
     </div>
     <div id="next_steps_div">
-        <div id="job_next_step">
+        <div id="next_step_actual">
             Next Steps:
-            {% if job.next_step != [] %}
-                <b>{{ job.next_step[0].description }}</b>
+            {% if job.next_step %}
+                {% set last_step = job.next_step[-1] %}
+                    <b>{{ last_step.step_type }} </b>
+                    With: 
+                    {% if last_step.task_for_recruiter %}
+                        <a href="{{ last_step.recruiter.linkedin }}", target="_blank">{{ last_step.recruiter.first_name }} {{ last_step.recruiter.last_name }} ({{ last_step.recruiter.title }})</a>
+                    {% else %}
+                    <a href="{{ last_step.employee.linkedin }}", target="_blank">{{ last_step.employee.first_name }} {{ last_step.employee.last_name }} ({{ last_step.recruiter.title }})</a>
+                    {% endif %}
+                    Scheduled for: <b>{{ last_step.due_date.strftime('%b %d @ %H:%M%p') }}</b>
             {% else %}
-                <b>No next steps.</b>
+                <b>No next steps scheduled.</b>
             {% endif %}
-            <a href="{{ url_for('schedule_next_step', job_id = job.id) }}"><button>Schedule Next Step</button></a>
+
         </div>
-        <div id="job_next_step_time">
-            Scheduled for:
-            {% if job.next_step != [] %}
-                <b>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</b>
-            {% else %}
-                <b>Nothing scheduled.</b>
-            {% endif %}
+        <div id="recruiter_next_step">
+            <a href="{{ url_for('sne_recruiter_form', job_id = job.id) }}"><button>Schedule Next Step with Recruiter</button></a>
+        </div>
+        <div id="employee_next_step">
+            <a href="{{ url_for('sne_employee_form', job_id = job.id) }}"><button>Schedule Next Step with Interviewer</button></a>
         </div>
         <div id="job_last_task">
             It's been <b>{{ days_since_task }} days since last activity.</b>
@@ -100,22 +106,25 @@
         </div>
         <div id="task_div">
             <div id="job_call_task"></div>
+            Next Call Task:
             <div id="job_email_task"></div>
+            Next Email Task:
             <div id="job_general_task"></div>
+            Next General Task:
         </div>
     </div>
     <div id="roster_div">
         <div id="job_recruiter">
             Lead Recruiter:
             {% if job.recruiter == None %}
-                <a href="{{ url_for('recruiter_form', job_id = job.id) }}"><button>Add Recruiter</button></a>
+                <a href="{{ url_for('create_recruiter_form', job_id = job.id) }}"><button>Add Recruiter</button></a>
             {% else %}
                 <a href="{{ job.recruiter.linkedin }}" target="_blank">{{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</a> ({{ job.recruiter.title }}) - <a href="mailto:{{ job.recruiter.email }}">{{ job.recruiter.email }}</a>
             {% endif %}
         </div>
         <div id="job_employee_list">
             Stackholders:
-            <a href="{{ url_for('employee_form', company_id = job.company.id, job_id = job.id) }}"><button>Add Stakeholder</button></a>
+            <a href="{{ url_for('create_employee_form', company_id = job.company.id, job_id = job.id) }}"><button>Add Stakeholder</button></a>
             {% for employee in job.company.employee %}
                 <ul><a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{ employee.last_name }}</a> ({{ employee.title }}) - <a href="mailto:{{ employee.email }}">{{ employee.email }}</a></ul>
             {% endfor %}

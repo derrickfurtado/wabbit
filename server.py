@@ -151,7 +151,6 @@ def show_job_detail():
     job_id = request.args.get('job_id')
     job = crud.job_detail(job_id)
     days_since_task = crud.days_since(job.last_logged_task_time)
-
     return render_template("job_detail_page.html", job = job, days_since_task = days_since_task)
 
 @app.route("/update_applied_status")
@@ -340,13 +339,13 @@ def show_company_detail():
 
 ######################### People Objects #################################
 
-@app.route("/create_recruiter")
-def recruiter_form():
+@app.route("/create_recruiter_form")
+def create_recruiter_form():
     job_id = request.args.get("job_id")
     recruiter_form = forms.Recruiter_Form()
     return render_template("create_recruiter.html", recruiter_form = recruiter_form, job_id = job_id)
 
-@app.route("/recruiter", methods=["post"])
+@app.route("/create_recruiter", methods=["post"])
 def create_recruiter():
     recruiter_form = forms.Recruiter_Form()
     job_id = request.args.get("job_id")
@@ -369,14 +368,14 @@ def create_recruiter():
     flash("Recruiter added to Job")
     return render_template("job_detail_page.html", job = job)
 
-@app.route("/create_employee")
-def employee_form():
+@app.route("/create_employee_form")
+def create_employee_form():
     company_id = request.args.get("company_id")
     job_id = request.args.get("job_id")
     employee_form = forms.Employee_Form()
     return render_template("create_employee.html", employee_form = employee_form, company_id = company_id, job_id = job_id)
 
-@app.route("/employee", methods=["post"])
+@app.route("/create_employee", methods=["post"])
 def create_employee():
     company_id = request.args.get("company_id")
     job_id = request.args.get("job_id")
@@ -393,6 +392,105 @@ def create_employee():
 
     flash(f"Stakeholder added to {new_employee.company.name}")
     return redirect(url_for("show_job_detail", job_id = job_id))
+
+
+
+
+
+@app.route("/sne_recruiter_form")
+def sne_recruiter_form():
+    sne_form = forms.SNE_Recruiter_Form()
+    job_id = request.args.get("job_id")
+    recruiter_list = crud.recruiter_list_by_company(job_id)
+    choices = [(recruiter.id, f"{recruiter.first_name} {recruiter.last_name} ({recruiter.title})") for recruiter in recruiter_list]
+    choices.append(("create_recruiter", "** Create Recruiter **"))
+    sne_form.task_for_recruiter_id.choices = choices
+
+    return render_template("sne_recruiter_form.html", sne_form = sne_form, job_id = job_id)
+
+@app.route("/create_sne_4recruiter", methods=["post"])
+def create_sne_4recruiter():
+    job_id = request.args.get("job_id")
+    sne_form = forms.SNE_Recruiter_Form()
+
+    if sne_form.task_for_recruiter_id.data == "create_recruiter":
+        ### forward form data to /sne_create_recruiter
+        session["due_date"] = sne_form.due_date.data
+        session["description"] = sne_form.description.data
+        session["step_type"] = sne_form.step_type.data
+        recruiter_form = forms.Recruiter_Form()
+
+        return render_template("/create_recruiter_4sne.html", job_id = job_id, recruiter_form = recruiter_form)
+    else:
+        task_for_employee = None
+        task_for_recruiter = sne_form.task_for_recruiter_id.data
+        due_date = sne_form.due_date.data
+        description = sne_form.description.data
+        step_type = sne_form.step_type.data
+
+        new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
+        model.db.session.add(new_sne)
+        model.db.session.commit()
+
+        return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/create_recruiter_4sne_form")
+def create_recruiter_4sne_form():
+    job_id = request.args.get("job_id")
+    recruiter_form = forms.Recruiter_Form()
+
+    return render_template("create_recruiter_4sne.html", job_id = job_id, recruiter_form = recruiter_form)
+
+@app.route("/add_recruiter_sne", methods=["post"])
+def add_recruiter_sne():
+    job_id = request.args.get("job_id")
+    form = forms.Recruiter_Form()
+    company = crud.get_company_by_job_id(job_id)
+    company_id = company.id
+    first_name = form.first_name.data
+    last_name = form.last_name.data
+    title = form.title.data
+    email = form.email.data
+    linkedin = form.linkedin.data
+    new_recruiter = crud.create_recruiter(company_id, first_name, last_name, title, email, linkedin)
+    model.db.session.add(new_recruiter)
+    model.db.session.commit()
+
+    task_for_employee = None
+    task_for_recruiter = new_recruiter.id
+    due_date = session["due_date"]
+    del session["due_date"]
+    description = session["description"]
+    del session["description"]
+    step_type = session["step_type"]
+    del session["step_type"]
+
+    new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
+    model.db.session.add(new_sne)
+    model.db.session.commit()
+
+    return redirect(url_for("show_job_detail", job_id = job_id))
+
+
+@app.route("/sne_employee_form")
+def sne_employee_form():
+    pass
+
+@app.route("/create_sne_4employee", methods=["post"])
+def create_sne_4employee():
+    pass
+
+@app.route("/create_employee_4sne_form")
+def create_employee_4sne_form():
+    pass
+
+@app.route("/add_employee_sne", methods=["post"])
+def add_employee_sne():
+    pass
+
+
+
+
 
 
 

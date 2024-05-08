@@ -38,6 +38,11 @@ def show_all_companies():
     company_list = model.Company.query.all()
     return company_list
 
+def get_company_by_job_id(job_id):
+    job = model.Job.query.get(job_id)
+    company = job.company
+    return company
+
 ########### Job Object ##########
 
 def create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time):

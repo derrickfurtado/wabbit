@@ -48,10 +48,20 @@ class Recruiter_Form(FlaskForm):
     linkedin = StringField("LinkedIn page: ", validators=[Length(max=255)])
     submit = SubmitField()
 
-class Next_Step_Form(FlaskForm):
+class SNE_Recruiter_Form(FlaskForm):
     task_for_recruiter_id = SelectField("Which recruiter? ", coerce=str)
+    due_date = DateField("Due Date or Date of Event:", validators=[DataRequired()])
+    description = StringField("Description: ", validators=[DataRequired(), Length(max=255)])
+    step_type = StringField("Next Step Category", validators=[DataRequired(), Length(max=255)])
+    submit = SubmitField()
+
+class SNE_Employee_Form(FlaskForm):
     task_for_employee_id = SelectField("Which employee?", coerce=str)
     due_date = DateField("Due Date or Date of Event:", validators=[DataRequired()])
     description = StringField("Description: ", validators=[DataRequired(), Length(max=255)])
     step_type = StringField("Next Step Category", validators=[DataRequired(), Length(max=255)])
     submit = SubmitField()
+
+
+
+

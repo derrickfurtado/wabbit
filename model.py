@@ -183,6 +183,10 @@ class Employee(db.Model):
 
 
 
+
+
+
+
 def connect_to_db(flask_app, echo=True):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["POSTGRES_URI"]
     flask_app.config["SQLALCHEMY_ECHO"] = echo
