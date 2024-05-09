@@ -99,39 +99,61 @@ def update_last_activity(job_id):
 
 ############# Email Object ########
 
-def create_email(job_id, task_for_id, due_date, description, completed):
+def create_email(job_id, task_for_employee, task_for_recruiter, due_date, description, completed):
     new_email = model.Email(
         job_id = job_id,
-        task_for_id = task_for_id,
+        task_for_employee = task_for_employee,
+        task_for_recruiter = task_for_recruiter,
         due_date = due_date,
         description = description,
         completed = completed
     )
     return new_email
 
+def email_list_by_job(job_id):
+    return model.Email.query.filter_by(job_id = job_id).all()
+
+def get_email_by_id(call_id):
+    return model.Email.query.get(call_id)
+
 ############ Call Object #########
 
-def create_call(job_id, task_for_id, due_date, description, completed):
+def create_call(job_id, task_for_employee, task_for_recruiter, due_date, description, completed):
     new_call = model.Call(
         job_id = job_id,
-        task_for_id = task_for_id,
+        task_for_employee = task_for_employee,
+        task_for_recruiter = task_for_recruiter,
         due_date = due_date,
         description = description,
         completed = completed
     )
     return new_call
 
+def call_list_by_job(job_id):
+    return model.Call.query.filter_by(job_id = job_id)
+
+def get_call_by_id(call_id):
+    return model.Call.query.get(call_id)
+    
+
 ############# General Task Object ########
 
-def create_general_task(job_id, task_for_id, due_date, description, completed):
+def create_general_task(job_id, task_for_employee, task_for_recruiter, due_date, description, completed):
     new_general_task = model.General_Task(
         job_id = job_id,
-        task_for_id = task_for_id,
+        task_for_employee = task_for_employee,
+        task_for_recruiter = task_for_recruiter,
         due_date = due_date,
         description = description,
         completed = completed
     )
     return new_general_task
+
+def general_task_by_job(job_id):
+    return model.General_Task.query.filter_by(job_id = job_id)
+
+def get_general_task_by_id(task_id):
+    return model.General_Task.query.get(task_id)
 
 ############## Next Step Object #######
 
@@ -146,6 +168,9 @@ def create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, de
     )
     return new_next_step
 
+def next_step_list_by_job(job_id):
+    return  model.Next_Step.query.filter_by(job_id = job_id)
+    
 ############## Employee Object #######
 
 def create_employee(company_id, first_name, last_name, title, email, linkedin):    
@@ -160,9 +185,11 @@ def create_employee(company_id, first_name, last_name, title, email, linkedin):
     return new_employee
 
 def employee_list_by_company(company_id):
-    employee_list = model.Employee.query.filter_by(company_id = company_id)
-    return employee_list
+    return model.Employee.query.filter_by(company_id = company_id)
 
+def employee_list_by_job(job_id):
+    return model.Employee.query.filter_by(job_id = job_id)
+    
 ############# Recruiter Object ########
 
 def create_recruiter(company_id, first_name, last_name, title, email, linkedin):
@@ -177,8 +204,12 @@ def create_recruiter(company_id, first_name, last_name, title, email, linkedin):
     return new_recruiter
 
 def recruiter_list_by_company(company_id):
-    recruiter_list = model.Recruiter.query.filter_by(company_id = company_id)
-    return recruiter_list
+    return model.Recruiter.query.filter_by(company_id = company_id)
+
+def recruiter_list_by_job(job_id):
+    return model.Recruiter.query.filter_by(job_id = job_id)
+
+
 
 ############## Miscellaneous Functions #######
 

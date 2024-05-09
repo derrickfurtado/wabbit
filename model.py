@@ -67,7 +67,7 @@ class Email(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_employe = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
+    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
     task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
     due_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(255), nullable=False) 
@@ -85,7 +85,7 @@ class Call(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_employe = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
+    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
     task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
     due_date = db.Column(db.Date, nullable = False)
     description = db.Column(db.String(255))

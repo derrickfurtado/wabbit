@@ -113,38 +113,83 @@
             </div>
         </div>
         <div id="task_div">
-            Next Call Task:
-            <a href="{{ url_for('call_form', job_id = job.id) }}"><button>Add Call Task</button></a>
             <div id="job_call_task">
-                {% for call in job.call_task %}
-                    {% if not call.completed %}
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Description</th>
-                                    <th>Due Date</th>
-                                    <th>Completed?</th>
-                                </tr>
-                            </thead>
+                Next Call Task:
+                <a href="{{ url_for('call_form', job_id = job.id) }}"><button>Add Call Task</button></a>
+                {% if job.call_task %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th>Completed?</th>
+                            </tr>
+                        </thead>
                             <tbody>
-                                <tr>
-                                    <td>{{ call.description }}</td>
-                                    <td>{{ call.due_date.strftime('%b %d @ %H:%M%p') }}</td>
-                                    <td><a href="{{ url_for('complete_call_task', job_id = job.id, call_id = call.id) }}"><button>COMPLETE</button></a></td>
-                                </tr>
+                                {% for call in job.call_task %}
+                                    {% if not call.completed %}
+                                        <tr>
+                                            <td>{{ call.description }}</td>
+                                            <td>{{ call.due_date.strftime('%b %d @ %H:%M%p') }}</td>
+                                            <td><a href="{{ url_for('complete_call_task', job_id = job.id, call_id = call.id) }}"><button>COMPLETE</button></a></td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
                             </tbody>
-                        </table>
-                    {% endif %}
-                {% endfor %}
+                    </table>
+                {% endif %}
             </div>
-
-            Next Email Task:
             <div id="job_email_task">
-                <button>Add Email Task</button>
+                Next Email Task:
+                <a href="{{ url_for('email_form', job_id = job.id) }}"><button>Add Email Task</button></a>
+                {% if job.email_task %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th>Completed?</th>
+                            </tr>
+                        </thead>
+                            <tbody>
+                                {% for email in job.email_task %}
+                                    {% if not email.completed %}
+                                        <tr>
+                                            <td>{{ email.description }}</td>
+                                            <td>{{ email.due_date.strftime('%b %d @ %H:%M%p') }}</td>
+                                            <td><a href="{{ url_for('complete_email_task', job_id = job.id, email_id = email.id) }}"><button>COMPLETE</button></a></td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                {% endif %}
             </div>
-            Next General Task:
             <div id="job_general_task">
-                <button>Add General Task</button>
+                Next General Task:
+                <a href="{{ url_for('task_form', job_id = job.id) }}"><button>Add General Task</button></a>
+                {% if job.general_task %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th>Completed?</th>
+                            </tr>
+                        </thead>
+                            <tbody>
+                                {% for task in job.general_task %}
+                                    {% if not task.completed %}
+                                        <tr>
+                                            <td>{{ task.description }}</td>
+                                            <td>{{ task.due_date.strftime('%b %d @ %H:%M%p') }}</td>
+                                            <td><a href="{{ url_for('complete_general_task', job_id = job.id, task_id = task.id) }}"><button>COMPLETE</button></a></td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                    </table>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -83,9 +83,9 @@ def sign_out():
 
 @app.route("/homepage")                     ## landing page, post login
 def homepage():
-    job_list = crud.show_all_jobs_by_userID(session["user_id"])               ### 💡only pull jobs that the user owns in the DB
-    company_list = crud.show_all_companies_by_userID(session["user_id"])
     user_id = session["user_id"]
+    job_list = crud.show_all_jobs_by_userID(user_id)               ### 💡only pull jobs that the user owns in the DB
+    company_list = crud.show_all_companies_by_userID(user_id)
     if not job_list:
         flash("You are not tracking any opportunities. Get on it!!!")
     return render_template("homepage.html", job_list = job_list, company_list = company_list, user_id = user_id)
@@ -288,6 +288,20 @@ def create_next_step():
         model.db.session.commit()
 
     return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/delete_job")
+def delete_job():
+    user_id = session["user_id"]
+    job_id = request.args.get("job_id")
+
+    next_step_list = crud.next_step_list_by_job(job_id)
+    email_list = crud.email_list_by_job(job_id)
+    call_list = crud.call_list_by_job(job_id)
+    task_list = crud.general_task_by_job(job_id)
+
+    ### loop through lists and delete all
+    flash("Job has been deleted.")
+    return redirect("homepage")
 
 ########################### Company Object ###############################
 
@@ -560,9 +574,119 @@ def add_employee_sne():
 
     return redirect(url_for("show_job_detail", job_id = job_id))
 
+############################## Call End Points ################################
 
+@app.route("/complete_call_task")
+def complete_call_task():
+    job_id = request.args.get("job_id")
+    call_id = request.args.get("call_id")
+    call = crud.get_call_by_id(int(call_id))
+    call.completed = crud.update_bool(call.completed)
 
+    model.db.session.add(call)
+    model.db.session.commit()
 
+    return redirect(url_for("show_job_detail", job_id = job_id))
+
+@app.route("/call_form")
+def call_form():
+    job_id = request.args.get("job_id")
+    form = forms.Call_Form()
+
+    return render_template("call_form.html", form = form, job_id = job_id)
+
+@app.route("/create_call_job", methods=["post"])
+def create_call_job():
+    form = forms.Call_Form()
+    job_id = request.args.get("job_id")
+
+    task_for_employee = None
+    task_for_recruiter = None
+    due_date = form.due_date.data
+    description = form.description.data
+    completed = False
+
+    new_call = crud.create_call(job_id, task_for_employee, task_for_recruiter, due_date, description, completed)
+    model.db.session.add(new_call)
+    model.db.session.commit()
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+############################## Email End Points ################################
+
+@app.route("/complete_email_task")
+def complete_email_task():
+    job_id = request.args.get("job_id")
+    email_id = request.args.get("email_id")
+    email = crud.get_email_by_id(int(email_id))
+    email.completed = crud.update_bool(email.completed)
+
+    model.db.session.add(email)
+    model.db.session.commit()
+
+    return redirect(url_for("show_job_detail", job_id = job_id))
+
+@app.route("/email_form")
+def email_form():
+    job_id = request.args.get("job_id")
+    form = forms.Email_Form()
+
+    return render_template("email_form.html", form = form, job_id = job_id)
+
+@app.route("/create_email_job", methods=["post"])
+def create_email_job():
+    form = forms.Email_Form()
+    job_id = request.args.get("job_id")
+
+    task_for_employee = None
+    task_for_recruiter = None
+    due_date = form.due_date.data
+    description = form.description.data
+    completed = False
+
+    new_email = crud.create_email(job_id, task_for_employee, task_for_recruiter, due_date, description, completed)
+    model.db.session.add(new_email)
+    model.db.session.commit()
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+############################## General Task End Points ################################
+
+@app.route("/complete_general_task")
+def complete_general_task():
+    job_id = request.args.get("job_id")
+    task_id = request.args.get("task_id")
+    task = crud.get_general_task_by_id(int(task_id))
+    task.completed = crud.update_bool(task.completed)
+
+    model.db.session.add(task)
+    model.db.session.commit()
+
+    return redirect(url_for("show_job_detail", job_id = job_id))
+
+@app.route("/task_form")
+def task_form():
+    job_id = request.args.get("job_id")
+    form = forms.General_Task_Form()
+
+    return render_template("task_form.html", form = form, job_id = job_id)
+
+@app.route("/create_task_job", methods=["post"])
+def create_task_job():
+    form = forms.General_Task_Form()
+    job_id = request.args.get("job_id")
+
+    task_for_employee = None
+    task_for_recruiter = None
+    due_date = form.due_date.data
+    description = form.description.data
+    completed = False
+
+    new_task = crud.create_general_task(job_id, task_for_employee, task_for_recruiter, due_date, description, completed)
+    model.db.session.add(new_task)
+    model.db.session.commit()
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
 
 
 

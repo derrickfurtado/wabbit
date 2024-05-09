@@ -62,6 +62,17 @@ class SNE_Employee_Form(FlaskForm):
     step_type = StringField("Next Step Category", validators=[DataRequired(), Length(max=255)])
     submit = SubmitField()
 
+class Call_Form(FlaskForm):
+    due_date = DateField("When are you making this call? ", validators=[DataRequired()])
+    description = StringField("Describe the goal of the call: ", validators=[Length(max=255)])
+    submit = SubmitField()
 
+class Email_Form(FlaskForm):
+    due_date = DateField("When are you sending this email? ", validators=[DataRequired()])
+    description = StringField("Describe the goal of the email: ", validators=[Length(max=255)])
+    submit = SubmitField()
 
-
+class General_Task_Form(FlaskForm):
+    due_date = DateField("When should this task be completed? ", validators=[DataRequired()])
+    description = StringField("Describe the task: ", validators=[Length(max=255)])
+    submit = SubmitField()
