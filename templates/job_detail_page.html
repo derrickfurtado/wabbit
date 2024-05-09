@@ -11,6 +11,9 @@
         <h1>{{ job.role }}</h1>
         <h3>{{ job.company.name }}</h3>
     </div>
+    <div id="delete_job_btn">
+        <a href="{{ url_for('delete_job', job_id = job.id) }}"><button>🚨DELETE JOB🚨</button></a>
+    </div>
     <div id="job_details_div">
         <div id="job_description">
             Job Description: <br>
@@ -110,12 +113,39 @@
             </div>
         </div>
         <div id="task_div">
-            <div id="job_call_task"></div>
             Next Call Task:
-            <div id="job_email_task"></div>
+            <a href="{{ url_for('call_form', job_id = job.id) }}"><button>Add Call Task</button></a>
+            <div id="job_call_task">
+                {% for call in job.call_task %}
+                    {% if not call.completed %}
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Due Date</th>
+                                    <th>Completed?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ call.description }}</td>
+                                    <td>{{ call.due_date.strftime('%b %d @ %H:%M%p') }}</td>
+                                    <td><a href="{{ url_for('complete_call_task', job_id = job.id, call_id = call.id) }}"><button>COMPLETE</button></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
             Next Email Task:
-            <div id="job_general_task"></div>
+            <div id="job_email_task">
+                <button>Add Email Task</button>
+            </div>
             Next General Task:
+            <div id="job_general_task">
+                <button>Add General Task</button>
+            </div>
         </div>
     </div>
     <div id="roster_div">
