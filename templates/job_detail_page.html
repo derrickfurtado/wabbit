@@ -12,7 +12,7 @@
         <h3>{{ job.company.name }}</h3>
     </div>
     <div id="delete_job_btn">
-        <a href="{{ url_for('delete_job', job_id = job.id) }}"><button>🚨DELETE JOB🚨</button></a>
+        <a href="{{ url_for('delete_warning', job_id = job.id) }}"><button>🚨DELETE JOB🚨</button></a>
     </div>
     <div id="job_details_div">
         <div id="job_description">
@@ -51,14 +51,18 @@
     </div>
     <div id="bool_div">
         <div id="job_offer_bool">
-            Job Offer?
-            <a href="{{ url_for('update_offer', job_id = job.id)}}"><button>SELECT</button></a>
-            <b>{{ job.job_offer }}</b>
+            {% if not job.job_offer %}
+                <a href="{{ url_for('update_offer', job_id = job.id)}}"><button>Job Offer?<br>CLICK HERE</button></a>
+            {% elif job.job_offer %}
+                <a href="{{ url_for('update_offer', job_id = job.id)}}"><button>Undo Job Offer</button></a>
+            {% endif %}
         </div>
         <div id="job_rejection_bool">
-            Rejection?
-            <a href="{{ url_for('update_rejection', job_id = job.id) }}"><button>SELECT</button></a>
-            <b>{{ job.rejection }}</b>
+            {% if not job.rejection %}
+                <a href="{{ url_for('update_rejection', job_id = job.id) }}"><button>Rejected?<br>CLICK HERE</button></a>
+            {% elif job.rejection %}
+                <a href="{{ url_for('update_rejection', job_id = job.id) }}"><button>Undo Rejection</button></a>
+            {% endif %}
         </div>
         <div id="job_interviewing_bool">
             interviewing?

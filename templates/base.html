@@ -10,15 +10,16 @@
 <body>
     <nav>
         
-        {% if request.path != "/" %}
-        <a href="/homepage"><button>Homepage</button></a>
-        <a href="/sign_out"><button>Sign Out</button></a>
-        <a href="/job_page"><button>Create Job</button></a>
-        <a href="/archived_jobs"><button>Archived Jobs</button></a>
-
+        {% if request.path.startswith("/create_sne_4recruiter") and "job_id" in request.args %}
+        {% elif request.path.startswith("/create_employee_4sne_form") and "job_id" in request.args %}
         {% elif request.path == "/company_page" %}
-
+        {% elif request.path != "/" %}
+            <a href="/homepage"><button>Homepage</button></a>
+            <a href="/sign_out"><button>Sign Out</button></a>
+            <a href="/job_page"><button>Create Job</button></a>
+            <a href="/archived_jobs"><button>👻 and Archived Jobs</button></a>
         {% endif %}
+
         
         {% block navbar %}
         {% endblock %}

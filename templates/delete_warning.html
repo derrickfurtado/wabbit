@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Are you sure?!?</title>
+{% endblock %}
+
+{% block body %}
+
+
+<section id="delete_warning">
+    <h1>Are you sure you want to delete this job?</h1>
+    <h2>It's permanent and you can't go back.</h2>
+    <h3>You can just archive the job instead: <a href="{{ url_for('update_rejection', job_id = job_id) }}"><button>ARCHIVE</button></a></h3>
+    <h4><a href="{{ url_for('delete_job', job_id = job_id) }}"><button>🚨 DELETE JOB 🚨</button></a></h4>
+</section>
+
+
+
+
+
+{% endblock %}
+

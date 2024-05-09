@@ -5,6 +5,7 @@ from flask import Flask, render_template, flash, redirect, session, request, url
 from key import secret_key
 from pdb import set_trace
 from datetime import datetime
+import os
 
 
 
@@ -177,7 +178,10 @@ def update_offer():
     job_id = request.args.get("job_id")                 ### grab job_id from url parameter
     job = crud.job_detail(job_id)                       ### grab the job object using using job_id
     job.job_offer = crud.update_bool(job.job_offer)     ### switch values of boolean
-    
+    job.last_logged_task = "Received Job Offer"
+    job.last_logged_task_time = datetime.now()
+
+
     model.db.session.add(job)
     model.db.session.commit()
     
@@ -188,6 +192,8 @@ def update_rejection():
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.rejection = crud.update_bool(job.rejection)
+    job.last_logged_task = "Received Rejection Notice"
+    job.last_logged_task_time = datetime.now()
 
     model.db.session.add(job)
     model.db.session.commit()
@@ -289,17 +295,33 @@ def create_next_step():
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
+@app.route("/delete_warning")
+def delete_warning():
+    job_id = request.args.get("job_id")
+
+
+    return render_template("delete_warning.html", job_id = job_id)
+
 @app.route("/delete_job")
 def delete_job():
-    user_id = session["user_id"]
     job_id = request.args.get("job_id")
+    job = crud.get_job_by_id(job_id)
 
     next_step_list = crud.next_step_list_by_job(job_id)
     email_list = crud.email_list_by_job(job_id)
     call_list = crud.call_list_by_job(job_id)
     task_list = crud.general_task_by_job(job_id)
 
-    ### loop through lists and delete all
+    for step in next_step_list:
+        model.db.session.delete(step)
+    for email in email_list:
+        model.db.session.delete(email)
+    for call in call_list:
+        model.db.session.delete(call)
+
+    model.db.session.delete(job)
+    model.db.session.commit()
+
     flash("Job has been deleted.")
     return redirect("homepage")
 
@@ -493,7 +515,7 @@ def add_recruiter_sne():
     new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
     model.db.session.add(new_sne)
     model.db.session.commit()
-
+    set_trace()
     return redirect(url_for("show_job_detail", job_id = job_id))
 
 @app.route("/sne_employee_form")                    ### 💡 the following employee next step forms are same as recruiter
@@ -687,6 +709,14 @@ def create_task_job():
     model.db.session.commit()
 
     return redirect(url_for('show_job_detail', job_id = job_id))
+
+
+
+
+
+
+
+
 
 
 

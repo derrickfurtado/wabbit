@@ -6,7 +6,7 @@ MVP:
 - ✅ Record Job Opportunities and details associated with it.
 - ✅ Link Job object to Company objects
 - ✅ Link Job object to staff and recruiter objects
-- Create tasks for email, call, or general for each job
+- ✅ Create tasks for email, call, or general for each job
 - Have time dependency associated with all tasks
 - Trigger notifications based on time frame: (following is a general timeline)
     - Create job as favorite, but have not applied yet ==> 24 hours - automate email to user (E2U) to demand call-2-action (CTA) apply for this job
@@ -36,10 +36,10 @@ Rubric:
     - ✅ Active DB
     - Full CRUD functionality
         - ✅ read
-        - delete
+        - ✅ delete
         - ✅ update
         - ✅ create
 4. Login
     - ✅ need login process functioning
 5. Features
-    - 3 user features complete and function
+    - ✅ 3 user features complete and function

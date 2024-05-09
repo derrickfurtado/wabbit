@@ -38,8 +38,9 @@ def show_all_companies_by_userID(user_id):
     company_list = model.Company.query.all()
     filtered_list = []
     for company in company_list:                        ### 🚨 this can be optimized ###
-        if company.job[0].user_id == user_id:           ###  💡 filtering out companies that don't belong to user
-            filtered_list.append(company)
+        if company.job:
+            if company.job[0].user_id == user_id:           ###  💡 filtering out companies that don't belong to user
+                filtered_list.append(company)
     return filtered_list
 
 def get_company_by_job_id(job_id):
@@ -97,6 +98,8 @@ def update_last_activity(job_id):
     job.last_logged_task_time = datetime.now()
     return job
 
+def get_job_by_id(job_id):
+    return model.Job.query.get(job_id)
 ############# Email Object ########
 
 def create_email(job_id, task_for_employee, task_for_recruiter, due_date, description, completed):

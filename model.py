@@ -156,7 +156,7 @@ class Recruiter(db.Model):
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(255), nullable=False, unique=True)
-    email = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255))
     linkedin = db.Column(db.String(255))
 
     next_step = db.relationship("Next_Step", backref="recruiter")
@@ -173,7 +173,7 @@ class Employee(db.Model):
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=False, unique=True)
+    email = db.Column(db.String(255), unique=True)
     linkedin = db.Column(db.String(255))
 
     next_step = db.relationship("Next_Step", backref="employee")
