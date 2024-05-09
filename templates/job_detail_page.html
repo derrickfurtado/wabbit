@@ -13,16 +13,21 @@
     </div>
     <div id="job_details_div">
         <div id="job_description">
-            Job Description:
+            Job Description: <br>
             <b>{{ job.description }}</b>
         </div>
         <div id="job_requirements">
-            Requirements:
+            Requirements: <br>
             <b>{{ job.requirements }}</b>
         </div>
         <div id="job_salary">
+            <br><br>
             Salary:
-            <b>{{ "$ {:,.0f} per year".format(job.salary) }}</b>
+            {% if job.salary %}
+                <b>{{ "$ {:,.0f} per year".format(job.salary) }}</b>
+            {% else %}
+                <b>Salary not provided</b>
+            {% endif %}
         </div>
         <div id="job_compensation">
             Additional Compensation:
@@ -52,10 +57,10 @@
             <a href="{{ url_for('update_rejection', job_id = job.id) }}"><button>SELECT</button></a>
             <b>{{ job.rejection }}</b>
         </div>
-        <div id="job_declined_bool">
-            Declined?
-            <a href="{{ url_for('update_declined', job_id = job.id) }}"><button>SELECT</button></a>
-            <b>{{ job.declined_offer }}</b>
+        <div id="job_interviewing_bool">
+            interviewing?
+            <a href="{{ url_for('update_interviewing', job_id = job.id) }}"><button>SELECT</button></a>
+            <b>{{ job.interviewing }}</b>
         </div>
         <div id="job_accepted_bool">
             Accepted?

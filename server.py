@@ -11,7 +11,7 @@ from datetime import datetime
 app = Flask(__name__)
     
 
-app.secret_key = secret_key                 ## secret key stored in key.py file for security
+app.secret_key = secret_key                 ### 💡secret key stored in key.py file for security
 
 ############################ Credentials ##############################
 
@@ -21,7 +21,7 @@ def login_page():
     register_form = forms.User_Registration_Form()
     return render_template("login.html", login_form = login_form, register_form = register_form)
 
-@app.route("/login_user", methods=["POST"])                               ## check for errors if methods = ["POST"] is needed
+@app.route("/login_user", methods=["POST"])                               
 def login_user():
     user_form = forms.User_Login_Form()             ## pull form data from login form
     current_users = model.Users.query.all()         ## query list of current users
@@ -83,19 +83,27 @@ def sign_out():
 
 @app.route("/homepage")                     ## landing page, post login
 def homepage():
-    job_list = crud.show_all_jobs()
-    company_list = crud.show_all_companies()
-
-    return render_template("homepage.html", job_list = job_list, company_list = company_list)
+    job_list = crud.show_all_jobs_by_userID(session["user_id"])               ### 💡only pull jobs that the user owns in the DB
+    company_list = crud.show_all_companies_by_userID(session["user_id"])
+    user_id = session["user_id"]
+    if not job_list:
+        flash("You are not tracking any opportunities. Get on it!!!")
+    return render_template("homepage.html", job_list = job_list, company_list = company_list, user_id = user_id)
 
             ####### 🚨 Add in table columns for buttons that update task completed
+
+@app.route("/archived_jobs")
+def archived_jobs():
+    job_list = crud.show_all_jobs_by_userID(session["user_id"])
+    return render_template("archived_jobs.html", job_list = job_list)
+
 
 ########################### Job Object ###############################
 
 
 @app.route("/job_page")                        ### landing page for job creation form ###
 def show_job_form():
-    company_list = crud.show_all_companies()
+    company_list = crud.show_all_companies_by_userID(session["user_id"])
     job_form = forms.Job_Form()
     choices = [(company.id, company.name) for company in company_list]      ## creating dynamic list for company options
     choices.append(("create_company", "*** Create Company ***"))            ## adding fall back in case company is not created yet
@@ -131,7 +139,7 @@ def create_job():
         date_applied = None
         job_offer = False
         rejection = False
-        declined_offer = False
+        interviewing = False
         accepted_offer = False
         ghosted = False
         favorite = False
@@ -139,7 +147,7 @@ def create_job():
         last_logged_task_time = datetime.now()
             ########################################## 🚨 implement auto tasks here
 
-        new_job = crud.create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)
+        new_job = crud.create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, interviewing, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)
 
         model.db.session.add(new_job)
         model.db.session.commit()
@@ -156,7 +164,9 @@ def show_job_detail():
 @app.route("/update_applied_status")
 def update_applied_status():
     job_id = request.args.get("job_id")
-    updated_job = crud.update_applied_status(job_id)
+    updated_job = crud.update_applied_status(job_id)        ### 💡 updated applied status to job 
+    updated_job.last_logged_task = "Submitted Application"  ### 💡 updated last task
+    updated_job.last_logged_task_time = datetime.now()      ### 💡 updated last task time to now
     model.db.session.add(updated_job)
     model.db.session.commit()
 
@@ -184,11 +194,11 @@ def update_rejection():
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
-@app.route("/update_declined")
-def update_declined():
+@app.route("/update_interviewing")
+def update_interviewing():
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
-    job.declined_offer = crud.update_bool(job.declined_offer)
+    job.interviewing = crud.update_bool(job.interviewing)
 
     model.db.session.add(job)
     model.db.session.commit()
@@ -311,7 +321,7 @@ def create_company():
     date_applied = None
     job_offer = False
     rejection = False
-    declined_offer = False
+    interviewing = False
     accepted_offer = False
     ghosted = False
     favorite = False
@@ -319,7 +329,7 @@ def create_company():
     last_logged_task_time = datetime.now()
         ########################################## 🚨 implement auto tasks here
 
-    new_job = crud.create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)
+    new_job = crud.create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, interviewing, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)
 
     del session["role"]                             ##### removing all of these unique sessions after they are no longer needed
     del session["description"]
@@ -395,16 +405,17 @@ def create_employee():
 
 
 
-
+############## Next Step End Points ####################
 
 @app.route("/sne_recruiter_form")
 def sne_recruiter_form():
-    sne_form = forms.SNE_Recruiter_Form()
-    job_id = request.args.get("job_id")
-    recruiter_list = crud.recruiter_list_by_company(job_id)
-    choices = [(recruiter.id, f"{recruiter.first_name} {recruiter.last_name} ({recruiter.title})") for recruiter in recruiter_list]
-    choices.append(("create_recruiter", "** Create Recruiter **"))
-    sne_form.task_for_recruiter_id.choices = choices
+    sne_form = forms.SNE_Recruiter_Form()                   ### 💡 pull in form template
+    job_id = request.args.get("job_id")                     ### 💡 this job_id is hitching a ride
+    company = crud.get_company_by_job_id(job_id)                    ### 💡 need this to get all recruiters in company
+    recruiter_list = crud.recruiter_list_by_company(company.id)
+    choices = [(recruiter.id, f"{recruiter.first_name} {recruiter.last_name} ({recruiter.title})") for recruiter in recruiter_list]   ### 💡 creating a dynamic list for creating next steps
+    choices.append(("create_recruiter", "*** Create Recruiter ***"))        ### 💡 adding option, in case recruiter object is absent
+    sne_form.task_for_recruiter_id.choices = choices            ### 💡 assigning choices to this form before rendering
 
     return render_template("sne_recruiter_form.html", sne_form = sne_form, job_id = job_id)
 
@@ -413,16 +424,15 @@ def create_sne_4recruiter():
     job_id = request.args.get("job_id")
     sne_form = forms.SNE_Recruiter_Form()
 
-    if sne_form.task_for_recruiter_id.data == "create_recruiter":
-        ### forward form data to /sne_create_recruiter
-        session["due_date"] = sne_form.due_date.data
-        session["description"] = sne_form.description.data
+    if sne_form.task_for_recruiter_id.data == "create_recruiter":                   ### 💡 if "Create Recruiter" is selected on the form
+        session["due_date"] = sne_form.due_date.data                    
+        session["description"] = sne_form.description.data                          ### 💡 saving form data to session
         session["step_type"] = sne_form.step_type.data
         recruiter_form = forms.Recruiter_Form()
 
-        return render_template("/create_recruiter_4sne.html", job_id = job_id, recruiter_form = recruiter_form)
+        return render_template("/create_recruiter_4sne_form.html", job_id = job_id, recruiter_form = recruiter_form)
     else:
-        task_for_employee = None
+        task_for_employee = None                                            ### 💡 this next step is for recruiter, not employee. DB column is nullable
         task_for_recruiter = sne_form.task_for_recruiter_id.data
         due_date = sne_form.due_date.data
         description = sne_form.description.data
@@ -430,21 +440,21 @@ def create_sne_4recruiter():
 
         new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
         model.db.session.add(new_sne)
-        model.db.session.commit()
+        model.db.session.commit()                                       ### 💡 create next step
 
         return redirect(url_for('show_job_detail', job_id = job_id))
 
 @app.route("/create_recruiter_4sne_form")
 def create_recruiter_4sne_form():
     job_id = request.args.get("job_id")
-    recruiter_form = forms.Recruiter_Form()
+    recruiter_form = forms.Recruiter_Form()             ### 💡 reusing recruiter form
 
     return render_template("create_recruiter_4sne.html", job_id = job_id, recruiter_form = recruiter_form)
 
 @app.route("/add_recruiter_sne", methods=["post"])
 def add_recruiter_sne():
-    job_id = request.args.get("job_id")
-    form = forms.Recruiter_Form()
+    job_id = request.args.get("job_id")                 ### 💡 job_id keeps hitching a ride to reuse when sending back to job detail page
+    form = forms.Recruiter_Form()                       ### 💡 capture date from last form used
     company = crud.get_company_by_job_id(job_id)
     company_id = company.id
     first_name = form.first_name.data
@@ -454,15 +464,16 @@ def add_recruiter_sne():
     linkedin = form.linkedin.data
     new_recruiter = crud.create_recruiter(company_id, first_name, last_name, title, email, linkedin)
     model.db.session.add(new_recruiter)
-    model.db.session.commit()
+    model.db.session.commit()                           ### 💡 need to create recruiter first to get recruiter id for next step object
 
     task_for_employee = None
     task_for_recruiter = new_recruiter.id
-    due_date = session["due_date"]
-    del session["due_date"]
+    due_date = session["due_date"]                      ### 💡  pulling old form data from session dictionary
     description = session["description"]
-    del session["description"]
     step_type = session["step_type"]
+    
+    del session["description"]                          ### 💡 making sure to delete session key/value pairs to not cause issues
+    del session["due_date"] 
     del session["step_type"]
 
     new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
@@ -471,22 +482,83 @@ def add_recruiter_sne():
 
     return redirect(url_for("show_job_detail", job_id = job_id))
 
-
-@app.route("/sne_employee_form")
+@app.route("/sne_employee_form")                    ### 💡 the following employee next step forms are same as recruiter
 def sne_employee_form():
-    pass
+    sne_form = forms.SNE_Employee_Form()
+    job_id = request.args.get("job_id")
+    company = crud.get_company_by_job_id(job_id)
+    employee_list = crud.employee_list_by_company(company.id)
+
+    choices = [(employee.id, f"{employee.first_name} {employee.last_name} ({employee.title})") for employee in employee_list]
+    choices.append(("create_employee", "*** Create Employee ***"))
+    sne_form.task_for_employee_id.choices = choices
+
+    return render_template("sne_employee_form.html", job_id = job_id, sne_form = sne_form)
 
 @app.route("/create_sne_4employee", methods=["post"])
 def create_sne_4employee():
-    pass
+    job_id = request.args.get("job_id")
+    employee_form = forms.SNE_Employee_Form()
+
+    if employee_form.task_for_employee_id.data == "create_employee":
+        ### session and render template
+        session["due_date"] = employee_form.due_date.data
+        session["description"] = employee_form.description.data
+        session["step_type"] = employee_form.step_type.data
+
+        return redirect(url_for('create_employee_4sne_form', job_id = job_id))
+    else:
+        task_for_employee = employee_form.task_for_employee_id.data
+        task_for_recruiter = None
+        due_date = employee_form.due_date.data
+        description = employee_form.description.data
+        step_type = employee_form.step_type.data
+
+        new_task = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
+        model.db.session.add(new_task)
+        model.db.session.commit()
+
+        return redirect(url_for("show_job_detail", job_id = job_id))
 
 @app.route("/create_employee_4sne_form")
 def create_employee_4sne_form():
-    pass
+    employee_form = forms.Employee_Form()
+    job_id = request.args.get("job_id")
+
+    return render_template("create_employee_4sne_form.html", job_id = job_id, employee_form = employee_form)
 
 @app.route("/add_employee_sne", methods=["post"])
 def add_employee_sne():
-    pass
+    job_id = request.args.get("job_id")
+    company = crud.get_company_by_job_id(job_id)
+    employee_form = forms.Employee_Form()
+
+    company_id = company.id
+    first_name = employee_form.first_name.data
+    last_name = employee_form.last_name.data
+    title = employee_form.title.data
+    email = employee_form.email.data
+    linkedin = employee_form.linkedin.data
+
+    new_employee = crud.create_employee(company_id, first_name, last_name, title, email, linkedin)
+    model.db.session.add(new_employee)
+    model.db.session.commit()
+
+    task_for_employee_id = new_employee.id
+    task_for_recruiter_id = None
+    due_date = session["due_date"]
+    description = session["description"]
+    step_type = session["step_type"]
+    
+    del session["due_date"]
+    del session["description"]
+    del session["step_type"]
+
+    new_task = crud.create_next_step(job_id, task_for_employee_id, task_for_recruiter_id, due_date, description, step_type)
+    model.db.session.add(new_task)
+    model.db.session.commit()
+
+    return redirect(url_for("show_job_detail", job_id = job_id))
 
 
 

@@ -34,9 +34,13 @@ def create_company(name, location, industry, favorite):
         )
     return new_company
 
-def show_all_companies():
+def show_all_companies_by_userID(user_id):
     company_list = model.Company.query.all()
-    return company_list
+    filtered_list = []
+    for company in company_list:                        ### 🚨 this can be optimized ###
+        if company.job[0].user_id == user_id:           ###  💡 filtering out companies that don't belong to user
+            filtered_list.append(company)
+    return filtered_list
 
 def get_company_by_job_id(job_id):
     job = model.Job.query.get(job_id)
@@ -45,7 +49,7 @@ def get_company_by_job_id(job_id):
 
 ########### Job Object ##########
 
-def create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time):
+def create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, interviewing, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time):
     new_job = model.Job(
         company_id = company_id, 
         user_id = user_id, 
@@ -59,7 +63,7 @@ def create_job(company_id, user_id, recruiter_id, role, description, requirement
         date_applied = date_applied,
         job_offer = job_offer,
         rejection = rejection,
-        declined_offer = declined_offer,
+        interviewing = interviewing,
         accepted_offer = accepted_offer,
         ghosted = ghosted,
         favorite = favorite,
@@ -69,8 +73,8 @@ def create_job(company_id, user_id, recruiter_id, role, description, requirement
     
     return new_job
 
-def show_all_jobs():
-    job_list = model.Job.query.all()
+def show_all_jobs_by_userID(user_id):
+    job_list = model.Job.query.filter_by(user_id = user_id).all()           ### 💡filter all jobs by user_id
     return job_list
 
 def job_detail(id):
@@ -87,6 +91,11 @@ def update_bool(bool):
     else:
         bool = False
     return bool
+
+def update_last_activity(job_id):
+    job = model.Job.query.get("job_id")
+    job.last_logged_task_time = datetime.now()
+    return job
 
 ############# Email Object ########
 

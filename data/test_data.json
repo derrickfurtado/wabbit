@@ -28,7 +28,7 @@
         "date_applied": "2023-10-15T12:00:00Z",
         "job_offer": "False",
         "rejection": "False",
-        "declined_offer": "False",
+        "interviewing": "False",
         "accepted_offer": "False",
         "ghosted": "False",
         "favorite": "False",

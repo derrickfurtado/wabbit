@@ -5,7 +5,7 @@ MVP:
 - ✅ Create Account
 - ✅ Record Job Opportunities and details associated with it.
 - ✅ Link Job object to Company objects
-- Link Job object to staff and recruiter objects
+- ✅ Link Job object to staff and recruiter objects
 - Create tasks for email, call, or general for each job
 - Have time dependency associated with all tasks
 - Trigger notifications based on time frame: (following is a general timeline)
@@ -35,9 +35,9 @@ Rubric:
 3. DB
     - ✅ Active DB
     - Full CRUD functionality
-        - read
+        - ✅ read
         - delete
-        - update
+        - ✅ update
         - ✅ create
 4. Login
     - ✅ need login process functioning

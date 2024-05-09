@@ -1,0 +1,45 @@
+{%  extends "base.html"%}
+
+
+{% block title %}
+<title>Archived Jobs</title>
+{% endblock %}
+
+{% block body %}
+
+<section id="archived_job_list">
+    <h2>Archived Jobs:</h2>
+    <table>
+    <thead>
+        <tr>
+            <th>Role Name</th>
+            <th>Company</th>
+            <th>Salary</th>
+            <th>Link to Job</th>
+            <th>Next Steps</th>
+            <th>Next Step Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for job in job_list %}
+            {% if job.rejection %}
+                <tr>
+                    <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
+                    <td>{{ job.company.name }}</td>
+                    <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                    <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
+                    {% if job.next_step == [] %}
+                    <td>None</td>
+                    <td>None</td>
+                    {% else %}
+                    <td>{{ job.next_step[0].description }}</td>
+                    <td>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</td>
+                    {% endif %}
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+    </table>
+</section>
+
+{% endblock %}

@@ -57,14 +57,14 @@ link = job_data["link"]
 date_applied = job_data["date_applied"]
 job_offer = eval(job_data["job_offer"])
 rejection = eval(job_data["rejection"])
-declined_offer = eval(job_data["declined_offer"])
+interviewing = eval(job_data["interviewing"])
 accepted_offer = eval(job_data["accepted_offer"])
 ghosted = eval(job_data["ghosted"])
 favorite = eval(job_data["favorite"])
 last_logged_task = job_data["last_logged_task"]
 last_logged_task_time = job_data["last_logged_task_time"]
 
-test_job = crud.create_job(company_id, user_id, None, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, declined_offer, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)            ### added None to certain fields that required dependencies. Only needed upon creation of test data
+test_job = crud.create_job(company_id, user_id, None, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, interviewing, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)            ### added None to certain fields that required dependencies. Only needed upon creation of test data
 
 model.db.session.add(test_job)
 model.db.session.commit()
