@@ -7,7 +7,10 @@ MVP:
 - ✅ Link Job object to Company objects
 - ✅ Link Job object to staff and recruiter objects
 - ✅ Create tasks for email, call, or general for each job
-- Have time dependency associated with all tasks
+- ✅ Have time dependency associated with all tasks
+
+Future State:
+
 - Trigger notifications based on time frame: (following is a general timeline)
     - Create job as favorite, but have not applied yet ==> 24 hours - automate email to user (E2U) to demand call-2-action (CTA) apply for this job
     - Job applied
@@ -28,7 +31,7 @@ MVP:
 Rubric:
 
 1. Front End
-    - 3 CSS-styled pages.
+    - ✅ 3 CSS-styled pages.
 2. Server
     - 3 ✅ endpoints
     - 3 ✅ view functions
