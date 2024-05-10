@@ -24,8 +24,8 @@
                     <th>Company</th>
                     <th>Salary</th>
                     <th>Link to Job</th>
-                    <th>Next Steps</th>
-                    <th>Next Step Date</th>
+                    <th>Last Activity</th>
+                    <th>Last Activity Date</th>
                 </tr>
             </thead>
         <tbody>
@@ -45,13 +45,9 @@
                             <td>N/A</td>
                         {% endif %}
                         <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
-                        {% if job.next_step == [] %}
-                        <td>None</td>
-                        <td>None</td>
-                        {% else %}
-                        <td>{{ job.next_step[0].description }}</td>
-                        <td>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</td>
-                        {% endif %}
+                        <td>{{ job.last_logged_task }}</td>
+                        <td>{{ job.last_logged_task_time.strftime('%b %d @ %H:%M%p') }}</td>
+
                     </tr>
                 {% endif %}
             {% endfor %}
@@ -69,8 +65,8 @@
                     <th>Company</th>
                     <th>Salary</th>
                     <th>Link to Job</th>
-                    <th>Next Steps</th>
-                    <th>Next Step Date</th>
+                    <th>Last Actvity</th>
+                    <th>Last Activity Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -90,13 +86,8 @@
                                 <td>N/A</td>
                             {% endif %}
                             <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
-                            {% if job.next_step == [] %}
-                            <td>None</td>
-                            <td>None</td>
-                            {% else %}
-                            <td>{{ job.next_step[0].description }}</td>
-                            <td>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</td>
-                            {% endif %}
+                            <td>{{ job.last_logged_task }}</td>
+                            <td>{{ job.last_logged_task_time.strftime('%b %d @ %H:%M%p') }}</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
