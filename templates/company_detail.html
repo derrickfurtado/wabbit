@@ -10,6 +10,13 @@
 <h1>{{ company.name }}</h1>
 <h3>Industry: {{ company.industry }}</h3>
 <h3>Location: {{ company.location }}</h3>
+<div id="company_favorite">
+    {% if company.favorite %}
+        <a href="{{ url_for('update_favorite_company', company_id = company.id) }}"><button>Favorite</button></a>
+    {% else %}
+        <a href="{{ url_for('update_favorite_company', company_id = company.id) }}"><button>Unfavorite</button></a>
+    {% endif %}
+</div>
 
 <div>
     All Jobs:

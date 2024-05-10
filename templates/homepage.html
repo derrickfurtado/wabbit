@@ -108,7 +108,7 @@
             </thead>
             <tbody>
                 {% for job in job_list %}
-                    {% if job.interviewing %}
+                    {% if job.interviewing and not job.job_offer %}
                         <tr>
                             <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                             <td>{{ job.company.name }}</td>
