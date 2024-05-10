@@ -16,24 +16,22 @@
             <th>Company</th>
             <th>Salary</th>
             <th>Link to Job</th>
-            <th>Next Steps</th>
-            <th>Next Step Date</th>
+            <th>Status</th>
+
         </tr>
     </thead>
     <tbody>
         {% for job in job_list %}
-            {% if job.rejection %}
+            {% if job.rejection or job.ghosted%}
                 <tr>
                     <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                     <td>{{ job.company.name }}</td>
                     <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
                     <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
-                    {% if job.next_step == [] %}
-                    <td>None</td>
-                    <td>None</td>
-                    {% else %}
-                    <td>{{ job.next_step[0].description }}</td>
-                    <td>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</td>
+                    {% if job.rejection %}
+                        <td>REJECTED</td>
+                    {% elif job.ghosted %}
+                        <td>GHOSTED</td>
                     {% endif %}
                 </tr>
             {% endif %}

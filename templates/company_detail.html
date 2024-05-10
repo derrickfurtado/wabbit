@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>Company Details</title>
+{% endblock %}
+
+
+{% block body %}
+
+<h1>{{ company.name }}</h1>
+<h3>Industry: {{ company.industry }}</h3>
+<h3>Location: {{ company.location }}</h3>
+
+<div>
+    All Jobs:
+    <table id="company_detail_job">
+        <thead>
+            <tr>
+                <th>Role</th>
+                <th>Salary</th>
+                <th>Link to Job</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in company.job %}
+            <tr>
+                <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{job.role}}</a></td>
+                <td> {{"$ {:,.0f}".format(job.salary)}} </td>
+                <td><a href="{{ job.link }}"><button>Job Link</button></a></td>
+                {% if job.accepted_offer %}
+                    <td>Offer Accepted</td>
+                {% elif job.job_offer %}
+                    <td>Offer Sent <br> Pending Decision</td>
+                {% elif job.interviewing %}
+                    <td>Currently Interviewing</td>
+                {% elif job.rejection %}
+                    <td>Rejected</td>
+                {% elif job.ghosted %}
+                    <td>Ghosted</td>
+                {% elif job.date_applied %}
+                    <td>Application Submitted</td>
+                {% elif not job.date_applied %}
+                    <td>Not Applied</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div>
+    Recruiters:
+    <table id="company_detail_recruiter">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Title</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for recruiter in company.recruiter %}
+            <tr>
+                <td>{{ recruiter.first_name }} {{ recruiter.last_name }}</td>
+                <td>{{ recruiter.title }}</td>
+                <td><a href="{{ recruiter.linkedin }}">LinkedIn Profile</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div>
+    Interviewers:
+    <table id="company_detail_employee">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Title</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in company.employee %}
+                <tr>
+                    <td>{{ employee.first_name }} {{ employee.last_name }}</td>
+                    <td>{{ employee.title }}</td>
+                    <td><a href="{{ employee.linkedin }}">LinkedIn Profile</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

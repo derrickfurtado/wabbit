@@ -5,15 +5,57 @@
 {% endblock %}
 
 {% block body %}
-<h1>Homepage</h1>
 
-<section id="task_list">
+{% for job in job_list %}
+    {% if job.accepted_offer %}
+    <div id="congrats">
+        <h1>Congratulations on your new {{ job.role }} at {{ job.company.name }}!!!</h1>
+    </div>
+    {% endif %}
+{% endfor %}
 
+<section id="pending_app_list">
+    <table>
+        <h2>Application Needed:</h2>
+            <thead>
+                <tr>
+                    <th>Role Name</th>
+                    <th>Company</th>
+                    <th>Salary</th>
+                    <th>Link to Job</th>
+                    <th>Next Steps</th>
+                    <th>Next Step Date</th>
+                </tr>
+            </thead>
+        <tbody>
+            {% for job in job_list %}
+                {% if not job.date_applied %}
+                    <tr>
+                        <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
+                        <td>{{ job.company.name }}</td>
+                        {% if job.salary %}
+                            <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                        {% else %}
+                            <td>N/A</td>
+                        {% endif %}
+                        <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
+                        {% if job.next_step == [] %}
+                        <td>None</td>
+                        <td>None</td>
+                        {% else %}
+                        <td>{{ job.next_step[0].description }}</td>
+                        <td>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
 </section>
 
 <section id="active_job_list">
         <table>
-            <h2>Active Jobs:</h2>
+            <h2>Active Applications:</h2>
             <thead>
                 <tr>
                     <th>Role Name</th>
@@ -26,7 +68,7 @@
             </thead>
             <tbody>
                 {% for job in job_list %}
-                    {% if not job.rejection and not job.interviewing and not job.job_offer and not job.accepted_offer and not job.ghosted %}
+                    {% if job.date_applied and not job.rejection and not job.interviewing and not job.job_offer and not job.accepted_offer and not job.ghosted %}
                         <tr>
                             <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                             <td>{{ job.company.name }}</td>
@@ -49,6 +91,7 @@
             </tbody>
         </table>
 </section>
+
 <section id="interviewing_list">
     <table>
         <table>
@@ -91,14 +134,29 @@
 
 <section id="offer_list">
     <h2>Offers Extended:</h2>
-    {% for job in job_list %}
-        {% if job.job_offer %}
-            <ul><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></ul>
-        {% endif %}
-    {% endfor %}
+    <table>
+        <thead>
+            <tr>
+                <th>Role</th>
+                <th>Company</th>
+                <th>Salary</th>
+                <th>Link to Job</th>
+            </tr>
+        </thead>
+        <tbody>
+                {% for job in job_list %}
+                    {% if job.job_offer %}
+                        <tr>
+                            <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
+                            <td>{{ job.company.name }}</td>
+                            <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                            <td><a href="{{ job.link }}">Job Link</a></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+    </table>
 </section>
-
-
 
 <section id="company_list">
     <table>
@@ -114,7 +172,7 @@
         <tbody>
             {% for company in company_list %}
             <tr>
-                <td>{{ company.name }}</td>
+                <td><a href="{{ url_for('show_company_detail', company_id = company.id) }}">{{ company.name }}</a></td>
                 <td>{{ company.location }}</td>
                 <td>{{ company.industry }}</td>
                 <td>{{ company.favorite }}</td>
