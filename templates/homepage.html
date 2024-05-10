@@ -19,6 +19,7 @@
         <h2>Application Needed:</h2>
             <thead>
                 <tr>
+                    <th></th>
                     <th>Role Name</th>
                     <th>Company</th>
                     <th>Salary</th>
@@ -31,6 +32,11 @@
             {% for job in job_list %}
                 {% if not job.date_applied %}
                     <tr>
+                        {% if job.favorite %}
+                            <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                        {% else %}
+                            <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                        {% endif %}
                         <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                         <td>{{ job.company.name }}</td>
                         {% if job.salary %}
@@ -58,6 +64,7 @@
             <h2>Active Applications:</h2>
             <thead>
                 <tr>
+                    <th></th>
                     <th>Role Name</th>
                     <th>Company</th>
                     <th>Salary</th>
@@ -70,6 +77,11 @@
                 {% for job in job_list %}
                     {% if job.date_applied and not job.rejection and not job.interviewing and not job.job_offer and not job.accepted_offer and not job.ghosted %}
                         <tr>
+                            {% if job.favorite %}
+                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                            {% else %}
+                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                            {% endif %}
                             <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                             <td>{{ job.company.name }}</td>
                             {% if job.salary %}
@@ -98,6 +110,7 @@
             <h2>Active Interview:</h2>
             <thead>
                 <tr>
+                    <th></th>
                     <th>Role Name</th>
                     <th>Company</th>
                     <th>Salary</th>
@@ -110,6 +123,11 @@
                 {% for job in job_list %}
                     {% if job.interviewing and not job.job_offer %}
                         <tr>
+                            {% if job.favorite %}
+                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                            {% else %}
+                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                            {% endif %}
                             <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                             <td>{{ job.company.name }}</td>
                             {% if job.salary %}
@@ -137,6 +155,7 @@
     <table>
         <thead>
             <tr>
+                <th></th>
                 <th>Role</th>
                 <th>Company</th>
                 <th>Salary</th>
@@ -147,6 +166,11 @@
                 {% for job in job_list %}
                     {% if job.job_offer %}
                         <tr>
+                            {% if job.favorite %}
+                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                            {% else %}
+                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                            {% endif %}
                             <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                             <td>{{ job.company.name }}</td>
                             <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
@@ -163,19 +187,23 @@
         <h2>Companies:</h2>
         <thead>
             <tr>
+                <th></th>
                 <th>Company Name:</th>
                 <th>Location:</th>
                 <th>Industry</th>
-                <th>Favorite</th>
             </tr>
         </thead>
         <tbody>
             {% for company in company_list %}
             <tr>
+                {% if company.favorite %}
+                    <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">❤️</a></td>
+                {% else %}
+                    <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">🖤</a></td>
+                {% endif %}
                 <td><a href="{{ url_for('show_company_detail', company_id = company.id) }}">{{ company.name }}</a></td>
                 <td>{{ company.location }}</td>
                 <td>{{ company.industry }}</td>
-                <td>{{ company.favorite }}</td>
             </tr>
             {% endfor %}
         </tbody>
