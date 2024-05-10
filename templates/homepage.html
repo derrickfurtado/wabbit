@@ -30,7 +30,7 @@
             </thead>
         <tbody>
             {% for job in job_list %}
-                {% if not job.date_applied %}
+                {% if not job.date_applied and not job.rejection and not job.ghosted %}
                     <tr>
                         {% if job.favorite %}
                             <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
@@ -112,7 +112,7 @@
             </thead>
             <tbody>
                 {% for job in job_list %}
-                    {% if job.interviewing and not job.job_offer %}
+                    {% if job.interviewing and not job.job_offer and not job.rejection and not job.ghosted %}
                         <tr>
                             {% if job.favorite %}
                                 <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
@@ -155,7 +155,7 @@
         </thead>
         <tbody>
                 {% for job in job_list %}
-                    {% if job.job_offer %}
+                    {% if job.job_offer and not job.rejection and not job.ghosted %}
                         <tr>
                             {% if job.favorite %}
                                 <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>

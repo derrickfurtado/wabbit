@@ -205,6 +205,8 @@ def update_interviewing():
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.interviewing = crud.update_bool(job.interviewing)
+    job.last_logged_task = "Starting Interview Process"
+    job.last_logged_task_time = datetime.now()
 
     model.db.session.add(job)
     model.db.session.commit()
@@ -216,6 +218,8 @@ def update_accepted():
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.accepted_offer = crud.update_bool(job.accepted_offer)
+    job.last_logged_task = "Accepted Offer"
+    job.last_logged_task_time = datetime.now()
 
     model.db.session.add(job)
     model.db.session.commit()
@@ -227,6 +231,8 @@ def update_ghosted():
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.ghosted = crud.update_bool(job.ghosted)
+    job.last_logged_task = "You've been Ghosted"
+    job.last_logged_task_time = datetime.now()
 
     model.db.session.add(job)
     model.db.session.commit()
@@ -243,6 +249,17 @@ def update_favorite():
     model.db.session.commit()
 
     return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/update_favorite_homepage")
+def update_favorite_homepage():
+    job_id = request.args.get("job_id")                 
+    job = crud.job_detail(job_id)    
+    job.favorite = crud.update_bool(job.favorite)
+
+    model.db.session.add(job)
+    model.db.session.commit()
+
+    return redirect(url_for('homepage'))
 
 @app.route("/next_steps")
 def schedule_next_step():
@@ -298,9 +315,9 @@ def create_next_step():
 @app.route("/delete_warning")
 def delete_warning():
     job_id = request.args.get("job_id")
+    gif = crud.loop_gifs()
 
-
-    return render_template("delete_warning.html", job_id = job_id)
+    return render_template("delete_warning.html", job_id = job_id, gif = gif)
 
 @app.route("/delete_job")
 def delete_job():
@@ -318,6 +335,8 @@ def delete_job():
         model.db.session.delete(email)
     for call in call_list:
         model.db.session.delete(call)
+    for task in task_list:
+        model.db.session.delete(task)
 
     model.db.session.delete(job)
     model.db.session.commit()
@@ -379,9 +398,34 @@ def create_company():
     flash("Job and Company created! Keep it up!")
     return redirect("job_page")
 
-@app.route("/company_detail")
+@app.route("/show_company_detail")
 def show_company_detail():
-    return render_template("company_detail_page.html")
+    company_id = request.args.get("company_id")
+    company = crud.get_company_by_company_id(company_id)
+
+    return render_template("company_detail.html", company = company)
+
+@app.route("/update_favorite_company")
+def update_favorite_company():
+    company_id = request.args.get("company_id")
+    company = crud.get_company_by_company_id(company_id)
+    company.favorite = crud.update_bool(company.favorite)
+
+    model.db.session.add(company)
+    model.db.session.commit()
+
+    return redirect(url_for("show_company_detail", company_id = company_id))
+
+@app.route("/update_favorite_company_homepage")
+def update_favorite_company_homepage():
+    company_id = request.args.get("company_id")
+    company = crud.get_company_by_company_id(company_id)
+    company.favorite = crud.update_bool(company.favorite)
+
+    model.db.session.add(company)
+    model.db.session.commit()
+
+    return redirect(url_for("homepage"))
 
 ######################### People Objects #################################
 
@@ -475,8 +519,12 @@ def create_sne_4recruiter():
         step_type = sne_form.step_type.data
 
         new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
-        model.db.session.add(new_sne)
-        model.db.session.commit()                                       ### 💡 create next step
+        model.db.session.add(new_sne)                                       ### 💡 create next step object
+
+        job = crud.get_job_by_id(job_id)
+        job.recruiter_id = sne_form.task_for_recruiter_id.data              ### 💡 add this recruiter to the Lead Recruiter of the job
+        model.db.session.add(job)
+        model.db.session.commit()
 
         return redirect(url_for('show_job_detail', job_id = job_id))
 
@@ -515,7 +563,12 @@ def add_recruiter_sne():
     new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
     model.db.session.add(new_sne)
     model.db.session.commit()
-    set_trace()
+
+    job = crud.get_job_by_id(job_id)
+    job.recruiter_id = new_recruiter.id            ### 💡 add this newly created recruiter to the Lead Recruiter of the job
+    model.db.session.add(job)
+    model.db.session.commit()
+
     return redirect(url_for("show_job_detail", job_id = job_id))
 
 @app.route("/sne_employee_form")                    ### 💡 the following employee next step forms are same as recruiter
@@ -604,7 +657,10 @@ def complete_call_task():
     call_id = request.args.get("call_id")
     call = crud.get_call_by_id(int(call_id))
     call.completed = crud.update_bool(call.completed)
+    call.job.last_logged_task_time = datetime.now()         
+    call.job.last_logged_task = call.description
 
+    model.db.session.add(call.job)
     model.db.session.add(call)
     model.db.session.commit()
 
@@ -642,7 +698,10 @@ def complete_email_task():
     email_id = request.args.get("email_id")
     email = crud.get_email_by_id(int(email_id))
     email.completed = crud.update_bool(email.completed)
+    email.job.last_logged_task_time = datetime.now()
+    email.job.last_logged_task = email.description
 
+    model.db.session.add(email.job)
     model.db.session.add(email)
     model.db.session.commit()
 
@@ -680,7 +739,10 @@ def complete_general_task():
     task_id = request.args.get("task_id")
     task = crud.get_general_task_by_id(int(task_id))
     task.completed = crud.update_bool(task.completed)
+    task.job.last_logged_task_time = datetime.now()
+    task.job.last_logged_task = task.description
 
+    model.db.session.add(task.job)
     model.db.session.add(task)
     model.db.session.commit()
 

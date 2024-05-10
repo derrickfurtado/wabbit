@@ -3,6 +3,8 @@
 import model, hashlib
 from pdb import set_trace
 from datetime import datetime
+from random import randint
+
 
 
 def create_user(first_name, last_name, email, password, location, school, bio, headshot):
@@ -35,7 +37,7 @@ def create_company(name, location, industry, favorite):
     return new_company
 
 def show_all_companies_by_userID(user_id):
-    company_list = model.Company.query.all()
+    company_list = model.Company.query.order_by(model.db.desc(model.Company.favorite))
     filtered_list = []
     for company in company_list:                        ### 🚨 this can be optimized ###
         if company.job:
@@ -48,6 +50,8 @@ def get_company_by_job_id(job_id):
     company = job.company
     return company
 
+def get_company_by_company_id(company_id):
+    return model.Company.query.get(company_id)
 ########### Job Object ##########
 
 def create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, interviewing, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time):
@@ -75,7 +79,7 @@ def create_job(company_id, user_id, recruiter_id, role, description, requirement
     return new_job
 
 def show_all_jobs_by_userID(user_id):
-    job_list = model.Job.query.filter_by(user_id = user_id).all()           ### 💡filter all jobs by user_id
+    job_list = model.Job.query.filter_by(user_id = user_id).order_by(model.db.desc(model.Job.favorite))           ### 💡filter all jobs by user_id
     return job_list
 
 def job_detail(id):
@@ -220,6 +224,19 @@ def days_since(date_time):
     time_difference = datetime.now() - date_time
     return time_difference.days
 
-
+def loop_gifs():
+    gif_list = [
+        "https://giphy.com/gifs/theoffice-gphyoffice726-pICj6JWqVpm5aapOIS", 
+        "https://i.giphy.com/media/3osxY8lmLf0SvhYbBe/giphy.gif?cid=790b7611fqblu7fmuvedyupuquf3rh119hm8fdmiya6dsfqg&ep=v1_gifs_search&rid=giphy.gif&ct=g",
+        "https://i.giphy.com/media/3oriNYewgX5o0bBxLi/giphy.gif?cid=790b7611fqblu7fmuvedyupuquf3rh119hm8fdmiya6dsfqg&ep=v1_gifs_search&rid=giphy.gif&ct=g"
+        "https://i.giphy.com/media/SqwG92na3vaN065L4S/giphy.gif?cid=790b7611fqblu7fmuvedyupuquf3rh119hm8fdmiya6dsfqg&ep=v1_gifs_search&rid=giphy.gif&ct=g",
+        "https://i.giphy.com/media/puOukoEvH4uAw/giphy.gif?cid=ecf05e47h0amsc5jhc1qwzdc938kavr32lhm7hc9np4qeqf3&ep=v1_gifs_search&rid=giphy.gif&ct=g",
+        "https://i.giphy.com/media/jy2XV0cy7uQufqczWW/giphy.gif?cid=ecf05e478s5ceghf30qatigzw003p81j994o5tn1j3nidh9f&ep=v1_gifs_search&rid=giphy.gif&ct=g",
+        "https://i.giphy.com/media/hclYypyKCEayY/giphy.gif?cid=ecf05e478s5ceghf30qatigzw003p81j994o5tn1j3nidh9f&ep=v1_gifs_search&rid=giphy.gif&ct=g",
+        "https://i.giphy.com/media/MCMIBsyDRcKjihz9uF/giphy.gif?cid=ecf05e470whq1xnlorlk76giqeav3vhymkgmfamhrezcfc6o&ep=v1_gifs_search&rid=giphy.gif&ct=g"
+    ]   
+    num = randint(0,7)
+    gif = gif_list[num]
+    return gif
 
 

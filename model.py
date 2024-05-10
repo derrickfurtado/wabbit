@@ -41,12 +41,14 @@ class Job(db.Model):
     compensation = db.Column(db.String(255))                    
     link = db.Column(db.String(255), nullable=False)
     date_applied = db.Column(db.DateTime)
+
     job_offer = db.Column(db.Boolean, default=False)            ## boolean for tracking analytics
     rejection = db.Column(db.Boolean, default=False)
     interviewing = db.Column(db.Boolean, default=False)
     accepted_offer = db.Column(db.Boolean, default=False)
     ghosted = db.Column(db.Boolean, default=False)
     favorite = db.Column(db.Boolean, default=False)
+
     last_logged_task = db.Column(db.String(255))
     last_logged_task_time = db.Column(db.DateTime)
 
