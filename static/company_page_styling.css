@@ -1,0 +1,24 @@
+body {
+    background-image: url(https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+    background-position: center;
+    background-size: cover;
+
+    height: 100dvh;
+}
+
+#company_list {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    margin-top: 10dvh;
+    padding-left: 20dvh;
+    padding-right: 20dvh;
+
+    height: 90dvh;
+}
+
+
+.table_table-sm {
+    padding-left: 20%;
+}
