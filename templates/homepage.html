@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/homepage_styling.css">
+{% endblock %}
+
 {% block title %}
 <title>Homepage</title>
 {% endblock %}
@@ -7,124 +11,130 @@
 {% block body %}
 
 {% for job in job_list %}
-    {% if job.accepted_offer %}
-    <div id="congrats">
-        <h1>Congratulations on your new {{ job.role }} at {{ job.company.name }}!!!</h1>
-    </div>
-    {% endif %}
+{% if job.accepted_offer %}
+<div id="congrats">
+    <h1>Congratulations on your new {{ job.role }} at {{ job.company.name }}!!!</h1>
+</div>
+{% endif %}
 {% endfor %}
 
-<section id="pending_app_list">
-    <table>
-        <h2>Application Needed:</h2>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Role Name</th>
-                    <th>Company</th>
-                    <th>Salary</th>
-                    <th>Link to Job</th>
-                    <th>Last Activity</th>
-                    <th>Last Activity Date</th>
-                </tr>
-            </thead>
-        <tbody>
-            {% for job in job_list %}
-                {% if not job.date_applied and not job.rejection and not job.ghosted %}
+<section id="card_block">
+    <div id="left_block">
+
+
+        <section id="pending_app_list">
+            <table>
+                <h2>Application Needed:</h2>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Role Name</th>
+                        <th>Company</th>
+                        <th>Salary</th>
+                        <th>Link to Job</th>
+                        <th>Last Activity</th>
+                        <th>Last Activity Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in job_list %}
+                    {% if not job.date_applied and not job.rejection and not job.ghosted %}
                     <tr>
                         {% if job.favorite %}
-                            <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
                         {% else %}
-                            <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
                         {% endif %}
                         <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                         <td>{{ job.company.name }}</td>
                         {% if job.salary %}
-                            <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                        <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
                         {% else %}
-                            <td>N/A</td>
+                        <td>N/A</td>
                         {% endif %}
                         <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
                         <td>{{ job.last_logged_task }}</td>
                         <td>{{ job.last_logged_task_time.strftime('%b %d @ %H:%M%p') }}</td>
 
                     </tr>
-                {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
-</section>
-
-<section id="active_job_list">
-        <table>
-            <h2>Active Applications:</h2>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Role Name</th>
-                    <th>Company</th>
-                    <th>Salary</th>
-                    <th>Link to Job</th>
-                    <th>Last Actvity</th>
-                    <th>Last Activity Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for job in job_list %}
-                    {% if job.date_applied and not job.rejection and not job.interviewing and not job.job_offer and not job.accepted_offer and not job.ghosted %}
-                        <tr>
-                            {% if job.favorite %}
-                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
-                            {% else %}
-                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
-                            {% endif %}
-                            <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
-                            <td>{{ job.company.name }}</td>
-                            {% if job.salary %}
-                                <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
-                            {% else %}
-                                <td>N/A</td>
-                            {% endif %}
-                            <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
-                            <td>{{ job.last_logged_task }}</td>
-                            <td>{{ job.last_logged_task_time.strftime('%b %d @ %H:%M%p') }}</td>
-                        </tr>
                     {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
-</section>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
 
-<section id="interviewing_list">
-    <table>
-        <table>
-            <h2>Active Interview:</h2>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Role Name</th>
-                    <th>Company</th>
-                    <th>Salary</th>
-                    <th>Link to Job</th>
-                    <th>Next Steps</th>
-                    <th>Next Step Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for job in job_list %}
-                    {% if job.interviewing and not job.job_offer and not job.rejection and not job.ghosted %}
+        <section id="active_job_list">
+            <table>
+                <h2>Active Applications:</h2>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Role Name</th>
+                        <th>Company</th>
+                        <th>Salary</th>
+                        <th>Link to Job</th>
+                        <th>Last Actvity</th>
+                        <th>Last Activity Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in job_list %}
+                    {% if job.date_applied and not job.rejection and not job.interviewing and not job.job_offer and not
+                    job.accepted_offer and not job.ghosted %}
+                    <tr>
+                        {% if job.favorite %}
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                        {% else %}
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                        {% endif %}
+                        <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
+                        <td>{{ job.company.name }}</td>
+                        {% if job.salary %}
+                        <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                        {% else %}
+                        <td>N/A</td>
+                        {% endif %}
+                        <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
+                        <td>{{ job.last_logged_task }}</td>
+                        <td>{{ job.last_logged_task_time.strftime('%b %d @ %H:%M%p') }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <div id="right_block">
+        <section id="interviewing_list">
+            <table>
+                <table>
+                    <h2>Active Interview:</h2>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Role Name</th>
+                            <th>Company</th>
+                            <th>Salary</th>
+                            <th>Link to Job</th>
+                            <th>Next Steps</th>
+                            <th>Next Step Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in job_list %}
+                        {% if job.interviewing and not job.job_offer and not job.rejection and not job.ghosted %}
                         <tr>
                             {% if job.favorite %}
-                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                            <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
                             {% else %}
-                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                            <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
                             {% endif %}
                             <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                             <td>{{ job.company.name }}</td>
                             {% if job.salary %}
-                                <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                            <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
                             {% else %}
-                                <td>N/A</td>
+                            <td>N/A</td>
                             {% endif %}
                             <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
                             {% if job.next_step == [] %}
@@ -135,73 +145,46 @@
                             <td>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</td>
                             {% endif %}
                         </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
-    </table>
-</section>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </section>
 
-<section id="offer_list">
-    <h2>Offers Extended:</h2>
-    <table>
-        <thead>
-            <tr>
-                <th></th>
-                <th>Role</th>
-                <th>Company</th>
-                <th>Salary</th>
-                <th>Link to Job</th>
-            </tr>
-        </thead>
-        <tbody>
-                {% for job in job_list %}
+        <section id="offer_list">
+            <h2>Offers Extended:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Role</th>
+                        <th>Company</th>
+                        <th>Salary</th>
+                        <th>Link to Job</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in job_list %}
                     {% if job.job_offer and not job.rejection and not job.ghosted %}
-                        <tr>
-                            {% if job.favorite %}
-                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
-                            {% else %}
-                                <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
-                            {% endif %}
-                            <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
-                            <td>{{ job.company.name }}</td>
-                            <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
-                            <td><a href="{{ job.link }}">Job Link</a></td>
-                        </tr>
+                    <tr>
+                        {% if job.favorite %}
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                        {% else %}
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                        {% endif %}
+                        <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
+                        <td>{{ job.company.name }}</td>
+                        <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                        <td><a href="{{ job.link }}">Job Link</a></td>
+                    </tr>
                     {% endif %}
-                {% endfor %}
-            </tbody>
-    </table>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+
 </section>
-
-<section id="company_list">
-    <table>
-        <h2>Companies:</h2>
-        <thead>
-            <tr>
-                <th></th>
-                <th>Company Name:</th>
-                <th>Location:</th>
-                <th>Industry</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for company in company_list %}
-            <tr>
-                {% if company.favorite %}
-                    <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">❤️</a></td>
-                {% else %}
-                    <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">🖤</a></td>
-                {% endif %}
-                <td><a href="{{ url_for('show_company_detail', company_id = company.id) }}">{{ company.name }}</a></td>
-                <td>{{ company.location }}</td>
-                <td>{{ company.industry }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</section>
-
-
 
 
 

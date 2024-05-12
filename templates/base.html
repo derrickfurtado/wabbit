@@ -1,39 +1,84 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/styling.css">
+    <link rel="stylesheet" href="/static/reset.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/base_styling.css">
+    {% block stylesheet %}
+    {% endblock %}
+
     {% block title %}
     {% endblock %}
 </head>
+
 <body>
-    <nav>
-        
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+
         {% if request.path.startswith("/create_sne_4recruiter") and "job_id" in request.args %}
         {% elif request.path.startswith("/create_employee_4sne_form") and "job_id" in request.args %}
         {% elif request.path == "/company_page" %}
         {% elif request.path != "/" %}
-            <a href="/homepage"><button>Homepage</button></a>
-            <a href="/sign_out"><button>Sign Out</button></a>
-            <a href="/job_page"><button>Create Job</button></a>
-            <a href="/archived_jobs"><button>👻 and Archived Jobs</button></a>
-        {% endif %}
 
-        
-        {% block navbar %}
-        {% endblock %}
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/homepage">Wabbit</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/homepage">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/company_list">Companies</a>
+                        <li class="nav-item">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/job_page">Create Job</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/archived_jobs">👻 and Archived Jobs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/sign_out">Sign Out</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/homepage">Homepage</a></li>
+                                <li><a class="dropdown-item" href="/company_list">Companies</a></li>
+                                <li><a class="dropdown-item" href="/job_page">Create Job</a></li>
+                                <li><a class="dropdown-item" href="/Archived Jobs">Archived Jobs</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="/sign_out">Sign Out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        {% endif %}
 
         <div id="flash_message">
             {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <b>{{ message }}</b>
-                    {% endfor %}
-                {% endif %}
+            {% if messages %}
+            {% for message in messages %}
+            <b>{{ message }}</b>
+            {% endfor %}
+            {% endif %}
             {% endwith %}
         </div>
     </nav>
+
 
     {% block body %}
     {% endblock %}
@@ -47,6 +92,7 @@
 
 
 
-    
+
 </body>
+
 </html>

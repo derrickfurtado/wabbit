@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/login_styling.css">
+{% endblock %}
+
 {% block title %}
 <title>Wabbit</title>
 {% endblock %}
@@ -7,32 +11,32 @@
 {% block body %}
 <div id="login_page_div">
     <div id="login_div">
-        <h1 id="login_prompt">Login below:</h1>
-            <form id="login_form" action="{{ url_for('login_user') }}" method="post">
-                {{ login_form.csrf_token() }}
-                {{ login_form.email.label }}
-                {{ login_form.email }}
-                {{ login_form.password.label }}
-                {{ login_form.password }}
-                {{ login_form.submit }}
+        <form id="login_form" action="{{ url_for('login_user') }}" method="post">
+            <h3 id="login_prompt">Login:</h3>
+            {{ login_form.csrf_token() }}
+            {{ login_form.email.label }}
+            {{ login_form.email(class="form-control") }}
+            {{ login_form.password.label }}
+            {{ login_form.password(class="form-control") }}
+            {{ login_form.submit(class="btn btn-primary mb-3") }}
 
-            </form>
+        </form>
     </div>
 
     <div id="register_div">
-        <h1 id="register_prompt">Register Account Here:</h1>
-            <form id="registration_form" action="{{ url_for('register_user') }}" method="post">
-                {{ register_form.csrf_token }}
-                {{ register_form.email.label }}
-                {{ register_form.email }}
-                {{ register_form.password.label }}
-                {{ register_form.password }}<br><br>
-                {{ register_form.first_name.label }}
-                {{ register_form.first_name }}
-                {{ register_form.last_name.label }}
-                {{ register_form.last_name }}
-                {{ register_form.submit }}
-            </form>
+        <form id="registration_form" action="{{ url_for('register_user') }}" method="post">
+            <h3 id="register_prompt">Register:</h3>
+            {{ register_form.csrf_token }}
+            {{ register_form.email.label }}
+            {{ register_form.email(class="form-control") }}
+            {{ register_form.password.label }}
+            {{ register_form.password(class="form-control") }}
+            {{ register_form.first_name.label }}
+            {{ register_form.first_name(class="form-control") }}
+            {{ register_form.last_name.label }}
+            {{ register_form.last_name(class="form-control") }}
+            {{ register_form.submit(class="btn btn-primary mb-3") }}
+        </form>
     </div>
 </div>
 {% endblock %}

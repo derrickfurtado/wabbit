@@ -1,0 +1,36 @@
+body {
+    background-image: url(https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+    background-size:cover;
+    background-position:center;
+    z-index: 0;
+}
+
+#login_page_div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    padding: 15px;
+    width: 100dvw;
+    height: 100dvh;
+
+    max-width: 300px;
+
+    background-color: rgba(22, 13, 7, 0.514);
+}
+
+#login_form, #registration_form {
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+
+    background-color: hwb(0 96% 4% / 0.603);
+    border-radius: 15px;
+    padding: 30px;
+}
+
+#login_form input, #registration_form input {
+    margin-bottom: 5px;
+    border-radius: 10px;
+    padding: 5px;
+}

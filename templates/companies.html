@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+<title>Company List</title>
+{% endblock %}
+
+
+{% block body %}
+
+
+<section id="company_list">
+    <table>
+        <h2>Companies:</h2>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Company Name:</th>
+                <th>Location:</th>
+                <th>Industry</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in company_list %}
+            <tr>
+                {% if company.favorite %}
+                <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">❤️</a></td>
+                {% else %}
+                <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">🖤</a></td>
+                {% endif %}
+                <td><a href="{{ url_for('show_company_detail', company_id = company.id) }}">{{ company.name }}</a>
+                </td>
+                <td>{{ company.location }}</td>
+                <td>{{ company.industry }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+
+
+{% endblock %}

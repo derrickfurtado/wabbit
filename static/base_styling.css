@@ -1,0 +1,14 @@
+
+
+.navbar-brand {
+    background-color: aqua;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+
+
+.navbar.navbar-expand-lg.bg-body-tertiary {
+    background-color: bisque !important;
+
+}
