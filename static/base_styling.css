@@ -12,3 +12,8 @@
     background-color: bisque !important;
 
 }
+
+table {
+    border-radius: 10px;
+    overflow: hidden;
+}

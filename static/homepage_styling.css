@@ -6,16 +6,28 @@ body {
 
 #card_block {
     display: flex;
-
-
+    justify-content:stretch;
 }
 
-#pending_app_list,
-#active_job_list,
-#interviewing_list,
-#offer_list,
-#company_list {
-    background-color: whitesmoke;
+#left_block, #right_block {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    height: 50dvh;
+    width: 50dvw;
+}
+
+#pending_app_list, #active_job_list, #interviewing_list, #offer_list {
+    border-style: solid;
+    border-radius: 10px;
+    z-index: 10;
+
+    background-color: rgba(245, 245, 245, 0.783);
     border-radius: 10px;
     padding: 15px;
+    margin: 15px;
 }
+
+
+

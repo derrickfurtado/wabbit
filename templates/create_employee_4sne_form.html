@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<h1>Add Recruiter to this Next Step:</h1>
+<h1>Add Employee to this Next Step:</h1>
 <section id="sne_4employee_form">
     <form action="{{ url_for('add_employee_sne', job_id = job_id) }}" method="post">
         {{ employee_form.csrf_token() }}

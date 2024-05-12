@@ -23,17 +23,17 @@
 
 
         <section id="pending_app_list">
-            <table>
-                <h2>Application Needed:</h2>
-                <thead>
+            <table class="table table-sm">
+                <h3>Application Needed</h3>
+                <thead class="table-dark">
                     <tr>
-                        <th></th>
-                        <th>Role Name</th>
-                        <th>Company</th>
-                        <th>Salary</th>
-                        <th>Link to Job</th>
-                        <th>Last Activity</th>
-                        <th>Last Activity Date</th>
+                        <th> </th>
+                        <th> Role Name</th>
+                        <th> Company</th>
+                        <th> Salary</th>
+                        <th> Link to Job</th>
+                        <th> Last Activity</th>
+                        <th> Last Activity Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,9 +64,9 @@
         </section>
 
         <section id="active_job_list">
-            <table>
-                <h2>Active Applications:</h2>
-                <thead>
+            <table class="table table-sm">
+                <h3>Active Applications</h3>
+                <thead class="table-dark">
                     <tr>
                         <th></th>
                         <th>Role Name</th>
@@ -104,57 +104,59 @@
             </table>
         </section>
     </div>
+
+
     <div id="right_block">
         <section id="interviewing_list">
-            <table>
-                <table>
-                    <h2>Active Interview:</h2>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Role Name</th>
-                            <th>Company</th>
-                            <th>Salary</th>
-                            <th>Link to Job</th>
-                            <th>Next Steps</th>
-                            <th>Next Step Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for job in job_list %}
-                        {% if job.interviewing and not job.job_offer and not job.rejection and not job.ghosted %}
-                        <tr>
-                            {% if job.favorite %}
-                            <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
-                            {% else %}
-                            <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
-                            {% endif %}
-                            <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
-                            <td>{{ job.company.name }}</td>
-                            {% if job.salary %}
-                            <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
-                            {% else %}
-                            <td>N/A</td>
-                            {% endif %}
-                            <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
-                            {% if job.next_step == [] %}
-                            <td>None</td>
-                            <td>None</td>
-                            {% else %}
-                            <td>{{ job.next_step[0].description }}</td>
-                            <td>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</td>
-                            {% endif %}
-                        </tr>
+            <table class="table table-sm">
+
+                <h3>Active Interview</h3>
+                <thead class="table-dark">
+                    <tr>
+                        <th></th>
+                        <th>Role Name</th>
+                        <th>Company</th>
+                        <th>Salary</th>
+                        <th>Link to Job</th>
+                        <th>Next Steps</th>
+                        <th>Next Step Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in job_list %}
+                    {% if job.interviewing and not job.job_offer and not job.rejection and not job.ghosted %}
+                    <tr>
+                        {% if job.favorite %}
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                        {% else %}
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
                         {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
+                        <td>{{ job.company.name }}</td>
+                        {% if job.salary %}
+                        <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                        {% else %}
+                        <td>N/A</td>
+                        {% endif %}
+                        <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
+                        {% if job.next_step == [] %}
+                        <td>None</td>
+                        <td>None</td>
+                        {% else %}
+                        <td>{{ job.next_step[0].description }}</td>
+                        <td>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</td>
+                        {% endif %}
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
         </section>
 
         <section id="offer_list">
-            <h2>Offers Extended:</h2>
-            <table>
-                <thead>
+            <h3>Offers Extended</h3>
+            <table class="table table-sm">
+                <thead class="table-dark">
                     <tr>
                         <th></th>
                         <th>Role</th>
