@@ -1,0 +1,52 @@
+body {
+    background-image: url(https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+    background-position: center;
+    background-size: auto;
+
+    height: fit-content;
+}
+
+
+#all_jobs_div,
+#recruiter_list_div,
+#employee_list_div {
+    border-radius: 10px;
+    background-color: antiquewhite;
+    margin: 10px;
+    padding: 10px;
+}
+
+#company_head_div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    
+}
+
+#company_deets, 
+#company_favorite {
+    border-style: solid;
+    border-radius: 10px;
+    z-index: 10;
+
+    background-color: rgba(245, 245, 245, 0.783);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px;
+}
+
+#roster_list_div {
+    display: flex;
+    justify-content: space-between;
+}
+
+#all_jobs_div {
+    padding: 15px;
+}
+
+#recruiter_list_div,
+#employee_list_div {
+    padding: 10px;
+    width: 50dvw;
+}
