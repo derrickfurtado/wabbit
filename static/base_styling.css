@@ -8,10 +8,12 @@
 
 
 
-.navbar.navbar-expand-lg.bg-body-tertiary {
+.navbar.navbar-expand-lg.bg-body-tertiary,
+.navbar.sticky-top.navbar-light.bg-light {
     background-color: bisque !important;
 
 }
+
 
 table {
     border-radius: 10px;

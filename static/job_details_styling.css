@@ -1,0 +1,111 @@
+body {
+    background-image: url(https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+    background-position: center;
+    background-size: auto;
+
+    height: fit-content;
+}
+
+#job_card {
+    display: flex;
+    flex-direction: column;
+    margin: 25px
+}
+
+
+
+#job_details_2_div, 
+#job_details_3_div,
+#job_details_4_div,
+#job_details_5_div {
+    background-color: aqua;
+    margin: 3px;
+    border-radius: 10px;
+    padding: 15px;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+#job_description,
+#job_requirements,
+#next_step_actual,
+#recruiter_next_step,
+#employee_next_step,
+#job_last_task,
+#task_div,
+#job_call_task,
+#job_email_task,
+#job_general_task,
+
+#job_salary,
+#job_compensation {
+    border-radius: 10px;
+    background-color: rgba(226, 226, 226, 0.713);
+}
+
+#role_div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+    border-radius: 10px;
+    background-color: rgba(226, 226, 226, 0.713);
+    width: 40dvw;
+}
+
+#job_date_applied {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#bool_div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#bool_div button {
+    margin: 2px;
+}
+
+#description_div {
+    display: flex;
+    flex-direction: column;
+    width: 50dvw;
+
+}
+
+#job_description, #job_requirements {
+    margin: 10px;
+    padding: 10px;
+}
+
+#next_steps_div {
+    display: flex;
+    flex-direction: column;
+    width: 50dvw;
+    margin: 10px;
+
+}
+
+#next_step_actual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    
+}
+
+#next_step_btns {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+
+

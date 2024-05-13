@@ -6,26 +6,19 @@ body {
     height: fit-content;
 }
 
-#create_job_form {
+#archived_job_list {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
+    margin-top: 10dvh;
     padding-left: 20dvh;
     padding-right: 20dvh;
 
     height: 90dvh;
-
 }
 
-#job_form {
-    background-color: rgba(250, 235, 215, 0.446);
-    padding: 2dvh;
-    border-radius: 10px;
-}
 
-#create_job_form form div {
-    display: flex;
-    flex-direction: column;
-    margin: 1dvh;
+.table_table-sm {
+    padding-left: 20%;
 }
