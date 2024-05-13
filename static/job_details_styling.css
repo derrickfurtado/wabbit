@@ -14,7 +14,7 @@ body {
 
 
 
-#job_details_2_div, 
+
 #job_details_3_div,
 #job_details_4_div,
 #job_details_5_div {
@@ -51,6 +51,7 @@ body {
     align-items: center;
     padding-top: 50px;
     padding-bottom: 50px;
+    margin-left: 30px;
 
     border-radius: 10px;
     background-color: rgba(226, 226, 226, 0.713);
@@ -67,11 +68,23 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 100px;
 }
 
 #bool_div button {
     margin: 2px;
 }
+
+#job_details_1_div,
+#job_details_2_div {
+    margin: 3px;
+    border-radius: 10px;
+    padding: 15px;
+
+    display: flex;
+    justify-content: space-between;
+}
+
 
 #description_div {
     display: flex;
@@ -104,6 +117,28 @@ body {
 #next_step_btns {
     display: flex;
     justify-content: space-between;
+    width: 100%;
+}
+
+#job_last_task {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: fit-content;
+    padding: 10px;
+}
+
+#task_div {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+#task_div button {
+    margin-bottom: 5px;
+}
+
+#task_table {
     width: 100%;
 }
 
