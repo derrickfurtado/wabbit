@@ -12,21 +12,6 @@ body {
     margin: 25px
 }
 
-
-
-
-#job_details_3_div,
-#job_details_4_div,
-#job_details_5_div {
-    background-color: aqua;
-    margin: 3px;
-    border-radius: 10px;
-    padding: 15px;
-
-    display: flex;
-    justify-content: space-between;
-}
-
 #job_description,
 #job_requirements,
 #next_step_actual,
@@ -37,7 +22,8 @@ body {
 #job_call_task,
 #job_email_task,
 #job_general_task,
-
+#job_recruiter,
+#job_employee,
 #job_salary,
 #job_compensation {
     border-radius: 10px;
@@ -76,7 +62,10 @@ body {
 }
 
 #job_details_1_div,
-#job_details_2_div {
+#job_details_2_div,
+#job_details_3_div,
+#job_details_4_div,
+#job_details_5_div {
     margin: 3px;
     border-radius: 10px;
     padding: 15px;
@@ -132,15 +121,64 @@ body {
     display: flex;
     flex-direction: column;
     padding: 10px;
+    width: 100%;
 }
 
 #task_div button {
     margin-bottom: 5px;
 }
 
+#job_details_3_div {
+    display: flex;
+    justify-content: space-between;
+}
+
 #task_table {
     width: 100%;
 }
 
+#salary_div {
+    display: flex;
+    width: 100dvw;
+}
 
+#job_salary, 
+#job_compensation,
+#job_link {
+    margin: 10px;
+    padding: 10px;
+}
+
+#job_compensation {
+    width: 60dvw;
+}
+#roster_div {
+    display: flex;
+    justify-content: space-between;
+    width: 100dvw;
+}
+
+ul {
+    list-style-type: disc;
+}
+
+#job_recruiter,
+#job_employee {
+    padding: 10px;
+}
+
+#job_recruiter,
+#job_employee h3{
+    margin-bottom: 3px;
+}
+
+
+#job_employee button{
+    margin-bottom: 3px;
+}
+
+#job_details_5_div {
+    display: flex;
+    justify-content: right;
+}
 
