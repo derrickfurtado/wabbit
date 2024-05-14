@@ -1,19 +1,18 @@
 
-
 .navbar-brand {
     padding: 5px;
     border-radius: 10px;
 }
 
-
-
 .navbar.navbar-expand-lg.bg-body-tertiary,
 .navbar.sticky-top.navbar-light.bg-light {
-    background-color: rgb(48, 27, 7) !important;
-
-
+    background-color: rgb(0, 0, 0) !important;
 }
 
+.nav-link {
+    color: white !important;
+    margin-right: 30px;
+}
 
 table {
     border-radius: 10px;
@@ -29,7 +28,7 @@ table {
 
     border-style: solid;
     border-color: black;
-    background-color: white;
+    background-color: rgb(213, 87, 33);
 
 }
 

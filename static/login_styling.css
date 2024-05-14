@@ -1,6 +1,9 @@
 body {
     background-image: url(/static/Wabbit_title.jpg);
+    background-blend-mode: darken;
+    background-color: rgb(96, 96, 96);
     background-size:auto;
+    background-attachment: fixed;
     background-position:center;
     background-repeat: no-repeat;
     z-index: 0;
@@ -11,13 +14,13 @@ body {
     flex-direction: column;
     justify-content: space-around;
 
-    padding: 15px;
+    padding: 25px;
     width: 100dvw;
     height: 100dvh;
 
     max-width: 300px;
 
-    background-color: rgba(22, 13, 7, 0.514);
+    background-color: rgb(0, 0, 0);
 }
 
 #login_form, #registration_form {
@@ -28,6 +31,7 @@ body {
     background-color: hwb(0 96% 4% / 0.603);
     border-radius: 15px;
     padding: 30px;
+    margin: 5px;
     z-index: 0;
 }
 
@@ -35,4 +39,5 @@ body {
     margin-bottom: 5px;
     border-radius: 10px;
     padding: 5px;
+    
 }
