@@ -19,7 +19,7 @@ body {
 #recruiter_next_step,
 #employee_next_step,
 #job_last_task,
-#task_div,
+
 #job_call_task,
 #job_email_task,
 #job_general_task,
@@ -83,9 +83,19 @@ body {
 
 }
 
+#job_details_2_div {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 #job_description, #job_requirements {
     margin: 10px;
     padding: 10px;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 #next_steps_div {
@@ -123,6 +133,18 @@ body {
     flex-direction: column;
     padding: 10px;
     width: 100%;
+}
+
+#task_menu {
+    display: flex;
+    flex-direction: column;
+}
+
+#job_call_task,
+#job_email_task,
+#job_general_task {
+    margin: 5px;
+    padding: 10px;
 }
 
 #task_div button {
@@ -178,8 +200,7 @@ ul {
     margin-bottom: 3px;
 }
 
-#job_details_5_div {
-    display: flex;
-    justify-content: right;
-}
+
+
+
 

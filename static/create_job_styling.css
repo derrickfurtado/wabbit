@@ -9,20 +9,23 @@ body {
 
 #create_job_form {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding-left: 20dvh;
     padding-right: 20dvh;
 
-    height: 90dvh;
+    height: 80dvh;
 
 }
 
 #job_form {
+    display: flex;
+    align-content: center;
     background-color: rgba(250, 235, 215, 0.446);
     padding: 2dvh;
     border-radius: 10px;
+    height: fit-content;
+
 }
 
 #create_job_form form div {
