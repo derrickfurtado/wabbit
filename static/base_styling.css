@@ -1,7 +1,6 @@
 
 
 .navbar-brand {
-    background-color: aqua;
     padding: 5px;
     border-radius: 10px;
 }
@@ -10,7 +9,8 @@
 
 .navbar.navbar-expand-lg.bg-body-tertiary,
 .navbar.sticky-top.navbar-light.bg-light {
-    background-color: bisque !important;
+    background-color: rgb(48, 27, 7) !important;
+
 
 }
 
@@ -31,4 +31,9 @@ table {
     border-color: black;
     background-color: white;
 
+}
+
+#logo {
+    width: 4dvw;;
+    border-radius: 5px;
 }
