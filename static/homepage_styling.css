@@ -31,5 +31,11 @@ body {
     margin: 15px;
 }
 
+#congrats {
+    display: flex;
+    justify-content: center;
+    border-style: solid;
+    background-color: gold;
+}
 
 

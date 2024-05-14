@@ -19,3 +19,16 @@ table {
     border-radius: 10px;
     overflow: hidden;
 }
+
+#flash_message {
+    border-radius: 5px;
+    padding: 20px;
+
+    width: auto;
+    height: auto;
+
+    border-style: solid;
+    border-color: black;
+    background-color: white;
+
+}
