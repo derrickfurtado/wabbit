@@ -78,7 +78,8 @@
                 {% endif %}
             </div>
             <div id="job_ghosted_bool">
-                {% if not job.ghosted and job.date_applied and job.interviewing and not job.job_offer and not job.rejected %}
+                {% if not job.ghosted and job.date_applied and job.interviewing and not job.job_offer and not
+                job.rejected %}
                 <a href="{{ url_for('update_ghosted', job_id = job.id) }}"><button
                         class="btn btn-secondary btn-lg btn-block">👻 Been Ghosted? 👉 CLICK
                         HERE</button></a>
@@ -111,6 +112,12 @@
                     <b>{{ last_step.step_type }} </b>
                 </div>
                 <div>
+                    Agenda:
+                    {% if last_step.description %}
+                    <b>{{ last_step.description }}</b>
+                    {% endif %}
+                </div>
+                <div>
                     With:
                     {% if last_step.task_for_recruiter %}
                     <a href="{{ last_step.recruiter.linkedin }}" , target="_blank">{{ last_step.recruiter.first_name }}
@@ -122,11 +129,7 @@
                     {% endif %}
                 </div>
                 <div>
-                    Scheduled for: <b>{{ last_step.due_date.strftime('%b %d, %Y') }} @ 
-                        
-                        {{ last_step.due_time.strftime('%I:%M %p') }}
-                    
-                    </b>
+                    Scheduled for: <b>{{ last_step.due_date.strftime('%b %d, %Y') }} @ {{ last_step.due_time.strftime('%I:%M %p') }}</b>
                     {% else %}
                     <b>No next steps scheduled.</b>
                     {% endif %}

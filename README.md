@@ -1,7 +1,7 @@
 MVP:
 
 - ✅ Log in to account
-- Log in securely with bcrypt
+- ✅ Log in securely with bcrypt
 - ✅ Create Account
 - ✅ Record Job Opportunities and details associated with it.
 - ✅ Link Job object to Company objects
