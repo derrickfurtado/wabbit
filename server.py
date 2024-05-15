@@ -1,6 +1,6 @@
 """ server to contain endpoints for Wabbit app """
 
-import forms, model, crud
+import forms, model, crud, bcrypt
 from flask import Flask, render_template, flash, redirect, session, request, url_for
 from key import secret_key
 from pdb import set_trace
@@ -33,8 +33,11 @@ def login_user():
             for user in current_users:
                 if user_form.email.data == user.email:
                     user_found = True
-                                            ### 🚨 bcrypt here
-                    if user_form.password.data == user.password:
+                    user_password = user_form.password.data
+                    user_byt_pass = user_password.encode('utf-8')
+                    stored_password = user.password
+                    password_check = bcrypt.checkpw(user_byt_pass, stored_password)
+                    if password_check:
                         session["user_id"] = user.id
                         flash(f"Welcome back {user.first_name}!")
                         return redirect("/homepage")
@@ -62,6 +65,13 @@ def register_user():
             last_name = register_form.last_name.data
             email = register_form.email.data
             password = register_form.password.data                  ### 🚨 bcrypt here
+
+            
+            byt = password.encode('utf-8')
+            salt = bcrypt.gensalt()
+
+            password = bcrypt.hashpw(byt, salt)
+
 
             new_user = crud.create_user(first_name, last_name, email, password, None, None, None, None)
             model.db.session.add(new_user)

@@ -1,6 +1,6 @@
 """ Seed file to create/delete DB and add test data to our Wabbit DB for testing/building only"""
 
-import os, model, server, json, crud
+import os, model, server, json, crud, key
 from pdb import set_trace
 
 server.app.app_context().push()
@@ -33,7 +33,7 @@ user_data = test_data[0]["users"]           ## each dataclass object has a speci
 first_name = user_data["first_name"]
 last_name = user_data["last_name"]
 email = user_data["email"]
-password = user_data["password"]
+password = key.user_password
 location = user_data["location"]
 school = user_data["school"]
 bio = user_data["bio"]

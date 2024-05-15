@@ -16,7 +16,7 @@ class Users(db.Model):
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.String(256), nullable=False)
+    password = db.Column(db.LargeBinary, nullable=False)            ### 💡changed column data type to be LargeBinary for encryption
     location = db.Column(db.String(255))
     school = db.Column(db.String(255))
     bio = db.Column(db.String(255))
