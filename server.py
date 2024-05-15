@@ -26,13 +26,14 @@ def login_page():
 def login_user():
     user_form = forms.User_Login_Form()             ## pull form data from login form
     current_users = model.Users.query.all()         ## query list of current users
-    user_list = []                                  ## empty list for verified emails
+
 
     if user_form.validate_on_submit():
             user_found = False
             for user in current_users:
                 if user_form.email.data == user.email:
                     user_found = True
+                                            ### 🚨 bcrypt here
                     if user_form.password.data == user.password:
                         session["user_id"] = user.id
                         flash(f"Welcome back {user.first_name}!")
@@ -54,13 +55,13 @@ def register_user():
     user_list = []                                  ## empty list for verified emails
 
     for user in current_users:
-        user_list.append(user.email)
+        user_list.append(user.email)              ### 💡 doing this so only email is being stored in a list, not passwords     
     if register_form.validate_on_submit():
         if register_form.email.data not in user_list:
             first_name = register_form.first_name.data
             last_name = register_form.last_name.data
             email = register_form.email.data
-            password = register_form.password.data
+            password = register_form.password.data                  ### 🚨 bcrypt here
 
             new_user = crud.create_user(first_name, last_name, email, password, None, None, None, None)
             model.db.session.add(new_user)
@@ -68,7 +69,7 @@ def register_user():
             flash("Successfully Registered Account")
             return redirect("/")
         else:
-            flash("Email already exists")
+            flash("Email already exists. Choose a different email.")
             return redirect("/")
     else:
         flash("Error submitting form. Please Try again")
@@ -77,7 +78,6 @@ def register_user():
 @app.route("/sign_out")
 def sign_out():
     del session["user_id"]
-    flash(f"You have logged out!")
     return redirect("/")
 
 ############################ Homepage Routes ##############################
@@ -87,6 +87,7 @@ def homepage():
     user_id = session["user_id"]
     job_list = crud.show_all_jobs_by_userID(user_id)               ### 💡only pull jobs that the user owns in the DB
     
+
     if not job_list:
         flash("You are not tracking any opportunities. Get on it!!!")
     return render_template("homepage.html", job_list = job_list, user_id = user_id)
@@ -113,7 +114,7 @@ def show_job_form():
     company_list = crud.show_all_companies_by_userID(session["user_id"])
     job_form = forms.Job_Form()
     choices = [(company.id, company.name) for company in company_list]      ## creating dynamic list for company options
-    choices.append(("create_company", "*** Create Company ***"))            ## adding fall back in case company is not created yet
+    choices.insert(0,("create_company", "*** Create Company ***"))            ## adding fall back in case company is not created yet
     job_form.company.choices = choices                              ## adding dynamic list and fallback together to choices
 
     return render_template("/job_page.html", job_form = job_form)
@@ -178,6 +179,16 @@ def update_applied_status():
     model.db.session.commit()
 
     return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/remove_applied_date")
+def remove_applied_date():
+
+    job_id = request.args.get("job_id")
+    updated_job = crud.remove_applied_status(job_id)
+    updated_job.last_logged_task = "Created Job"
+    model.db.session.add(updated_job)
+    model.db.session.commit()
+    return redirect(url_for("show_job_detail", job_id = job_id))
 
 @app.route("/update_offer")
 def update_offer():
@@ -427,11 +438,12 @@ def update_favorite_company_homepage():
     company_id = request.args.get("company_id")
     company = crud.get_company_by_company_id(company_id)
     company.favorite = crud.update_bool(company.favorite)
+    company_list = crud.show_all_companies_by_userID(session["user_id"])
 
     model.db.session.add(company)
     model.db.session.commit()
 
-    return redirect(url_for("homepage"))
+    return redirect(url_for("company_list", company_list = company_list))
 
 ######################### People Objects #################################
 
@@ -499,8 +511,12 @@ def sne_recruiter_form():
     job_id = request.args.get("job_id")                     ### 💡 this job_id is hitching a ride
     company = crud.get_company_by_job_id(job_id)                    ### 💡 need this to get all recruiters in company
     recruiter_list = crud.recruiter_list_by_company(company.id)
+
+    categories = [("Phone Call", "Phone Call"), ("Zoom Call","Zoom Call"), ("Google Meet","Google Meet"), ("In Person","In Person")]
+    sne_form.step_type.choices = categories
+
     choices = [(recruiter.id, f"{recruiter.first_name} {recruiter.last_name} ({recruiter.title})") for recruiter in recruiter_list]   ### 💡 creating a dynamic list for creating next steps
-    choices.append(("create_recruiter", "*** Create Recruiter ***"))        ### 💡 adding option, in case recruiter object is absent
+    choices.insert(0, ("create_recruiter", "*** Create Recruiter ***"))        ### 💡 adding option, in case recruiter object is absent
     sne_form.task_for_recruiter_id.choices = choices            ### 💡 assigning choices to this form before rendering
 
     return render_template("sne_recruiter_form.html", sne_form = sne_form, job_id = job_id)
@@ -509,9 +525,10 @@ def sne_recruiter_form():
 def create_sne_4recruiter():
     job_id = request.args.get("job_id")
     sne_form = forms.SNE_Recruiter_Form()
-
     if sne_form.task_for_recruiter_id.data == "create_recruiter":                   ### 💡 if "Create Recruiter" is selected on the form
-        session["due_date"] = sne_form.due_date.data                    
+        session["due_date"] = sne_form.due_date.data
+
+        session["due_time"] = str(sne_form.due_time.data)                           ### 💡 Session cannot store datetime.time data so need to convert to string
         session["description"] = sne_form.description.data                          ### 💡 saving form data to session
         session["step_type"] = sne_form.step_type.data
         recruiter_form = forms.Recruiter_Form()
@@ -521,14 +538,16 @@ def create_sne_4recruiter():
         task_for_employee = None                                            ### 💡 this next step is for recruiter, not employee. DB column is nullable
         task_for_recruiter = sne_form.task_for_recruiter_id.data
         due_date = sne_form.due_date.data
+        due_time = sne_form.due_time.data
         description = sne_form.description.data
         step_type = sne_form.step_type.data
 
-        new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
+        new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, due_time, description, step_type)
         model.db.session.add(new_sne)                                       ### 💡 create next step object
 
         job = crud.get_job_by_id(job_id)
         job.recruiter_id = sne_form.task_for_recruiter_id.data              ### 💡 add this recruiter to the Lead Recruiter of the job
+        job.interviewing = True
         model.db.session.add(job)
         model.db.session.commit()
 
@@ -558,20 +577,26 @@ def add_recruiter_sne():
 
     task_for_employee = None
     task_for_recruiter = new_recruiter.id
-    due_date = session["due_date"]                      ### 💡  pulling old form data from session dictionary
+    due_date = session["due_date"]                                                  ### 💡  pulling old form data from session dictionary
+    
+    time_object = datetime.strptime(session["due_time"], '%H:%M:%S')                   ### 💡 reverting back to datetime.time object
+    due_time = time_object.time()
+    
     description = session["description"]
     step_type = session["step_type"]
     
     del session["description"]                          ### 💡 making sure to delete session key/value pairs to not cause issues
     del session["due_date"] 
+    del session["due_time"]
     del session["step_type"]
 
-    new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
+    new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, due_time, description, step_type)
     model.db.session.add(new_sne)
     model.db.session.commit()
 
     job = crud.get_job_by_id(job_id)
     job.recruiter_id = new_recruiter.id            ### 💡 add this newly created recruiter to the Lead Recruiter of the job
+    job.interviewing = True
     model.db.session.add(job)
     model.db.session.commit()
 
@@ -584,8 +609,11 @@ def sne_employee_form():
     company = crud.get_company_by_job_id(job_id)
     employee_list = crud.employee_list_by_company(company.id)
 
+    categories = [("Phone Call", "Phone Call"), ("Zoom Call","Zoom Call"), ("Google Meet","Google Meet"), ("In Person","In Person")]
+    sne_form.step_type.choices = categories
+
     choices = [(employee.id, f"{employee.first_name} {employee.last_name} ({employee.title})") for employee in employee_list]
-    choices.append(("create_employee", "*** Create Employee ***"))
+    choices.insert(0, ("create_employee", "*** Create Employee ***"))
     sne_form.task_for_employee_id.choices = choices
 
     return render_template("sne_employee_form.html", job_id = job_id, sne_form = sne_form)
@@ -598,6 +626,7 @@ def create_sne_4employee():
     if employee_form.task_for_employee_id.data == "create_employee":
         ### session and render template
         session["due_date"] = employee_form.due_date.data
+        session["due_time"] = str(employee_form.due_time.data)
         session["description"] = employee_form.description.data
         session["step_type"] = employee_form.step_type.data
 
@@ -606,11 +635,16 @@ def create_sne_4employee():
         task_for_employee = employee_form.task_for_employee_id.data
         task_for_recruiter = None
         due_date = employee_form.due_date.data
+        due_time = employee_form.due_time.data
         description = employee_form.description.data
         step_type = employee_form.step_type.data
-
-        new_task = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type)
+        new_task = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, due_time, description, step_type)
         model.db.session.add(new_task)
+        model.db.session.commit()
+
+        job = crud.get_job_by_id(job_id)
+        job.interviewing = True
+        model.db.session.add(job)
         model.db.session.commit()
 
         return redirect(url_for("show_job_detail", job_id = job_id))
@@ -642,15 +676,25 @@ def add_employee_sne():
     task_for_employee_id = new_employee.id
     task_for_recruiter_id = None
     due_date = session["due_date"]
+    
+    time_object = datetime.strptime(session["due_time"], '%H:%M:%S')
+    due_time = time_object.time()
+
     description = session["description"]
     step_type = session["step_type"]
     
     del session["due_date"]
+    del session["due_time"]
     del session["description"]
     del session["step_type"]
 
-    new_task = crud.create_next_step(job_id, task_for_employee_id, task_for_recruiter_id, due_date, description, step_type)
+    new_task = crud.create_next_step(job_id, task_for_employee_id, task_for_recruiter_id, due_date, due_time, description, step_type)
     model.db.session.add(new_task)
+    model.db.session.commit()
+
+    job = crud.get_job_by_id(job_id)
+    job.interviewing = True
+    model.db.session.add(job)
     model.db.session.commit()
 
     return redirect(url_for("show_job_detail", job_id = job_id))
@@ -696,6 +740,18 @@ def create_call_job():
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
+@app.route("/delete_call")
+def delete_call():
+    job_id = request.args.get("job_id")
+    call_id = request.args.get("call_id")
+    call = crud.get_call_by_id(call_id)
+
+    model.db.session.delete(call)
+    model.db.session.commit()
+
+    flash("Call Task Deleted!")
+    return redirect(url_for("show_job_detail", job_id = job_id))
+
 ############################## Email End Points ################################
 
 @app.route("/complete_email_task")
@@ -735,6 +791,18 @@ def create_email_job():
     model.db.session.add(new_email)
     model.db.session.commit()
 
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/delete_email")
+def delete_email():
+    email_id = request.args.get("email_id")
+    job_id = request.args.get("job_id")
+    email = crud.get_email_by_id(email_id)
+
+    model.db.session.delete(email)
+    model.db.session.commit()
+
+    flash("Email Task Deleted")
     return redirect(url_for('show_job_detail', job_id = job_id))
 
 ############################## General Task End Points ################################
@@ -778,7 +846,17 @@ def create_task_job():
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
+@app.route("/delete_general_task")
+def delete_general_task():
+    job_id = request.args.get("job_id")
+    task_id = request.args.get("task_id")
+    general_task = crud.get_general_task_by_id(task_id)
 
+    model.db.session.delete(general_task)
+    model.db.session.commit()
+
+    flash("General Task Deleted!")
+    return redirect(url_for('show_job_detail', job_id = job_id))
 
 
 

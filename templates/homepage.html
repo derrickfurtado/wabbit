@@ -13,7 +13,7 @@
 {% for job in job_list %}
 {% if job.accepted_offer %}
 <div id="congrats">
-    <h1>Congratulations on your new {{ job.role }} at {{ job.company.name }}!!!</h1>
+    <h2>Congratulations on your new {{ job.role }} at {{ job.company.name }}!!!</h2>
 </div>
 {% endif %}
 {% endfor %}
@@ -41,14 +41,14 @@
                     {% if not job.date_applied and not job.rejection and not job.ghosted %}
                     <tr>
                         {% if job.favorite %}
-                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">📈</a></td>
                         {% else %}
-                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">📉</a></td>
                         {% endif %}
                         <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                         <td>{{ job.company.name }}</td>
                         {% if job.salary %}
-                        <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                        <td id="salary_data">{{ "$ {:,.0f}".format(job.salary) }}</td>
                         {% else %}
                         <td>N/A</td>
                         {% endif %}
@@ -83,14 +83,14 @@
                     job.accepted_offer and not job.ghosted %}
                     <tr>
                         {% if job.favorite %}
-                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">📈</a></td>
                         {% else %}
-                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">📉</a></td>
                         {% endif %}
                         <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                         <td>{{ job.company.name }}</td>
                         {% if job.salary %}
-                        <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                        <td id="salary_data">{{ "$ {:,.0f}".format(job.salary) }}</td>
                         {% else %}
                         <td>N/A</td>
                         {% endif %}
@@ -104,8 +104,7 @@
             </table>
         </section>
     </div>
-
-
+    
     <div id="right_block">
         <section id="interviewing_list">
             <table class="table table-sm">
@@ -127,24 +126,29 @@
                     {% if job.interviewing and not job.job_offer and not job.rejection and not job.ghosted %}
                     <tr>
                         {% if job.favorite %}
-                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                            <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">📈</a></td>
                         {% else %}
-                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                            <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">📉</a></td>
                         {% endif %}
+                        
                         <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                         <td>{{ job.company.name }}</td>
+                        
                         {% if job.salary %}
-                        <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                            <td id="salary_data">{{ "$ {:,.0f}".format(job.salary) }}</td>
                         {% else %}
-                        <td>N/A</td>
+                            <td>N/A</td>
                         {% endif %}
+                        
                         <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
+                        
                         {% if job.next_step == [] %}
-                        <td>None</td>
-                        <td>None</td>
-                        {% else %}
-                        <td>{{ job.next_step[0].description }}</td>
-                        <td>{{ job.next_step[0].due_date.strftime('%b %d @ %H:%M%p') }}</td>
+                            <td>None</td>
+                            <td>None</td>
+                        {% elif job.next_step %}
+                            {% set last_step = job.next_step[-1] %}
+                                <td>{{ last_step.step_type }}</td>
+                                <td>{{ last_step.due_date.strftime('%b %d') }} <br>@ {{ last_step.due_time.strftime('%I:%M %p') }}</td>
                         {% endif %}
                     </tr>
                     {% endif %}
@@ -170,13 +174,17 @@
                     {% if job.job_offer and not job.rejection and not job.ghosted %}
                     <tr>
                         {% if job.favorite %}
-                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">❤️</a></td>
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">📈</a></td>
                         {% else %}
-                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">🖤</a></td>
+                        <td><a href="{{ url_for('update_favorite_homepage', job_id = job.id )}}">📉</a></td>
                         {% endif %}
                         <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                         <td>{{ job.company.name }}</td>
-                        <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                        {% if job.salary %}
+                            <td id="salary_data">{{ "$ {:,.0f}".format(job.salary) }}</td>
+                        {% else %}
+                            <td>No Salary Data</td>
+                        {% endif %}
                         <td><a href="{{ job.link }}">Job Link</a></td>
                     </tr>
                     {% endif %}

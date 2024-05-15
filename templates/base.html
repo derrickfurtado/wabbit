@@ -13,44 +13,49 @@
 
     {% block title %}
     {% endblock %}
+
+
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
 
-        {% if request.path.startswith("/create_sne_4recruiter") and "job_id" in request.args %}
-        {% elif request.path.startswith("/create_employee_4sne_form") and "job_id" in request.args %}
-        {% elif request.path == "/company_page" %}
-        {% elif request.path != "/" %}
+    {% if request.path.startswith("/create_sne_4recruiter") and "job_id" in request.args %}
+    {% elif request.path.startswith("/create_employee_4sne_form") and "job_id" in request.args %}
+    {% elif request.path == "/company_page" %}
+    {% elif request.path != "/" %}
 
+    <nav class="navbar sticky-top navbar-light bg-light">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/homepage">Wabbit</a>
-                
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
+                <a class="navbar-brand" href="/homepage"><img id="logo" src="/static/WABBIT.jpg" alt="logo"></a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/homepage">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="/company_list">Companies</a>
-                        <li class="nav-item">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/job_page">Create Job</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/archived_jobs">👻 and Archived Jobs</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/sign_out">Sign Out</a>
-                        </li>
+                        <div>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/homepage"><button class="btn btn-secondary">Dashboard</button></a>
+                            </li>
+                        </div>
+                        <div>
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="/company_list"><button class="btn btn-secondary">Companies</button></a>
+                            <li class="nav-item">
+                        </div>
+                        <div>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/job_page"><button class="btn btn-secondary">Create Job</button></a>
+                            </li>
+                        </div>
+                        <div>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/archived_jobs"><button class="btn btn-secondary">Trash Bin</button></a>
+                            </li>
+                        </div>
+                        <div>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/sign_out"><button class="btn btn-secondary">Sign Out</button></a>
+                            </li>
+                        </div>
                     </ul>
                 </div>
             </div>
@@ -58,15 +63,15 @@
 
         {% endif %}
 
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
         <div id="flash_message">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
             {% for message in messages %}
             <b>{{ message }}</b>
             {% endfor %}
-            {% endif %}
-            {% endwith %}
         </div>
+        {% endif %}
+        {% endwith %}
     </nav>
 
 

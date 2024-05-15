@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block styling %}
-<link rel="stylesheet" href="/static/">
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/companies_styling.css">
 {% endblock %}
 
 {% block title %}
@@ -13,9 +13,8 @@
 
 
 <section id="company_list">
-    <table>
-        <h2>Companies:</h2>
-        <thead>
+    <table class="table table-sm">
+        <thead class="table-dark">
             <tr>
                 <th></th>
                 <th>Company Name:</th>
@@ -27,9 +26,9 @@
             {% for company in company_list %}
             <tr>
                 {% if company.favorite %}
-                <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">❤️</a></td>
+                <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">📈</a></td>
                 {% else %}
-                <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">🖤</a></td>
+                <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">📉</a></td>
                 {% endif %}
                 <td><a href="{{ url_for('show_company_detail', company_id = company.id) }}">{{ company.name }}</a>
                 </td>

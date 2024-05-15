@@ -1,25 +1,44 @@
 {% extends "base.html" %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/create_staff_form_styling.css">
+{% endblock %}
+
 {% block title %}
 <title>Add Stakeholders</title>
 {% endblock %}
 
 {% block body %}
-<h1>Add Stakeholders to this Company:</h1>
-<section id="employee_form">
-    <form action="{{ url_for('create_employee', company_id = company_id, job_id = job_id) }}" method="post">
+<section id="create_staff_form">
+    <form id="staff_form" action="{{ url_for('create_employee', company_id = company_id, job_id = job_id) }}"
+        method="post">
+        <h1>Add Stakeholders to this Company:</h1>
         {{ employee_form.csrf_token() }}
-        {{ employee_form.first_name.label }}
-        {{ employee_form.first_name }}
-        {{ employee_form.last_name.label }}
-        {{ employee_form.last_name }}
-        {{ employee_form.title.label }}
-        {{ employee_form.title }}
-        {{ employee_form.email.label }}
-        {{ employee_form.email }}
-        {{ employee_form.linkedin.label }}
-        {{ employee_form.linkedin }}
-        {{ employee_form.submit }}
+
+        <div>
+            {{ employee_form.first_name.label }}
+            {{ employee_form.first_name(class="form-control") }}
+        </div>
+        <div>
+            {{ employee_form.last_name.label }}
+            {{ employee_form.last_name(class="form-control") }}
+        </div>
+        <div>
+            {{ employee_form.title.label }}
+            {{ employee_form.title(class="form-control") }}
+        </div>
+        <div>
+            {{ employee_form.email.label }}
+            {{ employee_form.email(class="form-control") }}
+        </div>
+        <div>
+            {{ employee_form.linkedin.label }}
+            {{ employee_form.linkedin(class="form-control") }}
+        </div>
+        <div>
+            {{ employee_form.submit(class="btn btn-primary") }}
+        </div>
+
     </form>
 </section>
 

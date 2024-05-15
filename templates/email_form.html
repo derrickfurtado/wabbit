@@ -1,21 +1,32 @@
 {% extends "base.html" %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/task_styling.css">
+{% endblock %}
+
 {% block title %}
 <title>Email Form</title>
 {% endblock %}
 
 {% block body %}
 
-<h2>Create Email Task:</h2>
 
-<section id="email_form">
-    <form action="{{ url_for('create_email_job', job_id = job_id) }}", method="post">
+<section id="create_task_form">
+    <form id="task_form" action="{{ url_for('create_email_job', job_id = job_id) }}", method="post">
+        <h2>Create Email Task:</h2>
         {{ form.csrf_token() }}
+    <div>
         {{ form.due_date.label }}
-        {{ form.due_date }}
+        {{ form.due_date(class="form-control") }}
+    </div>
+    <div>
         {{ form.description.label }}
-        {{ form.description }}
-        {{ form.submit }}
+        {{ form.description(class="form-control") }}
+    </div>
+    <div>
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+
     </form>
 </section>
 

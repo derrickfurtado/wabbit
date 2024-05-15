@@ -1,12 +1,21 @@
-body {
-    background-image: url(/static/Wabbit_title.jpg);
-    background-blend-mode: darken;
+html {
     background-color: rgb(96, 96, 96);
-    background-size:auto;
-    background-attachment: fixed;
-    background-position:center;
-    background-repeat: no-repeat;
-    z-index: 0;
+}
+
+#body_div {
+    display: flex;
+}
+
+#background_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(96, 96, 96);
+    width: 100%;
+}
+
+img {
+    mix-blend-mode: darken;
 }
 
 #login_page_div {

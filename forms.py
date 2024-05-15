@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, PasswordField, EmailField, DateField, IntegerField
+from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, PasswordField, EmailField, DateField, IntegerField, TimeField
 from wtforms.validators import DataRequired, Length
 
 
@@ -18,11 +18,11 @@ class User_Registration_Form(FlaskForm):
 
 class Job_Form(FlaskForm):
     role = StringField("Role Title: ", validators=[DataRequired(), Length(max=255)])
-    description = StringField("Job Description: ", validators=(DataRequired(), Length(max=2000)))
-    requirements = StringField("Job Requirements: ", validators=[DataRequired(), Length(max=2000)])
+    description = TextAreaField("Job Description: ", validators=(DataRequired(), Length(max=4000)))
+    requirements = TextAreaField("Job Requirements: ", validators=[DataRequired(), Length(max=4000)])
     salary = IntegerField("Salary (if present): ")
-    compensation = StringField("Other Compensation (if present): ", validators=[Length(max=255)])
-    link = StringField("Link to posting: ", validators=[DataRequired(), Length(max=255)])
+    compensation = TextAreaField("Other Compensation (if present): ", validators=[Length(max=4000)])
+    link = StringField("Link to posting: ", validators=[DataRequired(), Length(max=500)])
     company = SelectField("Company: ", coerce=str)              ## coerce allows the form to "look" for a string when invoked
     submit = SubmitField()
 
@@ -50,29 +50,31 @@ class Recruiter_Form(FlaskForm):
 
 class SNE_Recruiter_Form(FlaskForm):
     task_for_recruiter_id = SelectField("Which recruiter? ", coerce=str)
-    due_date = DateField("Due Date or Date of Event:", validators=[DataRequired()])
-    description = StringField("Description: ", validators=[DataRequired(), Length(max=255)])
-    step_type = StringField("Next Step Category", validators=[DataRequired(), Length(max=255)])
+    due_date = DateField("Date of Event: ", validators=[DataRequired()])
+    due_time = TimeField("Time of Event: ", validators=[DataRequired()])
+    description = TextAreaField("Description: ", validators=[DataRequired(), Length(max=255)])
+    step_type = SelectField("Type of Call", coerce=str)
     submit = SubmitField()
 
 class SNE_Employee_Form(FlaskForm):
     task_for_employee_id = SelectField("Which employee?", coerce=str)
-    due_date = DateField("Due Date or Date of Event:", validators=[DataRequired()])
-    description = StringField("Description: ", validators=[DataRequired(), Length(max=255)])
-    step_type = StringField("Next Step Category", validators=[DataRequired(), Length(max=255)])
+    due_date = DateField("Date of Event:", validators=[DataRequired()])
+    due_time = TimeField("Time of Event: ", validators=[DataRequired()])
+    description = TextAreaField("Description: ", validators=[DataRequired(), Length(max=255)])
+    step_type = SelectField("Type of Call", coerce=str)
     submit = SubmitField()
 
 class Call_Form(FlaskForm):
     due_date = DateField("When are you making this call? ", validators=[DataRequired()])
-    description = StringField("Describe the goal of the call: ", validators=[Length(max=255)])
+    description = TextAreaField("Describe the goal of the call: ", validators=[Length(max=500)])
     submit = SubmitField()
 
 class Email_Form(FlaskForm):
     due_date = DateField("When are you sending this email? ", validators=[DataRequired()])
-    description = StringField("Describe the goal of the email: ", validators=[Length(max=255)])
+    description = TextAreaField("Describe the goal of the email: ", validators=[Length(max=500)])
     submit = SubmitField()
 
 class General_Task_Form(FlaskForm):
     due_date = DateField("When should this task be completed? ", validators=[DataRequired()])
-    description = StringField("Describe the task: ", validators=[Length(max=255)])
+    description = TextAreaField("Describe the task: ", validators=[Length(max=500)])
     submit = SubmitField()

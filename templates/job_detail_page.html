@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block stylesheet %}
-<link rel="stylesheet" href="/static/job_styling.css">
+<link rel="stylesheet" href="/static/job_details_styling.css">
+<style>
+    .job-description,
+    .job-requirements {
+        white-space: pre-wrap;
+    }
+</style>
 {% endblock %}
 
 {% block title %}
@@ -11,213 +17,334 @@
 {% block body %}
 
 <section id="job_card">
-    <div id="job_role_div">
-        <h1>{{ job.role }}</h1>
-        <h3><a href="{{ url_for('show_company_detail', company_id = job.company.id) }}">{{ job.company.name }}</a></h3>
-    </div>
-    <div id="delete_job_btn">
-        <a href="{{ url_for('delete_warning', job_id = job.id) }}"><button>🚨DELETE JOB🚨</button></a>
-    </div>
-    <div id="job_details_div">
-        <div id="job_description">
-            Job Description: <br>
-            <b>{{ job.description }}</b>
-        </div>
-        <div id="job_requirements">
-            Requirements: <br>
-            <b>{{ job.requirements }}</b>
-        </div>
-        <div id="job_salary">
-            <br><br>
-            Salary:
-            {% if job.salary %}
-                <b>{{ "$ {:,.0f} per year".format(job.salary) }}</b>
-            {% else %}
-                <b>Salary not provided</b>
-            {% endif %}
-        </div>
-        <div id="job_compensation">
-            Additional Compensation:
-            <b>{{ job.compensation }}</b>
-        </div>
-        <div id="job_link">
-            <b><a href="{{ job.link }}" target="_blank"><button>Link to Job Posting</button></a></b>
-        </div>
-        <div id="job_data_applied">
-            {% if job.date_applied != None %}
+
+    <div id="job_details_1_div">
+        <div id="role_div">
+            <h1>{{ job.role }}</h1>
+            <h3><a href="{{ url_for('show_company_detail', company_id = job.company.id) }}">{{ job.company.name }}</a>
+            </h3>
+            <div id="job_favorite_bool">
+                {% if not job.favorite %}
+                <a href="{{ url_for('update_favorite', job_id = job.id) }}"><button class="btn btn-primary btn-sm">❤️
+                        Mark as Favorite</button></a>
+                {% elif job.favorite %}
+                <a href="{{ url_for('update_favorite', job_id = job.id) }}"><button class="btn btn-primary btn-sm">🤮
+                        Mark as Unfavorite</button></a>
+                {% endif %}
+            </div>
+            <div id="job_date_applied">
+                {% if job.date_applied != None %}
                 Date Applied:
                 <b>{{ job.date_applied.strftime('%b %d @ %H:%M%p') }}</b>
-            {% else %}
+                <a href="{{ url_for('remove_applied_date', job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-sm">Undo Applied</button></a>
+                {% else %}
                 <b>Have not applied yet.</b>
-                <a href="{{ url_for('update_applied_status', job_id = job.id) }}"><button>APPLY</button></a>
-            {% endif %}
+                <a href="{{ url_for('update_applied_status', job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-lg">APPLY</button></a>
+                {% endif %}
+            </div>
         </div>
-    </div>
-    <div id="bool_div">
-        <div id="job_offer_bool">
-            {% if not job.job_offer %}
-                <a href="{{ url_for('update_offer', job_id = job.id)}}"><button>Job Offer?<br>CLICK HERE</button></a>
-            {% elif job.job_offer %}
-                <a href="{{ url_for('update_offer', job_id = job.id)}}"><button>Undo Job Offer</button></a>
-            {% endif %}
-        </div>
-        <div id="job_rejection_bool">
-            {% if not job.rejection %}
-                <a href="{{ url_for('update_rejection', job_id = job.id) }}"><button>Rejected?<br>CLICK HERE</button></a>
-            {% elif job.rejection %}
-                <a href="{{ url_for('update_rejection', job_id = job.id) }}"><button>Undo Rejection</button></a>
-            {% endif %}
-        </div>
-        <div id="job_interviewing_bool">
-            {% if not job.interviewing %}
-                <a href="{{ url_for('update_interviewing', job_id = job.id) }}"><button>Start Interviewing<br>CLICK HERE</button></a>
-            {% elif job.interviewing %}
-                <a href="{{ url_for('update_interviewing', job_id = job.id) }}"><button>Undo Interviewing</button></a>
-            {% endif %}
-        </div>
-        <div id="job_accepted_bool">
-            {% if job.job_offer %}
-                <a href="{{ url_for('update_accepted', job_id = job.id) }}"><button>Accepted Offer?<br>CLICK HERE</button></a>
-            {% endif %}
-            {% if job.job_offer and job.accepted_offer %}
-                <a href="{{ url_for('update_accepted', job_id = job.id) }}"><button>Undo Acceptance</button></a>
-            {% endif %}
-        </div>
-        <div id="job_ghosted_bool">
-            {% if not job.ghosted %}
-                <a href="{{ url_for('update_ghosted', job_id = job.id) }}"><button>Been Ghosted?<br>CLICK HERE</button></a>
-            {% elif job.ghosted %}
-                <a href="{{ url_for('update_ghosted', job_id = job.id) }}"><button>Did they get back to you?<br>CLICK HERE</button></a>
-            {% endif %}
-        </div>
-        <div id="job_favorite_bool">
-            {% if not job.favorite %}
-               <a href="{{ url_for('update_favorite', job_id = job.id) }}"><button>Favorite</button></a>
-            {% elif job.favorite %}
-                <a href="{{ url_for('update_favorite', job_id = job.id) }}"><button>Unfavorite</button></a>
-            {% endif %}
-        </div>
-    </div>
-    <div id="next_steps_div">
-        <div id="next_step_actual">
-            Next Steps:
-            {% if job.next_step %}
-                {% set last_step = job.next_step[-1] %}
-                    <b>{{ last_step.step_type }} </b>
-                    With: 
-                    {% if last_step.task_for_recruiter %}
-                        <a href="{{ last_step.recruiter.linkedin }}", target="_blank">{{ last_step.recruiter.first_name }} {{ last_step.recruiter.last_name }} ({{ last_step.recruiter.title }})</a>
-                    {% else %}
-                    <a href="{{ last_step.employee.linkedin }}", target="_blank">{{ last_step.employee.first_name }} {{ last_step.employee.last_name }} ({{ last_step.employee.title }})</a>
-                    {% endif %}
-                    Scheduled for: <b>{{ last_step.due_date.strftime('%b %d @ %H:%M%p') }}</b>
-            {% else %}
-                <b>No next steps scheduled.</b>
-            {% endif %}
+        <div id="bool_div">
+            <div id="job_offer_bool">
+                {% if not job.job_offer and job.interviewing and not job.rejection %}
+                <a href="{{ url_for('update_offer', job_id = job.id)}}"><button
+                        class="btn btn-secondary btn-lg btn-block">Job Offer? 👉 CLICK HERE</button></a>
+                {% elif job.job_offer and job.interviewing and not job.accepted_offer%}
+                <a href="{{ url_for('update_offer', job_id = job.id)}}"><button
+                        class="btn btn-secondary btn-lg btn-block">❌ Undo Job Offer</button></a>
+                {% endif %}
+            </div>
+            <div id="job_accepted_bool">
+                {% if job.job_offer and not job.accepted_offer %}
+                <a href="{{ url_for('update_accepted', job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-lg btn-block">Accepted Offer? 👉 CLICK
+                        HERE</button></a>
+                {% endif %}
+                {% if job.job_offer and job.accepted_offer %}
+                <a href="{{ url_for('update_accepted', job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-lg btn-block">❌ Undo Acceptance</button></a>
+                {% endif %}
+            </div>
+            <hr width="100%" size="10" style="border-style: solid; border-color: black;">
+            <div id="job_rejection_bool">
+                {% if not job.rejection and job.date_applied and not job.job_offer and not job.ghosted %}
+                <a href="{{ url_for('update_rejection', job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-lg btn-block">Rejected? 👉 CLICK
+                        HERE</button></a>
+                {% elif job.rejection and job.date_applied %}
+                <a href="{{ url_for('update_rejection', job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-lg btn-block">❌ Undo Rejection</button></a>
+                {% endif %}
+            </div>
+            <div id="job_ghosted_bool">
+                {% if not job.ghosted and job.date_applied and job.interviewing and not job.job_offer and not job.rejected %}
+                <a href="{{ url_for('update_ghosted', job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-lg btn-block">👻 Been Ghosted? 👉 CLICK
+                        HERE</button></a>
+                {% elif job.ghosted and job.date_applied and job.interviewing and not job.job_offer %}
+                <a href="{{ url_for('update_ghosted', job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-lg btn-block">Did they get back to you? 👉 CLICK
+                        HERE</button></a>
+                {% endif %}
+            </div>
 
         </div>
-        <div id="recruiter_next_step">
-            <a href="{{ url_for('sne_recruiter_form', job_id = job.id) }}"><button>Schedule Call with Recruiter</button></a>
+    </div>
+    <div id="job_details_2_div">
+        <div id="description_div">
+            <div id="job_description">
+                <h3> Job Description: </h3>
+                <pre>{{ job.description }}</pre>
+            </div>
+            <div id="job_requirements">
+                <h3>Requirements: </h3>
+                <pre>{{ job.requirements }}</pre>
+            </div>
         </div>
-        <div id="employee_next_step">
-            <a href="{{ url_for('sne_employee_form', job_id = job.id) }}"><button>Schedule Call with Interviewer</button></a>
+        <div id="next_steps_div">
+            <div id="next_step_actual">
+                <div>
+                    Next Steps:
+                    {% if job.next_step %}
+                    {% set last_step = job.next_step[-1] %}
+                    <b>{{ last_step.step_type }} </b>
+                </div>
+                <div>
+                    With:
+                    {% if last_step.task_for_recruiter %}
+                    <a href="{{ last_step.recruiter.linkedin }}" , target="_blank">{{ last_step.recruiter.first_name }}
+                        {{
+                        last_step.recruiter.last_name }} ({{ last_step.recruiter.title }})</a>
+                    {% else %}
+                    <a href="{{ last_step.employee.linkedin }}" , target="_blank">{{ last_step.employee.first_name }} {{
+                        last_step.employee.last_name }} ({{ last_step.employee.title }})</a>
+                    {% endif %}
+                </div>
+                <div>
+                    Scheduled for: <b>{{ last_step.due_date.strftime('%b %d, %Y') }} @ 
+                        
+                        {{ last_step.due_time.strftime('%I:%M %p') }}
+                    
+                    </b>
+                    {% else %}
+                    <b>No next steps scheduled.</b>
+                    {% endif %}
+                </div>
+
+                <div id="next_step_btns">
+                    <div id="recruiter_next_step">
+                        <a href="{{ url_for('sne_recruiter_form', job_id = job.id) }}"><button
+                                class="btn btn-primary btn-sm">Schedule Call with
+                                Recruiter</button></a>
+                    </div>
+                    <div id="employee_next_step">
+                        <a href="{{ url_for('sne_employee_form', job_id = job.id) }}"><button
+                                class="btn btn-primary btn-sm">Schedule Call with
+                                Interviewer</button></a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="job_last_task">
+                <div>
+                    Last Activity:
+                    <b>{{ job.last_logged_task }}</b>
+                </div>
+                <br>
+                <div>
+                    It's been <b>{{ days_since_task }} days since last activity.</b>
+                </div>
+            </div>
+
+            <div id="task_div">
+                <div id="task_menu">
+                    <div id="job_call_task">
+                        <a href="{{ url_for('call_form', job_id = job.id) }}"><button
+                                class="btn btn-secondary btn-lg">Add
+                                Call Task</button></a>
+                        {% if job.call_task %}
+                        <table class="table table-sm" id="task_table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Due Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for call in job.call_task %}
+                                <tr>
+                                    <td>{{ call.description }}</td>
+                                    <td>{{ call.due_date.strftime('%b %d, %Y') }}</td>
+                                    {% if not call.completed %}
+                                    <td>
+                                        <a
+                                            href="{{ url_for('complete_call_task', job_id = job.id, call_id = call.id) }}"><button
+                                                class="btn btn-primary">COMPLETE
+                                                TASK</button></a>
+                                    </td>
+                                    {% elif call.completed %}
+                                    <td>
+                                        <a href="{{ url_for('delete_call', job_id = job.id, call_id = call.id) }}"><button
+                                                class="btn btn-danger">DELETE</button></a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                    <div id="job_email_task">
+                        <a href="{{ url_for('email_form', job_id = job.id) }}"><button
+                                class="btn btn-secondary btn-lg">Add
+                                Email Task</button></a>
+                        {% if job.email_task %}
+                        <table class="table table-sm" id="task_table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Due Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for email in job.email_task %}
+
+                                <tr>
+                                    <td>{{ email.description }}</td>
+                                    <td>{{ email.due_date.strftime('%b %d, %Y') }}</td>
+                                    {% if not email.completed %}
+                                    <td>
+                                        <a
+                                            href="{{ url_for('complete_email_task', job_id = job.id, email_id = email.id) }}"><button
+                                                class="btn btn-primary">COMPLETE TASK</button></a>
+                                    </td>
+                                    {% elif email.completed %}
+
+                                    <td>
+                                        <a href="{{ url_for('delete_email', job_id = job.id, email_id = email.id) }}"><button
+                                                class="btn btn-danger">DELETE
+                                                EMAIL</button></a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                    <div id="job_general_task">
+                        <a href="{{ url_for('task_form', job_id = job.id) }}"><button
+                                class="btn btn-secondary btn-lg">Add
+                                General Task</button></a>
+                        {% if job.general_task %}
+                        <table class="table table-sm" id="task_table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Due Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in job.general_task %}
+                                <tr>
+                                    <td>{{ task.description }}</td>
+                                    <td>{{ task.due_date.strftime('%b %d, %Y') }}</td>
+                                    {% if not task.completed %}
+                                    <td>
+                                        <a
+                                            href="{{ url_for('complete_general_task', job_id = job.id, task_id = task.id) }}"><button
+                                                class="btn btn-primary">COMPLETE</button></a>
+                                    </td>
+                                    {% elif task.completed %}
+                                    <td>
+                                        <a
+                                            href="{{ url_for('delete_general_task', job_id = job.id, task_id = task.id) }}"><button
+                                                class="btn btn-danger">DELETE</button></a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="job_last_task">
-            It's been <b>{{ days_since_task }} days since last activity.</b>
+    </div>
+    <div id="job_details_3_div">
+        <div id="salary_div">
+            <div id="job_salary">
+                <h3>Salary:</h3>
+                {% if job.salary %}
+                <h4><b>{{ "$ {:,.0f} per year".format(job.salary) }}</b></h4>
+                {% else %}
+                <h4></h4><b>Salary not provided</b></h4>
+                {% endif %}
+            </div>
+            <div id="job_compensation">
+                <h3>Additional Compensation:</h3>
+                <pre>{{ job.compensation }}</pre>
+            </div>
+
+        </div>
+    </div>
+    <div id="job_details_4_div">
+        <div id="roster_div">
+            <div id="job_recruiter">
+                <h3>Lead Recruiter:</h3>
+                {% if job.recruiter == None %}
+                <a href="{{ url_for('create_recruiter_form', job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-sm">Add Recruiter</button></a>
+                {% else %}
+                <a href="{{ url_for('create_recruiter_form', job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-sm">Update Recruiter</button></a>
+                <ul>
+                    <li>
+                        <a href="{{ job.recruiter.linkedin }}" target="_blank">{{ job.recruiter.first_name }} {{
+                            job.recruiter.last_name }}</a> ({{ job.recruiter.title }}) - <a
+                            href="mailto:{{ job.recruiter.email }}"><button class="btn btn-info">EMAIL</button></a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
             <div>
-                Last Activity:
-                <b>{{ job.last_logged_task }}</b>
+                <div id="job_link">
+                    <b><a href="{{ job.link }}" target="_blank"><button class="btn btn-success">Link to Job
+                                Posting</button></a></b>
+                </div>
+                <div id="job_details_5_div">
+                    <a href="{{ url_for('delete_warning', job_id = job.id) }}"><button class="btn btn-danger">⚠️ DELETE
+                            JOB
+                            ⚠️</button></a>
+                </div>
             </div>
-        </div>
-        <div id="task_div">
-            <div id="job_call_task">
-                <a href="{{ url_for('call_form', job_id = job.id) }}"><button>Add Call Task</button></a>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>Due Date</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for call in job.call_task %}
-                                {% if not call.completed %}
-                                    <tr>
-                                        <td>{{ call.description }}</td>
-                                        <td>{{ call.due_date.strftime('%b %d @ %H:%M%p') }}</td>
-                                        <td><a href="{{ url_for('complete_call_task', job_id = job.id, call_id = call.id) }}"><button>COMPLETE</button></a></td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-            </div>
-            <div id="job_email_task">
-                <a href="{{ url_for('email_form', job_id = job.id) }}"><button>Add Email Task</button></a>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>Due Date</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for email in job.email_task %}
-                                {% if not email.completed %}
-                                    <tr>
-                                        <td>{{ email.description }}</td>
-                                        <td>{{ email.due_date.strftime('%b %d @ %H:%M%p') }}</td>
-                                        <td><a href="{{ url_for('complete_email_task', job_id = job.id, email_id = email.id) }}"><button>COMPLETE</button></a></td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-            </div>
-            <div id="job_general_task">
-                <a href="{{ url_for('task_form', job_id = job.id) }}"><button>Add General Task</button></a>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>Due Date</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for task in job.general_task %}
-                                {% if not task.completed %}
-                                    <tr>
-                                        <td>{{ task.description }}</td>
-                                        <td>{{ task.due_date.strftime('%b %d @ %H:%M%p') }}</td>
-                                        <td><a href="{{ url_for('complete_general_task', job_id = job.id, task_id = task.id) }}"><button>COMPLETE</button></a></td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div id="job_employee">
+                <h3>Stackholders:</h3>
+                <a href="{{ url_for('create_employee_form', company_id = job.company.id, job_id = job.id) }}"><button
+                        class="btn btn-secondary btn-sm">Add
+                        Stakeholder</button></a>
+                <ul>
+                    {% for employee in job.company.employee %}
+                    <li>
+                        <a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{
+                            employee.last_name }}</a> ({{ employee.title }}) - <a
+                            href="mailto:{{ employee.email }}"><button class="btn btn-info">EMAIL</button></a>
+                    </li>
+                    {% endfor %}
+                </ul>
+
             </div>
         </div>
     </div>
-    <div id="roster_div">
-        <div id="job_recruiter">
-            Lead Recruiter:
-            {% if job.recruiter == None %}
-                <a href="{{ url_for('create_recruiter_form', job_id = job.id) }}"><button>Add Recruiter</button></a>
-            {% else %}
-                <a href="{{ job.recruiter.linkedin }}" target="_blank">{{ job.recruiter.first_name }} {{ job.recruiter.last_name }}</a> ({{ job.recruiter.title }}) - <a href="mailto:{{ job.recruiter.email }}">{{ job.recruiter.email }}</a>
-            {% endif %}
-        </div>
-        <div id="job_employee_list">
-            Stackholders:
-            <a href="{{ url_for('create_employee_form', company_id = job.company.id, job_id = job.id) }}"><button>Add Stakeholder</button></a>
-            {% for employee in job.company.employee %}
-                <ul><a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{ employee.last_name }}</a> ({{ employee.title }}) - <a href="mailto:{{ employee.email }}">{{ employee.email }}</a></ul>
-            {% endfor %}
-        </div>
-    </div>
+
 
 </section>
 

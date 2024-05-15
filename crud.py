@@ -90,6 +90,11 @@ def update_applied_status(job_id):
     job.date_applied = datetime.now()
     return job
 
+def remove_applied_status(job_id):
+    job = model.Job.query.get(job_id)
+    job.date_applied = None
+    return job
+
 def update_bool(bool):
     if bool == False:
         bool = True
@@ -120,8 +125,8 @@ def create_email(job_id, task_for_employee, task_for_recruiter, due_date, descri
 def email_list_by_job(job_id):
     return model.Email.query.filter_by(job_id = job_id).all()
 
-def get_email_by_id(call_id):
-    return model.Email.query.get(call_id)
+def get_email_by_id(email_id):
+    return model.Email.query.get(email_id)
 
 ############ Call Object #########
 
@@ -142,7 +147,6 @@ def call_list_by_job(job_id):
 def get_call_by_id(call_id):
     return model.Call.query.get(call_id)
     
-
 ############# General Task Object ########
 
 def create_general_task(job_id, task_for_employee, task_for_recruiter, due_date, description, completed):
@@ -164,12 +168,13 @@ def get_general_task_by_id(task_id):
 
 ############## Next Step Object #######
 
-def create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, description, step_type):
+def create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, due_time, description, step_type):
     new_next_step = model.Next_Step(
         job_id = job_id,
         task_for_employee = task_for_employee,
         task_for_recruiter = task_for_recruiter,
         due_date = due_date,
+        due_time = due_time,
         description = description,
         step_type = step_type
     )
@@ -226,7 +231,7 @@ def days_since(date_time):
 
 def loop_gifs():
     gif_list = [
-        "https://giphy.com/gifs/theoffice-gphyoffice726-pICj6JWqVpm5aapOIS", 
+        "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2l3NGd1MjZ3N3JicjRsZWVrMWkyMjc5NzVkZnEwY2xwenVhdDJicyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pICj6JWqVpm5aapOIS/giphy.gif", 
         "https://i.giphy.com/media/3osxY8lmLf0SvhYbBe/giphy.gif?cid=790b7611fqblu7fmuvedyupuquf3rh119hm8fdmiya6dsfqg&ep=v1_gifs_search&rid=giphy.gif&ct=g",
         "https://i.giphy.com/media/3oriNYewgX5o0bBxLi/giphy.gif?cid=790b7611fqblu7fmuvedyupuquf3rh119hm8fdmiya6dsfqg&ep=v1_gifs_search&rid=giphy.gif&ct=g"
         "https://i.giphy.com/media/SqwG92na3vaN065L4S/giphy.gif?cid=790b7611fqblu7fmuvedyupuquf3rh119hm8fdmiya6dsfqg&ep=v1_gifs_search&rid=giphy.gif&ct=g",
@@ -235,7 +240,7 @@ def loop_gifs():
         "https://i.giphy.com/media/hclYypyKCEayY/giphy.gif?cid=ecf05e478s5ceghf30qatigzw003p81j994o5tn1j3nidh9f&ep=v1_gifs_search&rid=giphy.gif&ct=g",
         "https://i.giphy.com/media/MCMIBsyDRcKjihz9uF/giphy.gif?cid=ecf05e470whq1xnlorlk76giqeav3vhymkgmfamhrezcfc6o&ep=v1_gifs_search&rid=giphy.gif&ct=g"
     ]   
-    num = randint(0,7)
+    num = randint(0,6)
     gif = gif_list[num]
     return gif
 

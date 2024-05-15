@@ -1,18 +1,30 @@
 {% extends "base.html" %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/company_page_styling.css">
+{% endblock %}
+
 {% block body %}
-<h1>Create Company Here</h1>
 
 <section id="create_company_form">
-    <form action="{{ url_for('create_company')}}" method="post">
+    <form id="company_form" action="{{ url_for('create_company')}}" method="post">
+        <h1>Create Company</h1>
         {{ company_form.csrf_token() }}
-        {{ company_form.name.label }}
-        {{ company_form.name }}
-        {{ company_form.location.label }}
-        {{ company_form.location }}
-        {{ company_form.industry.label }}
-        {{ company_form.industry }}
-        {{ company_form.submit }}
+        <div>
+            {{ company_form.name.label }}
+            {{ company_form.name(class="form-control") }}
+        </div>
+        <div>
+            {{ company_form.location.label }}
+            {{ company_form.location(class="form-control") }}
+        </div>
+        <div>
+            {{ company_form.industry.label }}
+            {{ company_form.industry(class="form-control") }}
+        </div>
+        <div>
+            {{ company_form.submit(class="btn btn-primary") }}
+        </div>
     </form>
 </section>
 

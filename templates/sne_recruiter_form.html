@@ -1,23 +1,42 @@
 {% extends "base.html" %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/create_staff_form_styling.css">
+{% endblock %}
+
 {% block title %}
 <title>Schedule Next Steps</title>
 {% endblock %}
 
 {% block body %}
 
-<section id="next_step_form">
-    <form action="{{ url_for('create_sne_4recruiter', job_id = job_id) }}", method="post">
+<section id="create_staff_form">
+    <form id="staff_form" action="{{ url_for('create_sne_4recruiter', job_id = job_id) }}" , method="post">
         {{ sne_form.csrf_token }}
-        {{ sne_form.task_for_recruiter_id.label }}
-        {{ sne_form.task_for_recruiter_id }}
-        {{ sne_form.due_date.label }}
-        {{ sne_form.due_date }}
-        {{ sne_form.description.label }}
-        {{ sne_form.description }}
-        {{ sne_form.step_type.label }}
-        {{ sne_form.step_type }}
-        {{ sne_form.submit }}
+        <div>
+            {{ sne_form.task_for_recruiter_id.label }}
+            {{ sne_form.task_for_recruiter_id(class="form-control") }}
+        </div>
+        <div>
+            {{ sne_form.due_date.label }}
+            {{ sne_form.due_date(class="form-control") }}
+        </div>
+        <div>
+            {{ sne_form.due_time.label }}
+            {{ sne_form.due_time(class="form-control") }}
+        </div>
+        <div>
+            {{ sne_form.description.label }}
+            {{ sne_form.description(class="form-control") }}
+        </div>
+        <div>
+            {{ sne_form.step_type.label }}
+            {{ sne_form.step_type(class="form-control") }}
+        </div>
+        <div>
+            {{ sne_form.submit(class="btn btn-primary") }}
+        </div>
+
 
     </form>
 </section>

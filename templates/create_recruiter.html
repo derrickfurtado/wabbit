@@ -1,25 +1,43 @@
 {% extends "base.html" %}
 
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/create_staff_form_styling.css">
+{% endblock %}
+
 {% block title %}
 <title>Add Recruiter</title>
 {% endblock %}
 
 {% block body %}
-<h1>Add Recruiter to this Job:</h1>
-<section id="recruiter_form">
-    <form action="{{ url_for('create_recruiter', job_id = job_id) }}" method="post">
+<section id="create_staff_form">
+    <form id="staff_form" action="{{ url_for('create_recruiter', job_id = job_id) }}" method="post">
+        <h1>Add Recruiter to this Job:</h1>
         {{ recruiter_form.csrf_token() }}
-        {{ recruiter_form.first_name.label }}
-        {{ recruiter_form.first_name }}
-        {{ recruiter_form.last_name.label }}
-        {{ recruiter_form.last_name }}
-        {{ recruiter_form.title.label }}
-        {{ recruiter_form.title }}
-        {{ recruiter_form.email.label }}
-        {{ recruiter_form.email }}
-        {{ recruiter_form.linkedin.label }}
-        {{ recruiter_form.linkedin }}
-        {{ recruiter_form.submit }}
+
+        <div>
+            {{ recruiter_form.first_name.label }}
+            {{ recruiter_form.first_name(class="form-control") }}
+        </div>
+        <div>
+            {{ recruiter_form.last_name.label }}
+            {{ recruiter_form.last_name(class="form-control") }}
+        </div>
+        <div>
+            {{ recruiter_form.title.label }}
+            {{ recruiter_form.title(class="form-control") }}
+        </div>
+        <div>
+            {{ recruiter_form.email.label }}
+            {{ recruiter_form.email(class="form-control") }}
+        </div>
+        <div>
+            {{ recruiter_form.linkedin.label }}
+            {{ recruiter_form.linkedin(class="form-control") }}
+        </div>
+        <div>
+            {{ recruiter_form.submit(class="btn btn-secondary") }}
+        </div>
+
     </form>
 </section>
 

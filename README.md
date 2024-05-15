@@ -25,6 +25,7 @@ Future State:
         - 30 mins after interview -- E2U to CTA -- send thank you and excited email to recruiter
     - Multiple interviews
         - similar to recruiter steps
+- Make responsive for mobile and tablets
 
 
 

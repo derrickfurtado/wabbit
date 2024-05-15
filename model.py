@@ -35,11 +35,11 @@ class Job(db.Model):
     recruiter_id = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
 
     role = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.String(2000), nullable=False)
-    requirements = db.Column(db.String(2000), nullable=False)
+    description = db.Column(db.String(4000), nullable=False)
+    requirements = db.Column(db.String(4000), nullable=False)
     salary = db.Column(db.Integer)                              ## nullable in case salary and/or compensation is not present
-    compensation = db.Column(db.String(255))                    
-    link = db.Column(db.String(255), nullable=False)
+    compensation = db.Column(db.String(4000))                    
+    link = db.Column(db.String(500), nullable=False)
     date_applied = db.Column(db.DateTime)
 
     job_offer = db.Column(db.Boolean, default=False)            ## boolean for tracking analytics
@@ -72,7 +72,7 @@ class Email(db.Model):
     task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
     task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
     due_date = db.Column(db.Date, nullable=False)
-    description = db.Column(db.String(255), nullable=False) 
+    description = db.Column(db.String(500), nullable=False) 
     completed = db.Column(db.Boolean, default=False)
 
     recruiter = db.relationship("Recruiter", backref="email_task")
@@ -90,7 +90,7 @@ class Call(db.Model):
     task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
     task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
     due_date = db.Column(db.Date, nullable = False)
-    description = db.Column(db.String(255))
+    description = db.Column(db.String(500))
     completed = db.Column(db.Boolean, default=False)
 
     recruiter = db.relationship("Recruiter", backref="call_task")
@@ -108,7 +108,7 @@ class General_Task(db.Model):
     task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
     task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
     due_date = db.Column(db.Date, nullable=False)
-    description = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
     completed = db.Column(db.Boolean, default=False)
 
     recruiter = db.relationship("Recruiter", backref="general_task")
@@ -125,7 +125,8 @@ class Next_Step(db.Model):
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"), nullable=False)
     task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
     task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
-    due_date = db.Column(db.DateTime, nullable=False)
+    due_date = db.Column(db.Date, nullable=False)
+    due_time = db.Column(db.Time, nullable=False)
     description = db.Column(db.String(255), nullable=False)
     step_type = db.Column(db.String(255), nullable=False)
 
@@ -157,8 +158,8 @@ class Recruiter(db.Model):
     company_id = db.Column(db.Integer, db.ForeignKey("company_table.id"), nullable=False)
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
-    title = db.Column(db.String(255), nullable=False, unique=True)
-    email = db.Column(db.String(255))
+    title = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), unique=True)
     linkedin = db.Column(db.String(255))
 
     next_step = db.relationship("Next_Step", backref="recruiter")
