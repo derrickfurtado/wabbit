@@ -16,64 +16,63 @@ app.secret_key = secret_key                 ### 💡secret key stored in key.py 
 
 ############################ Credentials ##############################
 
-@app.route("/")                             ## main landing page
-def login_page():
+@app.route("/")                            
+def login_page():                            ## main landing page
     login_form = forms.User_Login_Form()
     register_form = forms.User_Registration_Form()
     return render_template("login.html", login_form = login_form, register_form = register_form)
 
-@app.route("/login_user", methods=["POST"])                               
-def login_user():
+@app.route("/login_user", methods=["POST"])                              
+def login_user():                           ## login feature 
     user_form = forms.User_Login_Form()             ## pull form data from login form
     current_users = model.Users.query.all()         ## query list of current users
 
 
-    if user_form.validate_on_submit():
-            user_found = False
-            for user in current_users:
-                if user_form.email.data == user.email:
+    if user_form.validate_on_submit():              
+            user_found = False                      ## default value created in case user is present
+            for user in current_users:              ## loop through all users
+                if user_form.email.data == user.email:      ## checking only the email data
                     user_found = True
                     user_password = user_form.password.data
-                    user_byt_pass = user_password.encode('utf-8')
-                    stored_password = user.password
-                    password_check = bcrypt.checkpw(user_byt_pass, stored_password)
-                    if password_check:
+                    user_byt_pass = user_password.encode('utf-8')           ## using bcrypt to encode the passwords
+                    stored_password = user.password                         ## capture stored password into variable
+                    password_check = bcrypt.checkpw(user_byt_pass, stored_password)     ## using bcrypt to check encrypted password
+                    if password_check:                              ## if password_check is truthy, begin session and attach user_id to session (user_id to be used throughout app)
                         session["user_id"] = user.id
                         flash(f"Welcome back {user.first_name}!")
                         return redirect("/homepage")
                     else:
                         flash("Incorrect password. Try again.")
                         return redirect("/")
-            if not user_found:
+            if not user_found:                      ## if user was not found, variable would stay FALSE
                 flash("Account does not exist. Please register below.")
                 return redirect("/")
     else:
         flash("Error submitting form. Please Try again")
         return redirect("/")
 
-@app.route("/register_user", methods=["POST"])
-def register_user():
+@app.route("/register_user", methods=["POST"])         
+def register_user():                         ## new user registration
     register_form = forms.User_Registration_Form()  ## capture form data
     current_users = model.Users.query.all()         ## query list of current users
-    user_list = []                                  ## empty list for verified emails
+    user_list = []                                  ## empty list for verified emails to cross check
 
     for user in current_users:
-        user_list.append(user.email)              ### 💡 doing this so only email is being stored in a list, not passwords     
+        user_list.append(user.email)              ### 💡 doing this so only email is being stored in a list, not passwords (I felt it more secure to store email, instead of password)    
     if register_form.validate_on_submit():
-        if register_form.email.data not in user_list:
+        if register_form.email.data not in user_list:           ## only creates user if email submitted is not in the database
             first_name = register_form.first_name.data
             last_name = register_form.last_name.data
             email = register_form.email.data
-            password = register_form.password.data                  ### 🚨 bcrypt here
-
+            password = register_form.password.data                  
             
-            byt = password.encode('utf-8')
+            byt = password.encode('utf-8')          ## using bcrypt to encrypt passwords upon submission
             salt = bcrypt.gensalt()
 
             password = bcrypt.hashpw(byt, salt)
 
 
-            new_user = crud.create_user(first_name, last_name, email, password, None, None, None, None)
+            new_user = crud.create_user(first_name, last_name, email, password, None, None, None, None)     ## creating room for location, school, bio, and headshot url
             model.db.session.add(new_user)
             model.db.session.commit()
             flash("Successfully Registered Account")
@@ -81,36 +80,34 @@ def register_user():
         else:
             flash("Email already exists. Choose a different email.")
             return redirect("/")
-    else:
+    else:                                                           ## 🚨 should convert this to a TRY EXCEPT statement
         flash("Error submitting form. Please Try again")
         return redirect("/")
 
-@app.route("/sign_out")
-def sign_out():
+@app.route("/sign_out")        
+def sign_out():                              ## sign out feature. Deletes session data
     del session["user_id"]
     return redirect("/")
 
 ############################ Homepage Routes ##############################
 
-@app.route("/homepage")                     ## landing page, post login
-def homepage():
+@app.route("/homepage")                     
+def homepage():                             ## Dashboard template variables 🚨 add error handling when no session is active
     user_id = session["user_id"]
-    job_list = crud.show_all_jobs_by_userID(user_id)               ### 💡only pull jobs that the user owns in the DB
+    job_list = crud.show_all_jobs_by_userID(user_id)               ## Only pull jobs that the user owns in the DB
 
     if not job_list:
         flash("You are not tracking any opportunities. Get on it!!!")
     return render_template("homepage.html", job_list = job_list, user_id = user_id)
-
-            ####### 🚨 Add in table columns for buttons that update task completed
         
 @app.route("/company_list")
-def company_list():
+def company_list():                         ## Company page template variables
     company_list = crud.show_all_companies_by_userID(session["user_id"])
     return render_template("companies.html", company_list = company_list)
 
 
-@app.route("/archived_jobs")
-def archived_jobs():
+@app.route("/archived_jobs")               
+def archived_jobs():                         ## Trash Bin template variables
     job_list = crud.show_all_jobs_by_userID(session["user_id"])
     return render_template("archived_jobs.html", job_list = job_list)
 
@@ -118,22 +115,21 @@ def archived_jobs():
 ########################### Job Object ###############################
 
 
-@app.route("/job_page")                        ### landing page for job creation form ###
-def show_job_form():
+@app.route("/job_page")                        
+def show_job_form():                        ### Create Job template variables
     company_list = crud.show_all_companies_by_userID(session["user_id"])
     job_form = forms.Job_Form()
-    choices = [(company.id, company.name) for company in company_list]      ## creating dynamic list for company options
-    choices.insert(0,("create_company", "*** Create Company ***"))            ## adding fall back in case company is not created yet
-    job_form.company.choices = choices                              ## adding dynamic list and fallback together to choices
+    choices = [(company.id, company.name) for company in company_list]      ## creating dynamic list for company options (based on current companies created)
+    choices.insert(0,("create_company", "*** Create Company ***"))            ## adding fallback option to create company at top of list
+    job_form.company.choices = choices                              ## Combining dynamic list and fallback together to choices variable
 
     return render_template("/job_page.html", job_form = job_form)
 
 @app.route("/create_job", methods=["POST"])
-def create_job():
+def create_job():                       ## POST job to DB
     job_form = forms.Job_Form()
 
-                                                        ####### can I put validate on submit here?
-    if job_form.company.data == 'create_company':
+    if job_form.company.data == 'create_company':       ## if user needs to create the company, this session data is created for the job details
         session["role"] = job_form.role.data
         session["description"] = job_form.description.data
         session["requirements"] = job_form.requirements.data
@@ -141,12 +137,12 @@ def create_job():
         session["compensation"] = job_form.compensation.data
         session["link"] = job_form.link.data
 
-        return redirect("company_page")
+        return redirect("company_page")            ## before job is created, redirect to  create company first
     
-    else:
+    else:                                           ## if company already created, create job and attaches to current company
         company_id = job_form.company.data
         user_id = session["user_id"]
-        recruiter_id = None
+        recruiter_id = None                     ## no recruiter has been attached yet
         role = job_form.role.data
         description = job_form.description.data
         requirements = job_form.requirements.data
@@ -160,9 +156,10 @@ def create_job():
         accepted_offer = False
         ghosted = False
         favorite = False
-        last_logged_task = "Created Job"
+        last_logged_task = "Created Job"                    ## creating first logged task with datetime
         last_logged_task_time = datetime.now()
-            ########################################## 🚨 implement auto tasks here
+
+                                                    ## 🚨 implement auto task creation here
 
         new_job = crud.create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, interviewing, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time)
 
@@ -172,36 +169,36 @@ def create_job():
         return redirect("/job_page")
 
 @app.route("/job_detail")
-def show_job_detail():
+def show_job_detail():              ## job detail template variables
     job_id = request.args.get('job_id')
     job = crud.job_detail(job_id)
-    days_since_task = crud.days_since(job.last_logged_task_time)
+    days_since_task = crud.days_since(job.last_logged_task_time)        ## counting days since last logged task
     return render_template("job_detail_page.html", job = job, days_since_task = days_since_task)
 
 @app.route("/update_applied_status")
-def update_applied_status():
+def update_applied_status():        ## update job applied function
     job_id = request.args.get("job_id")
-    updated_job = crud.update_applied_status(job_id)        ### 💡 updated applied status to job 
-    updated_job.last_logged_task = "Submitted Application"  ### 💡 updated last task
-    updated_job.last_logged_task_time = datetime.now()      ### 💡 updated last task time to now
+    updated_job = crud.update_applied_status(job_id)        ### updated applied status to job 
+    updated_job.last_logged_task = "Submitted Application"  ### updated last task
+    updated_job.last_logged_task_time = datetime.now()      ### updated last task time to now
     model.db.session.add(updated_job)
     model.db.session.commit()
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
 @app.route("/remove_applied_date")
-def remove_applied_date():
+def remove_applied_date():          ## remove applied status option 🚨 REDUNDANT - can add IF/ELSE to revert status to previous timeline step -- ADD TO CRUD
 
     job_id = request.args.get("job_id")
     updated_job = crud.remove_applied_status(job_id)
-    updated_job.last_logged_task = "Created Job"
+    updated_job.last_logged_task = "Created Job"        ## revert last logged task to last option in timeline
     model.db.session.add(updated_job)
     model.db.session.commit()
     return redirect(url_for("show_job_detail", job_id = job_id))
 
 @app.route("/update_offer")
-def update_offer():
-    job_id = request.args.get("job_id")                 ### grab job_id from url parameter
+def update_offer():                 ## change job status to offer extended - 🚨can add IF/ELSE to revert status to previous timeline step -- ADD TO CRUD
+    job_id = request.args.get("job_id")                 ### grab job_id from url parameter to make changes to job
     job = crud.job_detail(job_id)                       ### grab the job object using using job_id
     job.job_offer = crud.update_bool(job.job_offer)     ### switch values of boolean
     job.last_logged_task = "Received Job Offer"
@@ -211,10 +208,10 @@ def update_offer():
     model.db.session.add(job)
     model.db.session.commit()
     
-    return redirect(url_for('show_job_detail', job_id = job_id))
+    return redirect(url_for('show_job_detail', job_id = job_id))        ## 🚨 I can add a function to remove offer update and revert to interviewing process, but it's probably not necessary
 
-@app.route("/update_rejection")
-def update_rejection():
+@app.route("/update_rejection")     
+def update_rejection():             ## function to indicate rejection - 🚨can add IF/ELSE to revert status to previous timeline step  -- ADD TO CRUD
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.rejection = crud.update_bool(job.rejection)
@@ -226,8 +223,8 @@ def update_rejection():
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
-@app.route("/update_interviewing")
-def update_interviewing():
+@app.route("/update_interviewing") 
+def update_interviewing():           ## function to inidicate active interviewing - 🚨can add IF/ELSE to revert status to previous timeline step  -- ADD TO CRUD
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.interviewing = crud.update_bool(job.interviewing)
@@ -239,8 +236,8 @@ def update_interviewing():
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
-@app.route("/update_accepted")
-def update_accepted():
+@app.route("/update_accepted")     
+def update_accepted():              ## function to inidicate accepted offer - 🚨can add IF/ELSE to revert status to previous timeline step  -- ADD TO CRUD
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.accepted_offer = crud.update_bool(job.accepted_offer)
@@ -252,8 +249,8 @@ def update_accepted():
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
-@app.route("/update_ghosted")
-def update_ghosted():
+@app.route("/update_ghosted")      
+def update_ghosted():                ## function to indicate ghosted status - 🚨can add IF/ELSE to revert status to previous timeline step  -- ADD TO CRUD
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.ghosted = crud.update_bool(job.ghosted)
@@ -265,8 +262,8 @@ def update_ghosted():
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
-@app.route("/update_favorite")
-def update_favorite():
+@app.route("/update_favorite")     
+def update_favorite():               ## function to update favorite on job detail page
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.favorite = crud.update_bool(job.favorite)
@@ -277,7 +274,7 @@ def update_favorite():
     return redirect(url_for('show_job_detail', job_id = job_id))
 
 @app.route("/update_favorite_homepage")
-def update_favorite_homepage():
+def update_favorite_homepage():     ## function to update favoite on homepage
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.favorite = crud.update_bool(job.favorite)
