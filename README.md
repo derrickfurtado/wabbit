@@ -9,10 +9,15 @@ MVP:
 - ✅ Create tasks for email, call, or general for each job
 - ✅ Have time dependency associated with all tasks
 
+
 Future State:
-- Add resume link to database for job
+- 🚨 Add resume link to database for job
     - show a link to resume on job_details
 - Add note taking section for events/contacts
+- Add new table to show Referrals (Name, LinkedIn, Email, Phone)
+- 🚨 Add analytics page that show application, interview, offer, and rejection rates.
+- Make responsive for mobile and tablets
+
 - Trigger notifications based on time frame: (following is a general timeline)
     - Create job as favorite, but have not applied yet ==> 24 hours - automate email to user (E2U) to demand call-2-action (CTA) apply for this job
     - Job applied
@@ -27,25 +32,3 @@ Future State:
         - 30 mins after interview -- E2U to CTA -- send thank you and excited email to recruiter
     - Multiple interviews
         - similar to recruiter steps
-- Make responsive for mobile and tablets
-
-
-
-Rubric:
-
-1. Front End
-    - ✅ 3 CSS-styled pages.
-2. Server
-    - 3 ✅ endpoints
-    - 3 ✅ view functions
-3. DB
-    - ✅ Active DB
-    - Full CRUD functionality
-        - ✅ read
-        - ✅ delete
-        - ✅ update
-        - ✅ create
-4. Login
-    - ✅ need login process functioning
-5. Features
-    - ✅ 3 user features complete and function
