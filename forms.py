@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, BooleanField, TextAreaField, PasswordField, EmailField, DateField, IntegerField, TimeField
+from wtforms import StringField, SubmitField, SelectField, TextAreaField, PasswordField, EmailField, DateField, IntegerField, TimeField
 from wtforms.validators import DataRequired, Length
 
 
@@ -48,12 +48,12 @@ class Recruiter_Form(FlaskForm):
     linkedin = StringField("LinkedIn page: ", validators=[Length(max=255)])
     submit = SubmitField()
 
-class SNE_Recruiter_Form(FlaskForm):
+class SNE_Recruiter_Form(FlaskForm):        ## used coerce to make step types dynamic
     task_for_recruiter_id = SelectField("Which recruiter? ", coerce=str)
     due_date = DateField("Date of Event: ", validators=[DataRequired()])
     due_time = TimeField("Time of Event: ", validators=[DataRequired()])
     description = TextAreaField("Description: ", validators=[DataRequired(), Length(max=255)])
-    step_type = SelectField("Type of Call", coerce=str)
+    step_type = SelectField("Type of Call", coerce=str)                                             ## coerce=str helped to make the list options dynamic in server.py 
     submit = SubmitField()
 
 class SNE_Employee_Form(FlaskForm):

@@ -1,7 +1,7 @@
 """ DB seed and models script """
 
-from flask_sqlalchemy import SQLAlchemy
-import os
+from flask_sqlalchemy import SQLAlchemy     ## using SQLAlchemy db
+import os                                   ## used to pull in Postgres URI
 
 db = SQLAlchemy()
 
@@ -16,7 +16,7 @@ class Users(db.Model):
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.LargeBinary, nullable=False)            ### 💡changed column data type to be LargeBinary for encryption
+    password = db.Column(db.LargeBinary, nullable=False)            ## changed column data type to be LargeBinary for encryption
     location = db.Column(db.String(255))
     school = db.Column(db.String(255))
     bio = db.Column(db.String(255))
@@ -27,7 +27,7 @@ class Users(db.Model):
     
 class Job(db.Model):
 
-    __tablename__ = "job_table"
+    __tablename__ = "job_table"                         ## naming tables like this makes it easier to reference them later
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     company_id = db.Column(db.Integer, db.ForeignKey("company_table.id"))
@@ -69,8 +69,8 @@ class Email(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
-    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
+    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))       ## haven't implemented this yet for email, calls, or tasks -- May not need it, but it's nullable so it doesn't hurt
+    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))     ## haven't implemented this yet for email, calls, or tasks -- May not need it, but it's nullable so it doesn't hurt
     due_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(500), nullable=False) 
     completed = db.Column(db.Boolean, default=False)
@@ -87,8 +87,8 @@ class Call(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
-    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
+    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))        ## haven't implemented this yet for email, calls, or tasks -- May not need it, but it's nullable so it doesn't hurt
+    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))      ## haven't implemented this yet for email, calls, or tasks -- May not need it, but it's nullable so it doesn't hurt
     due_date = db.Column(db.Date, nullable = False)
     description = db.Column(db.String(500))
     completed = db.Column(db.Boolean, default=False)
@@ -105,8 +105,8 @@ class General_Task(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"))
-    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
-    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
+    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))        ## haven't implemented this yet for email, calls, or tasks -- May not need it, but it's nullable so it doesn't hurt
+    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))      ## haven't implemented this yet for email, calls, or tasks -- May not need it, but it's nullable so it doesn't hurt
     due_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.String(500), nullable=False)
     completed = db.Column(db.Boolean, default=False)
@@ -123,8 +123,8 @@ class Next_Step(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     job_id = db.Column(db.Integer, db.ForeignKey("job_table.id"), nullable=False)
-    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))
-    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
+    task_for_employee = db.Column(db.Integer, db.ForeignKey("employee_table.id"))       ## this is implemented and critical for rendering the correct next steps
+    task_for_recruiter = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))     ## this is implemented and critical for rendering the correct next steps
     due_date = db.Column(db.Date, nullable=False)
     due_time = db.Column(db.Time, nullable=False)
     description = db.Column(db.String(255), nullable=False)
@@ -193,18 +193,15 @@ class Employee(db.Model):
 def connect_to_db(flask_app, echo=True):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["POSTGRES_URI"]
     flask_app.config["SQLALCHEMY_ECHO"] = echo
-    flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False      ## turned off because the command line feedback was overwhelming
     db.app = flask_app
     db.init_app(flask_app)
 
     print("Crank it up to 5432!")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":          ## only used if running model.py directly when seeding the DB
     from server import app
     connect_to_db(app)
-
-    ####################### Seed Scripts ####################### 
-
 
 

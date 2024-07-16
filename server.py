@@ -1,11 +1,11 @@
 """ server to contain endpoints for Wabbit app """
 
-import forms, model, crud, bcrypt
+import forms, model, crud, bcrypt                                                      ## import forms.py, model.py, crud.py and bcrypt library
 from flask import Flask, render_template, flash, redirect, session, request, url_for
-from key import secret_key
-from pdb import set_trace
-from datetime import datetime
-import os
+from key import secret_key                                                             ## needed for database password
+from pdb import set_trace                                                              ## my favorite debug tool
+from datetime import datetime                                                          ## for use with keeping dates and times
+
 
 
 
@@ -823,4 +823,4 @@ def delete_general_task():
 
 if __name__ == "__main__":
     model.connect_to_db(app)
-    app.run(host="localhost", port=4040, debug=True)
+    app.run(host="localhost", port=4040, debug=True)        ## 🚨 change debug to FALSE when deploying

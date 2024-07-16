@@ -1,7 +1,7 @@
 """ Seed file to create/delete DB and add test data to our Wabbit DB for testing/building only"""
 
-import os, model, server, json, crud, key
-from pdb import set_trace
+import os, model, server
+from pdb import set_trace           
 
 server.app.app_context().push()
 
@@ -10,6 +10,14 @@ os.system("createdb wabbit")            ## recreate table
 
 model.connect_to_db(server.app)         ## connect to Wabbit DB
 model.db.create_all()                   ## create all tables
+
+
+
+### 🚨 No longer need test data ###
+
+
+
+
 
 # with open ('data/test_data.json') as file:  ## open and read .json file
 #     test_data = json.loads(file.read())     ## test_data will be a list of dictionaries for each dataclass object
