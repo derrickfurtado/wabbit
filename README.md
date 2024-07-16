@@ -10,7 +10,9 @@ MVP:
 - ✅ Have time dependency associated with all tasks
 
 Future State:
-
+- Add resume link to database for job
+    - show a link to resume on job_details
+- Add note taking section for events/contacts
 - Trigger notifications based on time frame: (following is a general timeline)
     - Create job as favorite, but have not applied yet ==> 24 hours - automate email to user (E2U) to demand call-2-action (CTA) apply for this job
     - Job applied

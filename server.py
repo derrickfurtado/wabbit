@@ -96,14 +96,13 @@ def sign_out():
 def homepage():
     user_id = session["user_id"]
     job_list = crud.show_all_jobs_by_userID(user_id)               ### 💡only pull jobs that the user owns in the DB
-    
 
     if not job_list:
         flash("You are not tracking any opportunities. Get on it!!!")
     return render_template("homepage.html", job_list = job_list, user_id = user_id)
 
             ####### 🚨 Add in table columns for buttons that update task completed
-
+        
 @app.route("/company_list")
 def company_list():
     company_list = crud.show_all_companies_by_userID(session["user_id"])
