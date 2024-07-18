@@ -93,37 +93,58 @@ def sign_out():                              ## sign out feature. Deletes sessio
 
 @app.route("/homepage")                     
 def homepage():                             ## Dashboard template variables 🚨 add error handling when no session is active
-    user_id = session["user_id"]
-    job_list = crud.show_all_jobs_by_userID(user_id)               ## Only pull jobs that the user owns in the DB
+    try:
+        user_id = session["user_id"]
+        job_list = crud.show_all_jobs_by_userID(user_id)               ## Only pull jobs that the user owns in the DB
 
-    if not job_list:
-        flash("You are not tracking any opportunities. Get on it!!!")
-    return render_template("homepage.html", job_list = job_list, user_id = user_id)
+        if not job_list:
+            flash("You are not tracking any opportunities. Get on it!!!")
+        return render_template("homepage.html", job_list = job_list, user_id = user_id)
+    
+    
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
         
 @app.route("/company_list")
 def company_list():                         ## Company page template variables
-    company_list = crud.show_all_companies_by_userID(session["user_id"])
-    return render_template("companies.html", company_list = company_list)
-
+    try:
+        company_list = crud.show_all_companies_by_userID(session["user_id"])
+        return render_template("companies.html", company_list = company_list)
+    
+    
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
 
 @app.route("/archived_jobs")               
 def archived_jobs():                         ## Trash Bin template variables
-    job_list = crud.show_all_jobs_by_userID(session["user_id"])
-    return render_template("archived_jobs.html", job_list = job_list)
-
+    try:
+        job_list = crud.show_all_jobs_by_userID(session["user_id"])
+        return render_template("archived_jobs.html", job_list = job_list)
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
 
 ########################### Job Object ###############################
 
 
 @app.route("/job_page")                        
 def show_job_form():                        ### Create Job template variables
-    company_list = crud.show_all_companies_by_userID(session["user_id"])
-    job_form = forms.Job_Form()
-    choices = [(company.id, company.name) for company in company_list]      ## creating dynamic list for company options (based on current companies created)
-    choices.insert(0,("create_company", "*** Create Company ***"))            ## adding fallback option to create company at top of list
-    job_form.company.choices = choices                              ## Combining dynamic list and fallback together to choices variable
+    try:
+        company_list = crud.show_all_companies_by_userID(session["user_id"])
+        job_form = forms.Job_Form()
+        choices = [(company.id, company.name) for company in company_list]      ## creating dynamic list for company options (based on current companies created)
+        choices.insert(0,("create_company", "*** Create Company ***"))            ## adding fallback option to create company at top of list
+        job_form.company.choices = choices                              ## Combining dynamic list and fallback together to choices variable
 
-    return render_template("/job_page.html", job_form = job_form)
+        return render_template("/job_page.html", job_form = job_form)
+    
+    
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 
 @app.route("/create_job", methods=["POST"])
 def create_job():                       ## POST job to DB
@@ -170,10 +191,17 @@ def create_job():                       ## POST job to DB
 
 @app.route("/job_detail")
 def show_job_detail():              ## job detail template variables
-    job_id = request.args.get('job_id')
-    job = crud.job_detail(job_id)
-    days_since_task = crud.days_since(job.last_logged_task_time)        ## counting days since last logged task
-    return render_template("job_detail_page.html", job = job, days_since_task = days_since_task)
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        job_id = request.args.get('job_id')
+        job = crud.job_detail(job_id)
+        days_since_task = crud.days_since(job.last_logged_task_time)        ## counting days since last logged task
+        return render_template("job_detail_page.html", job = job, days_since_task = days_since_task)
+    
+
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
 
 @app.route("/update_applied_status")
 def update_applied_status():        ## update job applied function
@@ -286,11 +314,17 @@ def update_favorite_homepage():     ## function to update favoite on homepage
 
 @app.route("/delete_warning")
 def delete_warning():               ## delete page template variables
-    job_id = request.args.get("job_id")
-    gif = crud.loop_gifs()          ## fun little gifs for warning about permanent deletion
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        job_id = request.args.get("job_id")
+        gif = crud.loop_gifs()          ## fun little gifs for warning about permanent deletion
 
-    return render_template("delete_warning.html", job_id = job_id, gif = gif)
+        return render_template("delete_warning.html", job_id = job_id, gif = gif)
 
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 @app.route("/delete_job")           
 def delete_job():                   ## job delete function
     job_id = request.args.get("job_id")
@@ -320,9 +354,16 @@ def delete_job():                   ## job delete function
 
 @app.route("/company_page")                                                 
 def show_company_form():            ## company creation form template variables
-    company_form = forms.Company_Form()
-    return render_template("company_page.html", company_form = company_form)
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        company_form = forms.Company_Form()
+        return render_template("company_page.html", company_form = company_form)
 
+
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 @app.route("/create_company", methods=["post"])            
 def create_company():               ## create company function AND create job function
     company_form = forms.Company_Form()
@@ -372,10 +413,18 @@ def create_company():               ## create company function AND create job fu
 
 @app.route("/show_company_detail")
 def show_company_detail():          ## company detail template variables
-    company_id = request.args.get("company_id")
-    company = crud.get_company_by_company_id(company_id)
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        company_id = request.args.get("company_id")
+        company = crud.get_company_by_company_id(company_id)
 
-    return render_template("company_detail.html", company = company)
+        return render_template("company_detail.html", company = company)
+
+
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 
 @app.route("/update_favorite_company")
 def update_favorite_company():      ## toggle favorite company on company page
@@ -404,40 +453,61 @@ def update_favorite_company_homepage():     ## toggle favorite company on compan
 
 @app.route("/create_recruiter_form")
 def create_recruiter_form():        ## create recruiter template variables from job page
-    job_id = request.args.get("job_id")
-    recruiter_form = forms.Recruiter_Form()
-    return render_template("create_recruiter.html", recruiter_form = recruiter_form, job_id = job_id)
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        job_id = request.args.get("job_id")
+        recruiter_form = forms.Recruiter_Form()
+        return render_template("create_recruiter.html", recruiter_form = recruiter_form, job_id = job_id)
 
+
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 @app.route("/create_recruiter", methods=["post"])
 def create_recruiter():             ## function to create recruiter
-    recruiter_form = forms.Recruiter_Form()
-    job_id = request.args.get("job_id")
-    job = model.Job.query.get(job_id)
-    company_id = job.company_id
-    first_name = recruiter_form.first_name.data
-    last_name = recruiter_form.last_name.data
-    title = recruiter_form.title.data
-    email = recruiter_form.email.data
-    linkedin = recruiter_form.linkedin.data
-    
-    new_recruiter = crud.create_recruiter(company_id, first_name, last_name, title, email, linkedin)        
-    model.db.session.add(new_recruiter)
-    model.db.session.commit()
-    
-    job.recruiter_id = new_recruiter.id
-    model.db.session.add(job)
-    model.db.session.commit()
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        recruiter_form = forms.Recruiter_Form()
+        job_id = request.args.get("job_id")
+        job = model.Job.query.get(job_id)
+        company_id = job.company_id
+        first_name = recruiter_form.first_name.data
+        last_name = recruiter_form.last_name.data
+        title = recruiter_form.title.data
+        email = recruiter_form.email.data
+        linkedin = recruiter_form.linkedin.data
+        
+        new_recruiter = crud.create_recruiter(company_id, first_name, last_name, title, email, linkedin)        
+        model.db.session.add(new_recruiter)
+        model.db.session.commit()
+        
+        job.recruiter_id = new_recruiter.id
+        model.db.session.add(job)
+        model.db.session.commit()
 
-    flash("Recruiter added to Job")
-    return render_template("job_detail_page.html", job = job)
+        flash("Recruiter added to Job")
+        return render_template("job_detail_page.html", job = job)
+    
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
 
 @app.route("/create_employee_form")
 def create_employee_form():         ## create employee template variables from job page
-    company_id = request.args.get("company_id")
-    job_id = request.args.get("job_id")
-    employee_form = forms.Employee_Form()
-    return render_template("create_employee.html", employee_form = employee_form, company_id = company_id, job_id = job_id)
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        company_id = request.args.get("company_id")
+        job_id = request.args.get("job_id")
+        employee_form = forms.Employee_Form()
+        return render_template("create_employee.html", employee_form = employee_form, company_id = company_id, job_id = job_id)
 
+
+
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 @app.route("/create_employee", methods=["post"])
 def create_employee():              ## function to create employee
     company_id = request.args.get("company_id")
@@ -462,59 +532,76 @@ def create_employee():              ## function to create employee
 
 @app.route("/sne_recruiter_form")
 def sne_recruiter_form():           ## next step recruiter form template variables
-    sne_form = forms.SNE_Recruiter_Form()                   ## pull in form template
-    job_id = request.args.get("job_id")                     ## this job_id is hitching a ride
-    company = crud.get_company_by_job_id(job_id)                    ## need this to get all recruiters in company
-    recruiter_list = crud.recruiter_list_by_company(company.id)
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        sne_form = forms.SNE_Recruiter_Form()                   ## pull in form template
+        job_id = request.args.get("job_id")                     ## this job_id is hitching a ride
+        company = crud.get_company_by_job_id(job_id)                    ## need this to get all recruiters in company
+        recruiter_list = crud.recruiter_list_by_company(company.id)
 
-    categories = [("Phone Call", "Phone Call"), ("Zoom Call","Zoom Call"), ("Google Meet","Google Meet"), ("In Person","In Person")]
-    sne_form.step_type.choices = categories
+        categories = [("Phone Call", "Phone Call"), ("Zoom Call","Zoom Call"), ("Google Meet","Google Meet"), ("In Person","In Person")]
+        sne_form.step_type.choices = categories
 
-    choices = [(recruiter.id, f"{recruiter.first_name} {recruiter.last_name} ({recruiter.title})") for recruiter in recruiter_list]   ## creating a dynamic list of recruiters for creating next steps
-    choices.insert(0, ("create_recruiter", "*** Create Recruiter ***"))        ## adding fallback option, in case recruiter object is absent or new recruiter is needed
-    sne_form.task_for_recruiter_id.choices = choices            ## assigning choices to this form before rendering
+        choices = [(recruiter.id, f"{recruiter.first_name} {recruiter.last_name} ({recruiter.title})") for recruiter in recruiter_list]   ## creating a dynamic list of recruiters for creating next steps
+        choices.insert(0, ("create_recruiter", "*** Create Recruiter ***"))        ## adding fallback option, in case recruiter object is absent or new recruiter is needed
+        sne_form.task_for_recruiter_id.choices = choices            ## assigning choices to this form before rendering
 
-    return render_template("sne_recruiter_form.html", sne_form = sne_form, job_id = job_id)
+        return render_template("sne_recruiter_form.html", sne_form = sne_form, job_id = job_id)
+    
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")   
 
 @app.route("/create_sne_4recruiter", methods=["post"])
 def create_sne_4recruiter():        ## create next step function for recruiter
-    job_id = request.args.get("job_id")
-    sne_form = forms.SNE_Recruiter_Form()
-    if sne_form.task_for_recruiter_id.data == "create_recruiter":                   ## IF "Create Recruiter" is selected on the form
-        session["due_date"] = sne_form.due_date.data                                ## datetime date data can be stored in session
+    try:
+        job_id = request.args.get("job_id")
+        sne_form = forms.SNE_Recruiter_Form()
+        if sne_form.task_for_recruiter_id.data == "create_recruiter":                   ## IF "Create Recruiter" is selected on the form
+            session["due_date"] = sne_form.due_date.data                                ## datetime date data can be stored in session
 
-        session["due_time"] = str(sne_form.due_time.data)                           ## Sessions cannot store datetime.time data -- need to convert to string
-        session["description"] = sne_form.description.data                          ## Saving form data to session
-        session["step_type"] = sne_form.step_type.data
-        recruiter_form = forms.Recruiter_Form()
+            session["due_time"] = str(sne_form.due_time.data)                           ## Sessions cannot store datetime.time data -- need to convert to string
+            session["description"] = sne_form.description.data                          ## Saving form data to session
+            session["step_type"] = sne_form.step_type.data
+            recruiter_form = forms.Recruiter_Form()
 
-        return render_template("/create_recruiter_4sne_form.html", job_id = job_id, recruiter_form = recruiter_form)        ## send to create recruiter for next step form template
-    else:
-        task_for_employee = None                                            ## This DB column is nullable because this next step is for the recruiter only. No employee is attached.
-        task_for_recruiter = sne_form.task_for_recruiter_id.data
-        due_date = sne_form.due_date.data
-        due_time = sne_form.due_time.data
-        description = sne_form.description.data
-        step_type = sne_form.step_type.data
+            return render_template("/create_recruiter_4sne_form.html", job_id = job_id, recruiter_form = recruiter_form)        ## send to create recruiter for next step form template
+        else:
+            task_for_employee = None                                            ## This DB column is nullable because this next step is for the recruiter only. No employee is attached.
+            task_for_recruiter = sne_form.task_for_recruiter_id.data
+            due_date = sne_form.due_date.data
+            due_time = sne_form.due_time.data
+            description = sne_form.description.data
+            step_type = sne_form.step_type.data
 
-        new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, due_time, description, step_type)
-        model.db.session.add(new_sne)                                       ## create next step object in the Next Step DB table
+            new_sne = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, due_time, description, step_type)
+            model.db.session.add(new_sne)                                       ## create next step object in the Next Step DB table
 
-        job = crud.get_job_by_id(job_id)
-        job.recruiter_id = sne_form.task_for_recruiter_id.data              ## add this recruiter to the Lead Recruiter of the job
-        job.interviewing = True                                             ## change interview status to TRUE
-        model.db.session.add(job)
-        model.db.session.commit()
+            job = crud.get_job_by_id(job_id)
+            job.recruiter_id = sne_form.task_for_recruiter_id.data              ## add this recruiter to the Lead Recruiter of the job
+            job.interviewing = True                                             ## change interview status to TRUE
+            model.db.session.add(job)
+            model.db.session.commit()
 
-        return redirect(url_for('show_job_detail', job_id = job_id))
+            return redirect(url_for('show_job_detail', job_id = job_id))
 
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")   
+    
 @app.route("/create_recruiter_4sne_form")
 def create_recruiter_4sne_form():       ## create recruiter DURING next step creation template variables
-    job_id = request.args.get("job_id")
-    recruiter_form = forms.Recruiter_Form()             ### 💡 reusing recruiter form
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        job_id = request.args.get("job_id")
+        recruiter_form = forms.Recruiter_Form()             ### 💡 reusing recruiter form
 
-    return render_template("create_recruiter_4sne.html", job_id = job_id, recruiter_form = recruiter_form)
+        return render_template("create_recruiter_4sne.html", job_id = job_id, recruiter_form = recruiter_form)
 
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 @app.route("/add_recruiter_sne", methods=["post"])
 def add_recruiter_sne():                ## create next step for newly created recruiter
     job_id = request.args.get("job_id")                 ## job_id keeps hitching a ride to reuse when sending back to job detail page
@@ -559,58 +646,78 @@ def add_recruiter_sne():                ## create next step for newly created re
 
 @app.route("/sne_employee_form")                    ## 💡 the following employee next step routes are same as recruiter, but for employees
 def sne_employee_form():
-    sne_form = forms.SNE_Employee_Form()
-    job_id = request.args.get("job_id")
-    company = crud.get_company_by_job_id(job_id)
-    employee_list = crud.employee_list_by_company(company.id)
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        sne_form = forms.SNE_Employee_Form()
+        job_id = request.args.get("job_id")
+        company = crud.get_company_by_job_id(job_id)
+        employee_list = crud.employee_list_by_company(company.id)
 
-    categories = [("Phone Call", "Phone Call"), ("Zoom Call","Zoom Call"), ("Google Meet","Google Meet"), ("In Person","In Person")]
-    sne_form.step_type.choices = categories
+        categories = [("Phone Call", "Phone Call"), ("Zoom Call","Zoom Call"), ("Google Meet","Google Meet"), ("In Person","In Person")]
+        sne_form.step_type.choices = categories
 
-    choices = [(employee.id, f"{employee.first_name} {employee.last_name} ({employee.title})") for employee in employee_list]
-    choices.insert(0, ("create_employee", "*** Create Employee ***"))
-    sne_form.task_for_employee_id.choices = choices
+        choices = [(employee.id, f"{employee.first_name} {employee.last_name} ({employee.title})") for employee in employee_list]
+        choices.insert(0, ("create_employee", "*** Create Employee ***"))
+        sne_form.task_for_employee_id.choices = choices
 
-    return render_template("sne_employee_form.html", job_id = job_id, sne_form = sne_form)
+        return render_template("sne_employee_form.html", job_id = job_id, sne_form = sne_form)
 
+
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 @app.route("/create_sne_4employee", methods=["post"])
 def create_sne_4employee():
-    job_id = request.args.get("job_id")
-    employee_form = forms.SNE_Employee_Form()
+    try:
+        job_id = request.args.get("job_id")
+        employee_form = forms.SNE_Employee_Form()
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
 
-    if employee_form.task_for_employee_id.data == "create_employee":
-        ### session and render template
-        session["due_date"] = employee_form.due_date.data
-        session["due_time"] = str(employee_form.due_time.data)
-        session["description"] = employee_form.description.data
-        session["step_type"] = employee_form.step_type.data
+        if employee_form.task_for_employee_id.data == "create_employee":
+            ### session and render template
+            session["due_date"] = employee_form.due_date.data
+            session["due_time"] = str(employee_form.due_time.data)
+            session["description"] = employee_form.description.data
+            session["step_type"] = employee_form.step_type.data
 
-        return redirect(url_for('create_employee_4sne_form', job_id = job_id))
-    else:
-        task_for_employee = employee_form.task_for_employee_id.data
-        task_for_recruiter = None
-        due_date = employee_form.due_date.data
-        due_time = employee_form.due_time.data
-        description = employee_form.description.data
-        step_type = employee_form.step_type.data
-        new_task = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, due_time, description, step_type)
-        model.db.session.add(new_task)
-        model.db.session.commit()
+            return redirect(url_for('create_employee_4sne_form', job_id = job_id))
+        else:
+            task_for_employee = employee_form.task_for_employee_id.data
+            task_for_recruiter = None
+            due_date = employee_form.due_date.data
+            due_time = employee_form.due_time.data
+            description = employee_form.description.data
+            step_type = employee_form.step_type.data
+            new_task = crud.create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, due_time, description, step_type)
+            model.db.session.add(new_task)
+            model.db.session.commit()
 
-        job = crud.get_job_by_id(job_id)
-        job.interviewing = True
-        model.db.session.add(job)
-        model.db.session.commit()
+            job = crud.get_job_by_id(job_id)
+            job.interviewing = True
+            model.db.session.add(job)
+            model.db.session.commit()
 
-        return redirect(url_for("show_job_detail", job_id = job_id))
-
+            return redirect(url_for("show_job_detail", job_id = job_id))
+        
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 @app.route("/create_employee_4sne_form")
 def create_employee_4sne_form():
-    employee_form = forms.Employee_Form()
-    job_id = request.args.get("job_id")
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        employee_form = forms.Employee_Form()
+        job_id = request.args.get("job_id")
 
-    return render_template("create_employee_4sne_form.html", job_id = job_id, employee_form = employee_form)
+        return render_template("create_employee_4sne_form.html", job_id = job_id, employee_form = employee_form)
 
+
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 @app.route("/add_employee_sne", methods=["post"])
 def add_employee_sne():
     job_id = request.args.get("job_id")
@@ -673,11 +780,17 @@ def complete_call_task():       ## toggle call complete
 
 @app.route("/call_form")
 def call_form():                ## call form template variables
-    job_id = request.args.get("job_id")
-    form = forms.Call_Form()
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        job_id = request.args.get("job_id")
+        form = forms.Call_Form()
 
-    return render_template("call_form.html", form = form, job_id = job_id)
+        return render_template("call_form.html", form = form, job_id = job_id)
 
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 @app.route("/create_call_job", methods=["post"])
 def create_call_job():          ## create call task function
     form = forms.Call_Form()
@@ -726,11 +839,17 @@ def complete_email_task():          ## 🚨 all the following routes are the sam
 
 @app.route("/email_form")
 def email_form():
-    job_id = request.args.get("job_id")
-    form = forms.Email_Form()
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        job_id = request.args.get("job_id")
+        form = forms.Email_Form()
 
-    return render_template("email_form.html", form = form, job_id = job_id)
+        return render_template("email_form.html", form = form, job_id = job_id)
 
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+    
 @app.route("/create_email_job", methods=["post"])
 def create_email_job():
     form = forms.Email_Form()
@@ -779,10 +898,16 @@ def complete_general_task():
 
 @app.route("/task_form")
 def task_form():
-    job_id = request.args.get("job_id")
-    form = forms.General_Task_Form()
+    try:
+        user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
+        job_id = request.args.get("job_id")
+        form = forms.General_Task_Form()
 
-    return render_template("task_form.html", form = form, job_id = job_id)
+        return render_template("task_form.html", form = form, job_id = job_id)
+    
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
 
 @app.route("/create_task_job", methods=["post"])
 def create_task_job():
