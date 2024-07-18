@@ -196,7 +196,8 @@ def show_job_detail():              ## job detail template variables
         job = crud.job_detail(job_id)
         days_since_task = crud.days_since(job.last_logged_task_time)        ## counting days since last logged task
         notes_form = forms.Notes_Form()
-        return render_template("job_detail_page.html", notes_form = notes_form, job = job, days_since_task = days_since_task)
+        resume_form = forms.Resume_Form()
+        return render_template("job_detail_page.html", notes_form = notes_form, resume_form = resume_form, job = job, days_since_task = days_since_task)
     
 
     except:                                 ## error handler to prevent viewing pages without an active session
@@ -209,9 +210,21 @@ def update_notes():
     job = crud.get_job_by_id(job_id)
 
     notes_form = forms.Notes_Form()
-    notes = notes_form.link.data
 
-    job.notes = notes
+    job.notes = notes_form.link.data
+
+    model.db.session.add(job)
+    model.db.session.commit()
+
+    return redirect(url_for("show_job_detail", job_id = job_id))
+
+@app.route("/update_resume", methods=["post"])
+def update_resume():
+    job_id = request.args.get("job_id")
+    job = crud.get_job_by_id(job_id)
+
+    resume_form = forms.Resume_Form()
+    job.resume = resume_form.link.data
 
     model.db.session.add(job)
     model.db.session.commit()
@@ -267,7 +280,7 @@ def update_rejection():             ## function to indicate rejection - 🚨can 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
 @app.route("/update_interviewing") 
-def update_interviewing():           ## function to inidicate active interviewing - 🚨can add IF/ELSE to revert status to previous timeline step  -- ADD TO CRUD
+def update_interviewing():           ## function to indicate active interviewing - 🚨can add IF/ELSE to revert status to previous timeline step  -- ADD TO CRUD
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.interviewing = crud.update_bool(job.interviewing)
@@ -280,7 +293,7 @@ def update_interviewing():           ## function to inidicate active interviewin
     return redirect(url_for('show_job_detail', job_id = job_id))
 
 @app.route("/update_accepted")     
-def update_accepted():              ## function to inidicate accepted offer - 🚨can add IF/ELSE to revert status to previous timeline step  -- ADD TO CRUD
+def update_accepted():              ## function to indicate accepted offer - 🚨can add IF/ELSE to revert status to previous timeline step  -- ADD TO CRUD
     job_id = request.args.get("job_id")                 
     job = crud.job_detail(job_id)    
     job.accepted_offer = crud.update_bool(job.accepted_offer)

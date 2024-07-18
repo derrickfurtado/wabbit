@@ -52,11 +52,22 @@
                 {{ notes_form.submit(class="btn btn-primary") }}
             </form>
             {% else %}
-            <a href="{{ job.notes }}" target="blank">
+            <b>Notes: </b><a href="{{ job.notes }}" target="blank">
                 <img id="notes_icon" src="https://cdn-icons-png.flaticon.com/512/768/768818.png">
             </a>
             {% endif %}
-
+            {% if not job.resume %}
+            <form id="resume_form" action="{{ url_for('update_resume', job_id = job.id) }}", method="post">
+                {{ resume_form.csrf_token }}
+                {{ resume_form.link.label }}
+                {{ resume_form.link(class="form-control") }}
+                {{ resume_form.submit(class="btn btn-primary") }}
+            </form>
+            {% else %}
+                <b>Resume:</b><a href="{{ job.resume }}" target="blank">
+                    <img id="resume_icon" src="https://cdn-icons-png.flaticon.com/128/942/942799.png">
+                </a>
+            {% endif %}
         </div>
         <div id="bool_div">
             <div id="job_offer_bool">

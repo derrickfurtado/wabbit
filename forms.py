@@ -29,7 +29,11 @@ class Job_Form(FlaskForm):
 class Notes_Form(FlaskForm):
     link = StringField("Link to Google Notes: ", validators=[Length(max=1000)])
     submit = SubmitField("Attach Notes Here")
-    
+
+class Resume_Form(FlaskForm):
+    link = StringField("Link to Resume: ", validators=[Length(max=1000)])
+    submit = SubmitField("Attach Resume Link Here")
+
 class Company_Form(FlaskForm):
     name = StringField("Company Name: ", validators=[DataRequired(), Length(max=255)])
     location = StringField("Location: ", validators=[DataRequired(), Length(max=255)])

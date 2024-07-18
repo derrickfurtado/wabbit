@@ -45,7 +45,7 @@ body {
     width: 40dvw;
 }
 
-#notes_icon {
+#notes_icon, #resume_icon {
     padding: 5px;
     margin-left: 20px;
     height: 75px;

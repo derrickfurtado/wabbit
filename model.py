@@ -37,6 +37,7 @@ class Job(db.Model):
     role = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(4000), nullable=False)
     notes = db.Column(db.String(1000))
+    resume = db.Column(db.String(1000))
     requirements = db.Column(db.String(4000), nullable=False)
     salary = db.Column(db.Integer)                              ## nullable in case salary and/or compensation is not present
     compensation = db.Column(db.String(4000))                    
