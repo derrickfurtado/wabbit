@@ -44,6 +44,19 @@
                         class="btn btn-secondary btn-lg">APPLY</button></a>
                 {% endif %}
             </div>
+            {% if not job.notes %}
+            <form id="notes_form" action="{{ url_for('update_notes', job_id = job.id) }}" , method="post">
+                {{ notes_form.csrf_token }}
+                {{ notes_form.link.label }}
+                {{ notes_form.link(class="form-control") }}
+                {{ notes_form.submit(class="btn btn-primary") }}
+            </form>
+            {% else %}
+            <a href="{{ job.notes }}" target="blank">
+                <img id="notes_icon" src="https://cdn-icons-png.flaticon.com/512/768/768818.png">
+            </a>
+            {% endif %}
+
         </div>
         <div id="bool_div">
             <div id="job_offer_bool">
@@ -129,7 +142,8 @@
                     {% endif %}
                 </div>
                 <div>
-                    Scheduled for: <b>{{ last_step.due_date.strftime('%b %d, %Y') }} @ {{ last_step.due_time.strftime('%I:%M %p') }}</b>
+                    Scheduled for: <b>{{ last_step.due_date.strftime('%b %d, %Y') }} @ {{
+                        last_step.due_time.strftime('%I:%M %p') }}</b>
                     {% else %}
                     <b>No next steps scheduled.</b>
                     {% endif %}

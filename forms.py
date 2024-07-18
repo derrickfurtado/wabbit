@@ -26,6 +26,10 @@ class Job_Form(FlaskForm):
     company = SelectField("Company: ", coerce=str)              ## coerce allows the form to "look" for a string when invoked
     submit = SubmitField()
 
+class Notes_Form(FlaskForm):
+    link = StringField("Link to Google Notes: ", validators=[Length(max=1000)])
+    submit = SubmitField("Attach Notes Here")
+    
 class Company_Form(FlaskForm):
     name = StringField("Company Name: ", validators=[DataRequired(), Length(max=255)])
     location = StringField("Location: ", validators=[DataRequired(), Length(max=255)])

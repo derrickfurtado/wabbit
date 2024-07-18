@@ -102,13 +102,10 @@ def update_bool(bool):
         bool = False
     return bool
 
-def update_last_activity(job_id):
-    job = model.Job.query.get("job_id")
-    job.last_logged_task_time = datetime.now()
-    return job
-
 def get_job_by_id(job_id):
     return model.Job.query.get(job_id)
+
+
 ############# Email Object ########
 
 def create_email(job_id, task_for_employee, task_for_recruiter, due_date, description, completed):

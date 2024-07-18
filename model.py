@@ -36,6 +36,7 @@ class Job(db.Model):
 
     role = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(4000), nullable=False)
+    notes = db.Column(db.String(1000))
     requirements = db.Column(db.String(4000), nullable=False)
     salary = db.Column(db.Integer)                              ## nullable in case salary and/or compensation is not present
     compensation = db.Column(db.String(4000))                    
@@ -139,7 +140,7 @@ class Company(db.Model):
     __tablename__ = "company_table"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255), nullable=False, unique=True)
+    name = db.Column(db.String(255), nullable=False)
     location = db.Column(db.String(255), nullable=False)
     industry = db.Column(db.String(255))
     favorite = db.Column(db.Boolean, default=False)

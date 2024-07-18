@@ -92,7 +92,7 @@ def sign_out():                              ## sign out feature. Deletes sessio
 ############################ Homepage Routes ##############################
 
 @app.route("/homepage")                     
-def homepage():                             ## Dashboard template variables 🚨 add error handling when no session is active
+def homepage():                             ## Dashboard template variables
     try:
         user_id = session["user_id"]
         job_list = crud.show_all_jobs_by_userID(user_id)               ## Only pull jobs that the user owns in the DB
@@ -145,7 +145,6 @@ def show_job_form():                        ### Create Job template variables
         flash("Please log in first")
         return redirect("/")
     
-
 @app.route("/create_job", methods=["POST"])
 def create_job():                       ## POST job to DB
     job_form = forms.Job_Form()
@@ -196,12 +195,28 @@ def show_job_detail():              ## job detail template variables
         job_id = request.args.get('job_id')
         job = crud.job_detail(job_id)
         days_since_task = crud.days_since(job.last_logged_task_time)        ## counting days since last logged task
-        return render_template("job_detail_page.html", job = job, days_since_task = days_since_task)
+        notes_form = forms.Notes_Form()
+        return render_template("job_detail_page.html", notes_form = notes_form, job = job, days_since_task = days_since_task)
     
 
     except:                                 ## error handler to prevent viewing pages without an active session
         flash("Please log in first")
         return redirect("/")
+
+@app.route("/update_notes", methods=["post"])             ## add notes link to job object
+def update_notes():
+    job_id = request.args.get("job_id")
+    job = crud.get_job_by_id(job_id)
+
+    notes_form = forms.Notes_Form()
+    notes = notes_form.link.data
+
+    job.notes = notes
+
+    model.db.session.add(job)
+    model.db.session.commit()
+
+    return redirect(url_for("show_job_detail", job_id = job_id))
 
 @app.route("/update_applied_status")
 def update_applied_status():        ## update job applied function
@@ -579,6 +594,8 @@ def create_sne_4recruiter():        ## create next step function for recruiter
 
             job = crud.get_job_by_id(job_id)
             job.recruiter_id = sne_form.task_for_recruiter_id.data              ## add this recruiter to the Lead Recruiter of the job
+            job.last_logged_task = "Scheduled Call with Recruiter"              ## update last activity
+            job.last_logged_task_time = datetime.now()
             job.interviewing = True                                             ## change interview status to TRUE
             model.db.session.add(job)
             model.db.session.commit()
@@ -638,13 +655,15 @@ def add_recruiter_sne():                ## create next step for newly created re
 
     job = crud.get_job_by_id(job_id)
     job.recruiter_id = new_recruiter.id            ## add this newly created recruiter to the Lead Recruiter of the job
+    job.last_logged_task = "Scheduled Call with Recruiter"
+    job.last_logged_task_time = datetime.now()
     job.interviewing = True
     model.db.session.add(job)
     model.db.session.commit()
 
     return redirect(url_for("show_job_detail", job_id = job_id))
 
-@app.route("/sne_employee_form")                    ## 💡 the following employee next step routes are same as recruiter, but for employees
+@app.route("/sne_employee_form")                    ## the following employee next step routes are same as recruiter, but for employees
 def sne_employee_form():
     try:
         user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
@@ -694,6 +713,8 @@ def create_sne_4employee():
             model.db.session.commit()
 
             job = crud.get_job_by_id(job_id)
+            job.last_logged_task = "Scheduled Call with Inteviewer"
+            job.last_logged_task_time = datetime.now()
             job.interviewing = True
             model.db.session.add(job)
             model.db.session.commit()
@@ -755,6 +776,8 @@ def add_employee_sne():
     model.db.session.commit()
 
     job = crud.get_job_by_id(job_id)
+    job.last_logged_task = "Scheduled Call with Inteviewer"
+    job.last_logged_task_time = datetime.now()
     job.interviewing = True
     model.db.session.add(job)
     model.db.session.commit()
