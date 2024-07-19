@@ -11,10 +11,10 @@ MVP:
 
 
 Future State:
-- 🚨 Add resume link to database for job
-    - show a link to resume on job_details
+- ✅ Add resume link to database for job
+    - ✅ show a link to resume on job_details
 - ✅ Add note taking section for events/contacts (Added link for external notes, like Google Docs)
-- Add new table to show Referrals (Name, LinkedIn, Email, Phone)
+- ✅ Add new table to show Referrals (Name, LinkedIn, Email, Phone)
 - Add analytics page that show application, interview, offer, and rejection rates.
 - Make responsive for mobile and tablets
 

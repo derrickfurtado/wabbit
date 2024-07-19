@@ -218,6 +218,17 @@ def recruiter_list_by_company(company_id):
 def recruiter_list_by_job(job_id):
     return model.Recruiter.query.filter_by(job_id = job_id)
 
+############# Referral Object ########
+
+def create_referral(full_name, linkedin):
+    new_referral = model.Referral(
+        full_name = full_name,
+        linkedin = linkedin
+    )
+    return new_referral
+
+def referral_by_id(id):
+    return model.Referral.query.get(id)
 
 
 ############## Miscellaneous Functions #######

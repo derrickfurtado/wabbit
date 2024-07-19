@@ -33,6 +33,7 @@ class Job(db.Model):
     company_id = db.Column(db.Integer, db.ForeignKey("company_table.id"))
     user_id = db.Column(db.Integer, db.ForeignKey("users_table.id"), nullable=False)
     recruiter_id = db.Column(db.Integer, db.ForeignKey("recruiter_table.id"))
+    referral_id = db.Column(db.Integer, db.ForeignKey("referral_table.id"))
 
     role = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(4000), nullable=False)
@@ -61,6 +62,7 @@ class Job(db.Model):
     email_task = db.relationship("Email", backref="job")
     call_task = db.relationship("Call", backref="job")
     general_task = db.relationship("General_Task", backref="job")
+    referral = db.relationship("Referral", backref="job")
 
     def __repr__(self):
         return f"Job ID: {self.id}: {self.role} for company id: {self.company_id}"
@@ -161,7 +163,7 @@ class Recruiter(db.Model):
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), unique=True)
+    email = db.Column(db.String(255))
     linkedin = db.Column(db.String(255))
 
     next_step = db.relationship("Next_Step", backref="recruiter")
@@ -178,7 +180,7 @@ class Employee(db.Model):
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), unique=True)
+    email = db.Column(db.String(255))
     linkedin = db.Column(db.String(255))
 
     next_step = db.relationship("Next_Step", backref="employee")
@@ -186,7 +188,16 @@ class Employee(db.Model):
     def __repr__(self):
         return f"Employee name: {self.first_name} {self.last_name}"
 
+class Referral(db.Model):
 
+    __tablename__ = "referral_table"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    full_name = db.Column(db.String(255), nullable=False)
+    linkedin = db.Column(db.String(255))
+
+    def _repr__(self):
+        return f"Referral name: {self.full_name}"
 
 
 

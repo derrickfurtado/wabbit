@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/create_staff_form_styling.css">
+{% endblock %}
+
+{% block title %}
+<title>Add Referral</title>
+{% endblock %}
+
+{% block body %}
+<section id="create_staff_form">
+    <form id="staff_form" action="{{ url_for('create_referral', job_id = job_id) }}"
+        method="post">
+        <h1>Add Referral to this Job:</h1>
+        {{ referral_form.csrf_token() }}
+        <div>
+            {{ referral_form.full_name.label }}
+            {{ referral_form.full_name(class="form-control") }}
+        </div>
+        <div>
+            {{ referral_form.linkedin.label }}
+            {{ referral_form.linkedin(class="form-control") }}
+        </div>
+        <div>
+            {{ referral_form.submit(class="btn btn-primary") }}
+        </div>
+
+    </form>
+</section>
+
+
+
+{% endblock %}

@@ -322,6 +322,21 @@
                 <pre>{{ job.compensation }}</pre>
             </div>
 
+
+            <div id="job_referral">
+                <h3>Referral:</h3>
+                {% if not job.referral %}
+                <a href="{{ url_for('create_referral_form', job_id = job.id) }}">
+                    <button class="btn btn-secondary btn-sm">Add Referral</button>
+                </a>
+                {% else %}
+                    <a href="{{ url_for('remove_referral', job_id = job.id) }}"><button class="btn btn-secondary btn-sm">Remove Referral</button></a>
+                    <li><a href="{{ job.referral.linkedin }}" target="_blank">{{ job.referral.full_name }}</a></li>
+                {% endif %}
+            </div>
+
+
+
         </div>
     </div>
     <div id="job_details_4_div">
