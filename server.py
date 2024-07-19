@@ -494,7 +494,7 @@ def create_recruiter_form():        ## create recruiter template variables from 
     
 @app.route("/create_recruiter", methods=["post"])
 def create_recruiter():             ## function to create recruiter
-    # try:
+    try:
         user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
         recruiter_form = forms.Recruiter_Form()
         job_id = request.args.get("job_id")
@@ -517,9 +517,9 @@ def create_recruiter():             ## function to create recruiter
         flash("Recruiter added to Job")
         return render_template("job_detail_page.html", job = job)
     
-    # except:                                 ## error handler to prevent viewing pages without an active session
-    #     flash("Please log in first")
-    #     return redirect("/")
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
 
 @app.route("/create_employee_form")
 def create_employee_form():         ## create employee template variables from job page
