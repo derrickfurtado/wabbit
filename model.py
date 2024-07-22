@@ -1,9 +1,9 @@
 """ DB seed and models script """
 
 from flask_sqlalchemy import SQLAlchemy     ## using SQLAlchemy db
-import os                                   ## used to pull in Postgres URI
+import os, app                                   ## used to pull in Postgres URI
 
-db = SQLAlchemy()
+db = SQLAlchemy(app)
 
 ####################### DB Class Models ####################### 
 
