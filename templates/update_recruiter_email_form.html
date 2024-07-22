@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/task_styling.css">
+{% endblock %}
+
+{% block title %}
+<title>Update Email</title>
+{% endblock %}
+
+{% block body %}
+
+
+<section id="create_task_form">
+    <form id="task_form" action="{{ url_for('update_recruiter_email', job_id = job_id) }}", method="post">
+        <h2>Update Email for {{ recruiter_full_name }}</h2>
+        {{ email_form.csrf_token() }}
+
+        <div>
+            {{ email_form.email.label }}
+            {{ email_form.email(class="form-control") }}
+        </div>
+        <div>
+            {{ email_form.submit(class="btn btn-primary") }}
+        </div>
+
+    </form>
+</section>
+
+
+
+
+
+
+{% endblock %}

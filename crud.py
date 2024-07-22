@@ -198,6 +198,9 @@ def employee_list_by_company(company_id):
 
 def employee_list_by_job(job_id):
     return model.Employee.query.filter_by(job_id = job_id)
+
+def get_employee_by_id(employee_id):
+    return model.Employee.query.get(employee_id)
     
 ############# Recruiter Object ########
 

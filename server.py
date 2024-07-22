@@ -190,19 +190,73 @@ def create_job():                       ## POST job to DB
 
 @app.route("/job_detail")
 def show_job_detail():              ## job detail template variables
-    try:
+    # try:
         user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
         job_id = request.args.get('job_id')
         job = crud.job_detail(job_id)
         days_since_task = crud.days_since(job.last_logged_task_time)        ## counting days since last logged task
         notes_form = forms.Notes_Form()
         resume_form = forms.Resume_Form()
+ 
         return render_template("job_detail_page.html", notes_form = notes_form, resume_form = resume_form, job = job, days_since_task = days_since_task)
     
 
-    except:                                 ## error handler to prevent viewing pages without an active session
-        flash("Please log in first")
-        return redirect("/")
+    # except:                                 ## error handler to prevent viewing pages without an active session
+    #     flash("Please log in first")
+    #     return redirect("/")
+
+@app.route("/update_recruiter_email_form")        ## update email form template variables
+def update_recruiter_email_form():
+    job_id = request.args.get("job_id")   
+    email_form = forms.Update_Email_Form()
+    job = crud.get_job_by_id(job_id)
+    recruiter_full_name = f"{job.recruiter.first_name} {job.recruiter.last_name}"
+
+    return render_template("update_recruiter_email_form.html", email_form = email_form, job_id = job_id, recruiter_full_name = recruiter_full_name)
+
+@app.route("/update_recruiter_email", methods=["post"])
+def update_recruiter_email():
+    job_id = request.args.get("job_id")    
+
+    email_form = forms.Update_Email_Form()
+    job = crud.get_job_by_id(job_id)
+    updated_email = email_form.email.data
+    job.recruiter.email = updated_email
+
+    model.db.session.add(job)
+    model.db.session.commit()
+
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+@app.route("/update_employee_email_form")
+def update_employee_email_form():
+    job_id = request.args.get("job_id")
+    employee_id = request.args.get("employee_id")
+    employee = crud.get_employee_by_id(employee_id)
+    email_form = forms.Update_Email_Form()
+
+    return render_template("update_employee_email_form.html", email_form = email_form, job_id = job_id, employee = employee)
+
+@app.route("/update_employee_email", methods=["post"])
+def update_employee_email():
+    job_id = request.args.get("job_id")
+    employee_id = request.args.get("employee_id")
+    email_form = forms.Update_Email_Form()
+
+    employee = crud.get_employee_by_id(employee_id)
+
+    updated_email = email_form.email.data
+
+    employee.email = updated_email
+
+    model.db.session.add(employee)
+    model.db.session.commit()
+    
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
+
+
 
 @app.route("/update_notes", methods=["post"])             ## add notes link to job object
 def update_notes():
@@ -1025,4 +1079,4 @@ def delete_general_task():
 
 if __name__ == "__main__":
     model.connect_to_db(app)
-    app.run(host="localhost", port=4040, debug=True)        ## 🚨 change debug to FALSE when deploying
+    app.run(host="0.0.0.0", port=80, debug=True)        ## 🚨 change debug to FALSE when deploying

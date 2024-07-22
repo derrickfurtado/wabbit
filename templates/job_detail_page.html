@@ -352,8 +352,13 @@
                 <ul>
                     <li>
                         <a href="{{ job.recruiter.linkedin }}" target="_blank">{{ job.recruiter.first_name }} {{
-                            job.recruiter.last_name }}</a> ({{ job.recruiter.title }}) - <a
-                            href="mailto:{{ job.recruiter.email }}"><button class="btn btn-info">EMAIL</button></a>
+                            job.recruiter.last_name }}</a> ({{ job.recruiter.title }}) - 
+                            {% if job.recruiter.email == '' %}
+                            <a href="{{ url_for('update_recruiter_email_form', job_id = job.id) }}"><button class="btn btn-info">ADD EMAIL</button></a>
+                            {% else %}
+                            <a href="mailto:{{ job.recruiter.email }}"><button class="btn btn-info">EMAIL</button></a>
+                                <a href="{{ url_for('update_recruiter_email_form', job_id = job.id) }}"><button class="btn btn-info">UPDATE EMAIL</button></a>
+                            {% endif %}
                     </li>
                 </ul>
                 {% endif %}
@@ -363,7 +368,7 @@
                     <b><a href="{{ job.link }}" target="_blank"><button class="btn btn-success">Link to Job
                                 Posting</button></a></b>
                 </div>
-                <div id="job_details_5_div">
+                <div id="delete_warning">
                     <a href="{{ url_for('delete_warning', job_id = job.id) }}"><button class="btn btn-danger">⚠️ DELETE
                             JOB
                             ⚠️</button></a>
@@ -378,8 +383,13 @@
                     {% for employee in job.company.employee %}
                     <li>
                         <a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{
-                            employee.last_name }}</a> ({{ employee.title }}) - <a
-                            href="mailto:{{ employee.email }}"><button class="btn btn-info">EMAIL</button></a>
+                            employee.last_name }}</a> ({{ employee.title }}) - 
+                            {% if job.company.employee.email == '' %}
+                            <a href="{{ url_for('update_employee_email_form', job_id = job.id, employee_id = employee.id) }}"><button class="btn btn-info">ADD EMAIL</button></a>
+                            {% else %}
+                            <a href="mailto:{{ employee.email }}"><button class="btn btn-info">EMAIL</button></a>
+                                <a href="{{ url_for('update_employee_email_form', job_id = job.id, employee_id = employee.id) }}"><button class="btn btn-info">UPDATE EMAIL</button></a>
+                            {% endif %}
                     </li>
                     {% endfor %}
                 </ul>

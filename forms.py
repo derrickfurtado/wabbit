@@ -44,7 +44,7 @@ class Employee_Form(FlaskForm):
     first_name = StringField("First Name: ", validators=[DataRequired(), Length(max=255)])
     last_name = StringField("Last Name: ", validators=[Length(max=255)])
     title = StringField("Title: ", validators=[DataRequired(), Length(max=255)])
-    email = EmailField("Email", validators=[DataRequired(), Length(max=255)])
+    email = EmailField("Email: ", validators=[Length(max=255)])
     linkedin = StringField("LinkedIn page: ", validators=[Length(max=255)])
     submit = SubmitField()
 
@@ -52,8 +52,12 @@ class Recruiter_Form(FlaskForm):
     first_name = StringField("First Name: ", validators=[DataRequired(), Length(max=255)])
     last_name = StringField("Last Name: ", validators=[Length(max=255)])
     title = StringField("Title: ", validators=[DataRequired(), Length(max=255)])
-    email = EmailField("Email", validators=[DataRequired(), Length(max=255)])
+    email = EmailField("Email: ", validators=[Length(max=255)])
     linkedin = StringField("LinkedIn page: ", validators=[Length(max=255)])
+    submit = SubmitField()
+
+class Update_Email_Form(FlaskForm):
+    email = StringField("Email Address: ", validators=[Length(max=255)])
     submit = SubmitField()
 
 class Referral_Form(FlaskForm):

@@ -210,7 +210,7 @@ def connect_to_db(flask_app, echo=True):
     db.app = flask_app
     db.init_app(flask_app)
 
-    print("Crank it up to 5432!")
+    print("Crank it up to 80!")
 
 
 if __name__ == "__main__":          ## only used if running model.py directly when seeding the DB

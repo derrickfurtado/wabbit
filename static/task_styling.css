@@ -7,7 +7,7 @@ body {
     height: fit-content;
 }
 
-#create_task_form {
+#create_task_form, #update_email_form {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,7 +19,7 @@ body {
 
 }
 
-#task_form {
+#task_form, #update_email_form {
     background-color: rgba(250, 235, 215, 0.446);
     padding: 2dvh;
     border-radius: 10px;
