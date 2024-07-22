@@ -1,8 +1,8 @@
 """ server to contain endpoints for Wabbit app """
 
-import forms, model, crud, bcrypt                                                      ## import forms.py, model.py, crud.py and bcrypt library
+import forms, model, crud, bcrypt, os                                                      ## import forms.py, model.py, crud.py and bcrypt library
 from flask import Flask, render_template, flash, redirect, session, request, url_for
-from key import secret_key                                                             ## needed for database password
+# from key import secret_key                                                             ## needed for database password (locally)
 from pdb import set_trace                                                              ## my favorite debug tool
 from datetime import datetime                                                          ## for use with keeping dates and times
 
@@ -12,7 +12,9 @@ from datetime import datetime                                                   
 app = Flask(__name__)
     
 
-app.secret_key = secret_key                 ### 💡secret key stored in key.py file for security
+# app.secret_key = secret_key                 ### 💡secret key stored in key.py file for security (used locally)
+
+app.secret_key = os.getenv('SECRET_KEY')
 
 ############################ Credentials ##############################
 
