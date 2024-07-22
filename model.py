@@ -204,10 +204,9 @@ class Referral(db.Model):
 
 
 
-def connect_to_db(flask_app, echo=False):
+def connect_to_db(flask_app):
     # flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["POSTGRES_URI"]          #used locally
-    flask_app.config["SQLALCHEMY_ECHO"] = echo
-    flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False      ## turned off because the command line feedback was overwhelming
+    flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
     db.app = flask_app
     db.init_app(flask_app)
 
