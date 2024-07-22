@@ -204,17 +204,17 @@ class Referral(db.Model):
 
 
 
-def connect_to_db(flask_app):
-    # flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["POSTGRES_URI"]          #used locally
-    flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
+
+def connect_to_db(flask_app, echo=True):
+    #flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
+    flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["POSTGRES_URI"]
+    flask_app.config["SQLALCHEMY_ECHO"] = echo
+    flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True      ## turned off because the command line feedback was overwhelming
     db.app = flask_app
     db.init_app(flask_app)
-
     print("Crank it up to 80!")
 
 
 if __name__ == "__main__":          ## only used if running model.py directly when seeding the DB
     from app import app
     connect_to_db(app)
-
-

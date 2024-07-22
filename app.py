@@ -2,7 +2,7 @@
 
 import forms, model, crud, bcrypt, os                                                      ## import forms.py, model.py, crud.py and bcrypt library
 from flask import Flask, render_template, flash, redirect, session, request, url_for
-# from key import secret_key                                                             ## needed for database password (locally)
+from key import secret_key                                                             ## needed for database password (locally)
 from pdb import set_trace                                                              ## my favorite debug tool
 from datetime import datetime                                                          ## for use with keeping dates and times
 
@@ -12,9 +12,9 @@ from datetime import datetime                                                   
 app = Flask(__name__)
     
 
-# app.secret_key = secret_key                 ### 💡secret key stored in key.py file for security (used locally)
+# app.secret_key = secret_key                 ### 💡💡💡 secret key stored in key.py file for security (used locally)
 
-app.secret_key = os.getenv('SECRET_KEY')
+
 
 ############################ Credentials ##############################
 
@@ -1113,4 +1113,5 @@ def delete_general_task():
 
 if __name__ == "__main__":
     model.connect_to_db(app)
-    app.run(host="0.0.0.0", port=5432, debug=False)        ## 🚨 change debug to FALSE when deploying
+    # app.run(host="0.0.0.0", port=4040, debug=False)        ### 💡💡💡
+    app.run(host="0.0.0.0", port=5432, debug=False)

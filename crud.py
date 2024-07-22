@@ -1,16 +1,15 @@
 """ CRUD file for all CRUD functions"""
-
-import model, hashlib
+import model
 from pdb import set_trace
 from datetime import datetime
 from random import randint
 
 
 
+
+
 def create_user(first_name, last_name, email, password, location, school, bio, headshot):
-
     ### Hash password here with haslib ###
-
     new_user = model.Users(
         first_name = first_name, 
         last_name = last_name,
@@ -25,7 +24,6 @@ def create_user(first_name, last_name, email, password, location, school, bio, h
     return new_user
 
 ########## Company Object ###########
-
 
 def create_company(name, location, industry, favorite):
     new_company = model.Company(
@@ -52,6 +50,7 @@ def get_company_by_job_id(job_id):
 
 def get_company_by_company_id(company_id):
     return model.Company.query.get(company_id)
+
 ########### Job Object ##########
 
 def create_job(company_id, user_id, recruiter_id, role, description, requirements, salary, compensation, link, date_applied, job_offer, rejection, interviewing, accepted_offer, ghosted, favorite, last_logged_task, last_logged_task_time):
@@ -105,7 +104,6 @@ def update_bool(bool):
 def get_job_by_id(job_id):
     return model.Job.query.get(job_id)
 
-
 ############# Email Object ########
 
 def create_email(job_id, task_for_employee, task_for_recruiter, due_date, description, completed):
@@ -143,7 +141,7 @@ def call_list_by_job(job_id):
 
 def get_call_by_id(call_id):
     return model.Call.query.get(call_id)
-    
+
 ############# General Task Object ########
 
 def create_general_task(job_id, task_for_employee, task_for_recruiter, due_date, description, completed):
@@ -179,7 +177,7 @@ def create_next_step(job_id, task_for_employee, task_for_recruiter, due_date, du
 
 def next_step_list_by_job(job_id):
     return  model.Next_Step.query.filter_by(job_id = job_id)
-    
+
 ############## Employee Object #######
 
 def create_employee(company_id, first_name, last_name, title, email, linkedin):    
@@ -201,7 +199,7 @@ def employee_list_by_job(job_id):
 
 def get_employee_by_id(employee_id):
     return model.Employee.query.get(employee_id)
-    
+
 ############# Recruiter Object ########
 
 def create_recruiter(company_id, first_name, last_name, title, email, linkedin):
