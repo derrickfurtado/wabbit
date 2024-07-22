@@ -9,7 +9,7 @@ secret_key = os.getenv('SECRET_KEY')
 app.config['SECRET_KEY'] = secret_key
 app.config['SQLALCHEMY_DAYABASE_URI'] = database_uri
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 ####################### DB Class Models ####################### 
 
