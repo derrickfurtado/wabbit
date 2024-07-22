@@ -19,11 +19,11 @@
             <h5>Location: {{ company.location }}</h5>
         </div>
         <div id="company_favorite">
-            {% if company.favorite %}
-            <a href="{{ url_for('update_favorite_company', company_id = company.id) }}", target="_blank"><button
+            {% if not company.favorite %}
+            <a href="{{ url_for('update_favorite_company', company_id = company.id) }}"><button
                     class="btn btn-primary btn-sm"> ❤️ Mark as Favorite</button></a>
             {% else %}
-            <a href="{{ url_for('update_favorite_company', company_id = company.id) }}", target="_blank"><button
+            <a href="{{ url_for('update_favorite_company', company_id = company.id) }}"><button
                     class="btn btn-primary btn-sm">🤮 Mark as Unfavorite</button></a>
             {% endif %}
         </div>

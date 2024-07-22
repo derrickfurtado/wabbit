@@ -214,7 +214,7 @@ def connect_to_db(flask_app, echo=True):
 
 
 if __name__ == "__main__":          ## only used if running model.py directly when seeding the DB
-    from server import app
+    from app import app
     connect_to_db(app)
 
 

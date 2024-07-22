@@ -1,14 +1,14 @@
 """ Seed file to create/delete DB and add test data to our Wabbit DB for testing/building only"""
 
-import os, model, server
+import os, model, app
 from pdb import set_trace           
 
-server.app.app_context().push()
+app.app.app_context().push()
 
 os.system("dropdb wabbit")              ## drop table and all data
 os.system("createdb wabbit")            ## recreate table
 
-model.connect_to_db(server.app)         ## connect to Wabbit DB
+model.connect_to_db(app.app)         ## connect to Wabbit DB
 model.db.create_all()                   ## create all tables
 
 

@@ -1111,4 +1111,4 @@ def delete_general_task():
 
 if __name__ == "__main__":
     model.connect_to_db(app)
-    app.run(host="0.0.0.0", port=80, debug=True)        ## 🚨 change debug to FALSE when deploying
+    app.run(host="0.0.0.0", port=80, debug=False)        ## 🚨 change debug to FALSE when deploying
