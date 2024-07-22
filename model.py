@@ -1,7 +1,6 @@
 """ DB seed and models script """
 
 from flask_sqlalchemy import SQLAlchemy     ## using SQLAlchemy db
-from app import app
 import os                                  ## used to pull in Postgres URI
 
 database_uri = os.getenv('DATABASE_URI')
