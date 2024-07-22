@@ -1,9 +1,15 @@
 """ DB seed and models script """
 
 from flask_sqlalchemy import SQLAlchemy     ## using SQLAlchemy db
+from app import app
 import os                                  ## used to pull in Postgres URI
 
-db = SQLAlchemy()
+database_uri = os.getenv('DATABASE_URI')
+secret_key = os.getenv('SECRET_KEY')
+app.config['SECRET_KEY'] = secret_key
+app.config['SQLALCHEMY_DAYABASE_URI'] = database_uri
+
+db = SQLAlchemy(app)
 
 ####################### DB Class Models ####################### 
 
@@ -205,7 +211,6 @@ class Referral(db.Model):
 
 def connect_to_db(flask_app, echo=False):
     # flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["POSTGRES_URI"]          #used locally
-    flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv["DATABASE_URI"]
     flask_app.config["SQLALCHEMY_ECHO"] = echo
     flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False      ## turned off because the command line feedback was overwhelming
     db.app = flask_app
