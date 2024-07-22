@@ -313,8 +313,10 @@
                 <h3>Salary:</h3>
                 {% if job.salary %}
                 <h4><b>{{ "$ {:,.0f} per year".format(job.salary) }}</b></h4>
+                <a href="{{ url_for('update_salary_form', job_id = job.id) }}"><button class="btn btn-secondary btn-sm">Update Salary</button></a><br>
                 {% else %}
-                <h4></h4><b>Salary not provided</b></h4>
+                <b>Salary not provided</b><br>
+                <a href="{{ url_for('update_salary_form', job_id = job.id) }}"><button class="btn btn-secondary btn-sm">Update Salary</button></a>
                 {% endif %}
             </div>
             <div id="job_compensation">
@@ -330,8 +332,8 @@
                     <button class="btn btn-secondary btn-sm">Add Referral</button>
                 </a>
                 {% else %}
-                    <a href="{{ url_for('remove_referral', job_id = job.id) }}"><button class="btn btn-secondary btn-sm">Remove Referral</button></a>
-                    <li><a href="{{ job.referral.linkedin }}" target="_blank">{{ job.referral.full_name }}</a></li>
+                <li><a href="{{ job.referral.linkedin }}" target="_blank">{{ job.referral.full_name }}</a></li>
+                <a href="{{ url_for('remove_referral', job_id = job.id) }}"><button class="btn btn-secondary btn-sm">Remove Referral</button></a>
                 {% endif %}
             </div>
 

@@ -60,6 +60,10 @@ class Update_Email_Form(FlaskForm):
     email = StringField("Email Address: ", validators=[Length(max=255)])
     submit = SubmitField()
 
+class Update_Salary_Form(FlaskForm):
+    salary = IntegerField("Updated Salary: ")
+    submit = SubmitField()
+
 class Referral_Form(FlaskForm):
     full_name = StringField("Full Name: ", validators=[DataRequired(), Length(max=255)])
     linkedin = StringField("LinkedIn: ", validators=[Length(max=255)])

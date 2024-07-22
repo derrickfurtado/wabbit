@@ -190,7 +190,7 @@ def create_job():                       ## POST job to DB
 
 @app.route("/job_detail")
 def show_job_detail():              ## job detail template variables
-    # try:
+    try:
         user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
         job_id = request.args.get('job_id')
         job = crud.job_detail(job_id)
@@ -201,18 +201,22 @@ def show_job_detail():              ## job detail template variables
         return render_template("job_detail_page.html", notes_form = notes_form, resume_form = resume_form, job = job, days_since_task = days_since_task)
     
 
-    # except:                                 ## error handler to prevent viewing pages without an active session
-    #     flash("Please log in first")
-    #     return redirect("/")
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
 
-@app.route("/update_recruiter_email_form")        ## update email form template variables
-def update_recruiter_email_form():
-    job_id = request.args.get("job_id")   
-    email_form = forms.Update_Email_Form()
-    job = crud.get_job_by_id(job_id)
-    recruiter_full_name = f"{job.recruiter.first_name} {job.recruiter.last_name}"
+@app.route("/update_recruiter_email_form")        
+def update_recruiter_email_form():      ## update email form template variables
+    try:
+        job_id = request.args.get("job_id")   
+        email_form = forms.Update_Email_Form()
+        job = crud.get_job_by_id(job_id)
+        recruiter_full_name = f"{job.recruiter.first_name} {job.recruiter.last_name}"       ## needed to add recruiter name to html
 
-    return render_template("update_recruiter_email_form.html", email_form = email_form, job_id = job_id, recruiter_full_name = recruiter_full_name)
+        return render_template("update_recruiter_email_form.html", email_form = email_form, job_id = job_id, recruiter_full_name = recruiter_full_name)
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
 
 @app.route("/update_recruiter_email", methods=["post"])
 def update_recruiter_email():
@@ -230,13 +234,17 @@ def update_recruiter_email():
     return redirect(url_for('show_job_detail', job_id = job_id))
 
 @app.route("/update_employee_email_form")
-def update_employee_email_form():
-    job_id = request.args.get("job_id")
-    employee_id = request.args.get("employee_id")
-    employee = crud.get_employee_by_id(employee_id)
-    email_form = forms.Update_Email_Form()
+def update_employee_email_form():       ## update email form template variables
+    try:
+        job_id = request.args.get("job_id")
+        employee_id = request.args.get("employee_id")
+        employee = crud.get_employee_by_id(employee_id)     ## push whole employee object to use first and last name in html
+        email_form = forms.Update_Email_Form()
 
-    return render_template("update_employee_email_form.html", email_form = email_form, job_id = job_id, employee = employee)
+        return render_template("update_employee_email_form.html", email_form = email_form, job_id = job_id, employee = employee)
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
 
 @app.route("/update_employee_email", methods=["post"])
 def update_employee_email():
@@ -256,10 +264,8 @@ def update_employee_email():
 
     return redirect(url_for('show_job_detail', job_id = job_id))
 
-
-
-@app.route("/update_notes", methods=["post"])             ## add notes link to job object
-def update_notes():
+@app.route("/update_notes", methods=["post"])            
+def update_notes():      ## add notes link to job object
     job_id = request.args.get("job_id")
     job = crud.get_job_by_id(job_id)
 
@@ -273,7 +279,7 @@ def update_notes():
     return redirect(url_for("show_job_detail", job_id = job_id))
 
 @app.route("/update_resume", methods=["post"])
-def update_resume():
+def update_resume():         ## add resume link to job object
     job_id = request.args.get("job_id")
     job = crud.get_job_by_id(job_id)
 
@@ -284,6 +290,32 @@ def update_resume():
     model.db.session.commit()
 
     return redirect(url_for("show_job_detail", job_id = job_id))
+
+@app.route("/update_salary_form")
+def update_salary_form():       ## update salary on job page
+    try:
+        job_id = request.args.get("job_id")
+        salary_form = forms.Update_Salary_Form()
+
+        return render_template("update_salary_form.html", job_id = job_id, salary_form = salary_form)
+    except:                                 ## error handler to prevent viewing pages without an active session
+        flash("Please log in first")
+        return redirect("/")
+
+@app.route("/update_salary", methods=["post"])
+def update_salary():
+    job_id = request.args.get("job_id")
+    salary_form = forms.Update_Salary_Form()
+    updated_salary = salary_form.salary.data
+    
+    job = crud.get_job_by_id(job_id)
+
+    job.salary = updated_salary
+
+    model.db.session.add(job)
+    model.db.session.commit()
+
+    return redirect(url_for('show_job_detail', job_id = job_id))
 
 @app.route("/update_applied_status")
 def update_applied_status():        ## update job applied function
@@ -609,7 +641,7 @@ def create_employee():              ## function to create employee
     return redirect(url_for("show_job_detail", job_id = job_id))
 
 @app.route("/create_referral_form")
-def create_referral_form():         ## create referral template variables 🚨 add error handler
+def create_referral_form():         ## create referral template variables
     try:
         user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
         job_id = request.args.get("job_id")
@@ -771,8 +803,8 @@ def add_recruiter_sne():                ## create next step for newly created re
 
     return redirect(url_for("show_job_detail", job_id = job_id))
 
-@app.route("/sne_employee_form")                    ## the following employee next step routes are same as recruiter, but for employees
-def sne_employee_form():
+@app.route("/sne_employee_form")                    
+def sne_employee_form():        ## the following employee next step routes are same as recruiter, but for employees
     try:
         user_id = session["user_id"]                ## not using this variable, but needed to make sure the error handler functioned correctly if a user wasn't logged in
         sne_form = forms.SNE_Employee_Form()

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/task_styling.css">
+{% endblock %}
+
+{% block title %}
+<title>Update Email</title>
+{% endblock %}
+
+{% block body %}
+
+
+<section id="create_task_form">
+    <form id="task_form" action="{{ url_for('update_salary', job_id = job_id) }}", method="post">
+        <h2>Update Salary:<h2>
+            <h6>[leave blank if unknown]</h6>
+        {{ salary_form.csrf_token() }}
+
+        <div>
+
+            {{ salary_form.salary(class="form-control") }}
+        </div>
+        <div>
+            {{ salary_form.submit(class="btn btn-primary") }}
+        </div>
+
+    </form>
+</section>
+
+
+
+
+
+
+{% endblock %}
