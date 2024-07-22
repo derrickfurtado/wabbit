@@ -3,10 +3,6 @@
 from flask_sqlalchemy import SQLAlchemy     ## using SQLAlchemy db
 import os                                  ## used to pull in Postgres URI
 
-database_uri = os.getenv('DATABASE_URI')
-secret_key = os.getenv('SECRET_KEY')
-app.config['SECRET_KEY'] = secret_key
-app.config['SQLALCHEMY_DAYABASE_URI'] = database_uri
 
 db = SQLAlchemy()
 
