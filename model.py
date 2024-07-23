@@ -1,10 +1,13 @@
 """ DB seed and models script """
 
 from flask_sqlalchemy import SQLAlchemy     ## using SQLAlchemy db
-import os                                  ## used to pull in Postgres URI
+import os, psycopg2                                  ## used to pull in Postgres URI
 
 
 db = SQLAlchemy()
+database_uri = os.environ["DATABASE_URI"]
+
+
 
 ####################### DB Class Models ####################### 
 
@@ -209,7 +212,7 @@ def connect_to_db(flask_app, echo=True):
     #flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["POSTGRES_URI"]
     flask_app.config["SQLALCHEMY_ECHO"] = echo
-    flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True      ## turned off because the command line feedback was overwhelming
+    flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False      ## turned off because the command line feedback was overwhelming
     db.app = flask_app
     db.init_app(flask_app)
     print("Crank it up to 80!")

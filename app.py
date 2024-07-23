@@ -5,7 +5,7 @@ from flask import Flask, render_template, flash, redirect, session, request, url
 # from key import secret_key      ### 💡💡💡                                           ## needed for database password (locally)
 from pdb import set_trace                                                              ## my favorite debug tool
 from datetime import datetime                                                          ## for use with keeping dates and times
-
+from flask_migrate import Migrate
 
 
 
@@ -14,6 +14,9 @@ app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.getenv('SECRET_KEY')                
 
+model.connect_to_db(app)
+
+migrate = Migrate(app, model.db)
 
 
 ############################ Credentials ##############################
@@ -1114,4 +1117,4 @@ def delete_general_task():
 if __name__ == "__main__":
     model.connect_to_db(app)
     # app.run(host="0.0.0.0", port=4040, debug=False)        ### 💡💡💡
-    app.run(host="0.0.0.0", port=5432, debug=False)
+    app.run(host="0.0.0.0", port=int(os.getenv('PORT', 5432)), debug=False)
