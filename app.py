@@ -12,7 +12,7 @@ from datetime import datetime                                                   
 app = Flask(__name__)
     
 
-# app.secret_key = secret_key                 ### 💡💡💡 secret key stored in key.py file for security (used locally)
+app.config["SECRET_KEY"] = os.getenv('SECRET_KEY')                
 
 
 
