@@ -606,7 +606,7 @@ def create_recruiter():             ## function to create recruiter
         model.db.session.commit()
 
         flash("Recruiter added to Job")
-        return render_template("job_detail_page.html", job = job)
+        return redirect(url_for("show_job_detail", job_id=job_id))
     
     except:                                 ## error handler to prevent viewing pages without an active session
         flash("Please log in first")
