@@ -386,7 +386,7 @@
                     <li>
                         <a href="{{ employee.linkedin }}" target="_blank">{{ employee.first_name }} {{
                             employee.last_name }}</a> ({{ employee.title }}) - 
-                            {% if job.company.employee.email == '' %}
+                            {% if employee.email == '' %}
                             <a href="{{ url_for('update_employee_email_form', job_id = job.id, employee_id = employee.id) }}"><button class="btn btn-info">ADD EMAIL</button></a>
                             {% else %}
                             <a href="mailto:{{ employee.email }}"><button class="btn btn-info">EMAIL</button></a>
