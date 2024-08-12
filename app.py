@@ -36,9 +36,9 @@ def login_user():                           ## login feature
     if user_form.validate_on_submit():              
             user_found = False                      ## default value created in case user is present
             for user in current_users:              ## loop through all users
-                if user_form.email.data == user.email:      ## checking only the email data
+                if user_form.eml.data == user.email:      ## checking only the email data
                     user_found = True
-                    user_password = user_form.password.data
+                    user_password = user_form.pwd.data
                     user_byt_pass = user_password.encode('utf-8')           ## using bcrypt to encode the passwords
                     stored_password = user.password                         ## capture stored password into variable
                     password_check = bcrypt.checkpw(user_byt_pass, stored_password)     ## using bcrypt to check encrypted password

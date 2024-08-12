@@ -15,11 +15,11 @@
             <form id="login_form" action="{{ url_for('login_user') }}" method="post">
                 <h3 id="login_prompt">Login:</h3>
                 {{ login_form.csrf_token() }}
-                {{ login_form.email.label }}
-                {{ login_form.email(class="form-control") }}
-                {{ login_form.password.label }}
-                {{ login_form.password(class="form-control") }}
-                {{ login_form.submit(class="btn btn-primary mb-3") }}
+                {{ login_form.eml.label }}
+                {{ login_form.eml(class="form-control") }}
+                {{ login_form.pwd.label }}
+                {{ login_form.pwd(class="form-control") }}
+                {{ login_form.sbmt(class="btn btn-primary mb-3") }}
 
             </form>
         </div>

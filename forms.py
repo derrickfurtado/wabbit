@@ -5,9 +5,9 @@ from wtforms.validators import DataRequired, Length
 
 
 class User_Login_Form(FlaskForm):
-    email = StringField("Email: ", validators=[DataRequired(), Length(min=5, max=255)])
-    password = PasswordField("Password: ", validators=[DataRequired(), Length(min=4, max=255)])
-    submit = SubmitField("Login")
+    eml = StringField("Email: ", validators=[DataRequired(), Length(min=5, max=255)])
+    pwd = PasswordField("Password: ", validators=[DataRequired(), Length(min=4, max=255)])
+    sbmt = SubmitField("Login")
 
 class User_Registration_Form(FlaskForm):
     first_name = StringField("First Name: ", validators=[DataRequired(), Length(min=2, max=255)])
