@@ -30,7 +30,11 @@
             <tr>
                 <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                 <td>{{ job.company.name }}</td>
-                <td>{{ "$ {:,.0f}".format(job.salary) }}</td>
+                {% if not job.salary %}
+                    <td>N/A</td>
+                {% else %}
+                    <td> {{"$ {:,.0f}".format(job.salary)}} </td>
+                {% endif %}
                 <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
                 {% if job.rejection %}
                 <td>REJECTED</td>
