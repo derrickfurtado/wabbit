@@ -23,7 +23,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for company in company_list %}
+            {% for company in company_list | sort(attribute="name") %}
             <tr>
                 {% if company.favorite %}
                 <td><a href="{{ url_for('update_favorite_company_homepage', company_id = company.id) }}">📈</a></td>

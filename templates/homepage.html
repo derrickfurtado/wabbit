@@ -37,7 +37,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for job in job_list %}
+                    {% for job in job_list | sort(attribute="last_logged_task_time", reverse = True) %}
+                    
                     {% if not job.date_applied and not job.rejection and not job.ghosted %}
                     <tr>
                         {% if job.favorite %}
@@ -48,9 +49,9 @@
                         <td><a href="{{ url_for('show_job_detail', job_id = job.id) }}">{{ job.role }}</a></td>
                         <td>{{ job.company.name }}</td>
                         {% if job.salary %}
-                        <td id="salary_data">{{ "$ {:,.0f}".format(job.salary) }}</td>
+                            <td id="salary_data">{{ "$ {:,.0f}".format(job.salary) }}</td>
                         {% else %}
-                        <td>N/A</td>
+                            <td>N/A</td>
                         {% endif %}
                         <td><a href="{{ job.link }}" target="_blank">Job Link</a></td>
                         <td>{{ job.last_logged_task }}</td>
@@ -78,7 +79,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for job in job_list %}
+                    {% for job in job_list | sort(attribute="last_logged_task_time", reverse = True) %}
+                    
                     {% if job.date_applied and not job.rejection and not job.interviewing and not job.job_offer and not
                     job.accepted_offer and not job.ghosted %}
                     <tr>
