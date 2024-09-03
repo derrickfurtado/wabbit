@@ -100,11 +100,39 @@ def sign_out():                              ## sign out feature. Deletes sessio
 def homepage():                             ## Dashboard template variables
     try:
         user_id = session["user_id"]
-        job_list = crud.show_all_jobs_by_userID(user_id)               ## Only pull jobs that the user owns in the DB
+        job_list = crud.show_all_jobs_by_userID(user_id)  ## Only pull jobs that the user owns in the DB
+        task_list = []
 
         if not job_list:
             flash("You are not tracking any opportunities. Get on it!!!")
-        return render_template("homepage.html", job_list = job_list, user_id = user_id)
+
+        for job in job_list:
+            incomplete_emails = [email for email in job.email_task if not email.completed]
+            incomplete_calls = [call for call in job.call_task if not call.completed]
+            incomplete_general_tasks = [task for task in job.general_task if not task.completed]
+
+            for email in incomplete_emails:         ### Add incomplete emails to task_list
+                task_list.append({
+                    'job': job,
+                    'task_type': 'email',
+                    'task': email,
+                })
+            
+            for call in incomplete_calls:           ### Add incomplete calls to task_list
+                task_list.append({
+                    'job': job,
+                    'task_type': 'call',
+                    'task': call,
+                })
+
+            for task in incomplete_general_tasks:       ### Add incomplete general tasks to task_list
+                task_list.append({
+                    'job': job,
+                    'task_type': 'general',
+                    'task': task,
+                })
+
+        return render_template("homepage.html", task_list=task_list, job_list=job_list, user_id=user_id)
     
     
     except:                                 ## error handler to prevent viewing pages without an active session

@@ -80,7 +80,7 @@
                 </thead>
                 <tbody>
                     {% for job in job_list | sort(attribute="last_logged_task_time", reverse = True) %}
-                    
+
                     {% if job.date_applied and not job.rejection and not job.interviewing and not job.job_offer and not
                     job.accepted_offer and not job.ghosted %}
                     <tr>
@@ -190,6 +190,36 @@
                         <td><a href="{{ job.link }}">Job Link</a></td>
                     </tr>
                     {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section id="task_list">
+            <h2>Due Tasks: </h2>
+            <table class="table table-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Task</th>
+                        <th>Job Role</th>
+                        <th>Due Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task_item in task_list | sort(attribute="due_date") %}
+                        <tr>
+                            <td>
+                                {% if task_item.task_type == 'email' %}
+                                    {{ task_item.task.description }}
+                                {% elif task_item.task_type == 'call' %}
+                                    {{ task_item.task.description }}
+                                {% elif task_item.task_type == 'general' %}
+                                    {{ task_item.task.description }}
+                                {% endif %}
+                            </td>
+                            <td><a href="{{ url_for('show_job_detail', job_id = task_item['job'].id) }}">{{ task_item.job.role }}</a></td>
+                            <td>{{ task_item.task.due_date.strftime('%b %d') }}</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
